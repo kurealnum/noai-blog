@@ -29,5 +29,9 @@ class CommentReaction(models.Model):
 
 
 class ReplyTo(models.Model):
-    comment = models.ForeignKey(to=Comment, on_delete=models.CASCADE)
-    reply = models.ForeignKey(to=Comment, on_delete=models.CASCADE)
+    comment = models.ForeignKey(
+        to=Comment, on_delete=models.CASCADE, related_name="comment_id"
+    )
+    reply = models.ForeignKey(
+        to=Comment, on_delete=models.CASCADE, related_name="reply_id"
+    )
