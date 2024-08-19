@@ -25,7 +25,7 @@ class Comment(models.Model):
 
 class CommentReaction(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
+    comment = models.ForeignKey(to=Comment, on_delete=models.SET_NULL, null=True)
 
 
 class ReplyTo(models.Model):
