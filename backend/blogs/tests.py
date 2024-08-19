@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.db import connection
 from accounts.models import CustomUser
+from blogs.helpers import get_comment_replies
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
 
@@ -74,22 +75,6 @@ class CommentTestCase(TestCase):
             user=self.user, post=self.blog_post, content="This is a reply!"
         )
 
-        # FIXME: still need to fix this query to join everything
-        query = f"""
-        WITH RECURSIVE comments AS (
-                SELECT reply_id 
-                FROM blogs_replyto
-                WHERE id = %s
-            UNION ALL
-                SELECT comment_id
-                FROM blogs_replyto AS br
-                JOIN blogs_comment bc ON bc.id=br.comment_id
-        )
-        SELECT * FROM comments;
-        """
-
-        with connection.cursor() as cursor:
-            cursor.execute(query, [self.comment.id])
-            row = cursor.fetchall()
-            expected_length = 2
-            self.assertEqual(expected_length, len(row))
+        query_res = get_comment_replies(self.comment.id)  # type: ignore
+        expected_length = 2
+        self.assertEqual(expected_length, len(query_res))
