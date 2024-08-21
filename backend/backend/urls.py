@@ -23,4 +23,5 @@ API_URL = "api/"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(API_URL + "accounts/", include("accounts.urls")),
+    path(API_URL + "blog-posts/", include("blogs.urls")),
 ]
