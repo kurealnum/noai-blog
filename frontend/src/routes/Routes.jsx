@@ -3,8 +3,31 @@ import Login from "../containers/Login";
 import AuthenticatedRoute from "./AuthenticatedRoutes";
 import Dashboard from "../containers/Dashboard";
 import Logout from "../containers/Logout";
+import Feed from "../containers/Feed";
+import Register from "../containers/Register";
+import Home from "../containers/Home";
+import AboutUs from "../containers/AboutUs";
+import Guidelines from "../containers/Guidelines";
 
 const router = createBrowserRouter([
+  {
+    path: "/feed",
+    element: <Feed />,
+  },
+  { path: "/register", element: <Register /> },
+  { path: "/", element: <Home /> },
+  {
+    path: "/about-us",
+    element: <AboutUs />,
+  },
+  {
+    path: "/guidelines",
+    element: <Guidelines />,
+  },
+  {
+    path: "/feed",
+    element: <Feed />,
+  },
   {
     path: "/login",
     element: <Login />,
