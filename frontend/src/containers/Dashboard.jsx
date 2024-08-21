@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 function Dashboard() {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    getPosts("ADMIN").then((res) => {
+    getPosts().then((res) => {
       console.log(res);
       setPosts(res);
     });
@@ -11,19 +11,19 @@ function Dashboard() {
   return (
     <div className="posts">
       {posts.map((content) => (
-        <p>{content}</p>
+        <h2>{content.title}</h2>
       ))}
     </div>
   );
 }
 
-async function getPosts(username) {
+async function getPosts() {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/get-posts/" + username, config);
+  const response = await fetch("/api/blog-posts/get-posts/", config);
   return await response.json();
 }
 
