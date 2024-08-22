@@ -1,7 +1,10 @@
 from django.test import TestCase
-from django.db import connection
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
+from rest_framework.test import APIRequestFactory, force_authenticate
+
+from blogs.views import BlogPostList
+
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
 
@@ -78,3 +81,40 @@ class CommentTestCase(TestCase):
         query_res = get_comment_replies(self.comment.id)  # type: ignore
         expected_length = 2
         self.assertEqual(expected_length, len(query_res))
+
+
+class BlogPostListTestCase(TestCase):
+    def setUp(self) -> None:
+        self.user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+        )
+        self.user.set_password("TerriblePassword123")
+        self.blog_post = BlogPost.objects.create(
+            user=self.user,
+            title="My awesome blog post",
+            content="Here's something about my blog post",
+        )
+        # alternative user
+        self.alternative_user = CustomUser.objects.create(
+            email="marysue@gmail.com",
+            first_name="Mary",
+            last_name="Sue",
+            about_me="I do not destroy worlds!",
+            username="MarySue",
+        )
+        self.alternative_blog_post = BlogPost.objects.create(
+            user=self.alternative_user,
+            title="My awesome blog post",
+            content="Here's something about my blog post",
+        )
+
+    def test_blogpostlist_returns_correctly(self):
+        factory = APIRequestFactory()
+        request = factory.get("/api/blog-posts/get-posts/")
+        force_authenticate(request, user=self.user)
+        response = BlogPostList.as_view()(request)
+        expected_length = 1
+        self.assertEqual(expected_length, len(response.data))
