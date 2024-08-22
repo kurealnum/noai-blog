@@ -1,6 +1,11 @@
+from rest_framework import generics
 from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
+
+from accounts.models import CustomUser
+from accounts.serializers import CustomUserSerializer
 
 
 @api_view(["POST"])
@@ -47,3 +52,12 @@ def logout_user(request):
         return Response({"success": "You have been logged out"}, status=200)
     except:
         return Response({"error": "Something went wrong"}, status=403)
+
+
+class UserInfoView(generics.RetrieveAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = (AllowAny,)
+
+    def get_queryset(self):
+        user_id = self.request.user.id  # type:ignore
+        return CustomUser.objects.filter(id=user_id)

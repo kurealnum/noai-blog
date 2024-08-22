@@ -4,6 +4,7 @@ function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [commentReplies, setCommentReplies] = useState([]);
   const [postReplies, setPostReplies] = useState([]);
+  const [userInfo, setUserInfo] = useState([]);
 
   useEffect(() => {
     getPosts().then((res) => {
@@ -15,6 +16,9 @@ function Dashboard() {
     getPostReplies().then((res) => {
       setPostReplies(res);
     });
+    getUserInfo().then((res) => {
+      setUserInfo(res);
+    });
   }, []);
 
   return (
@@ -23,22 +27,6 @@ function Dashboard() {
         {posts.map((content) => (
           <>
             <h1>Blog posts</h1>
-            <h2>{content.title}</h2>
-          </>
-        ))}
-      </div>
-      <div className="comment-replies">
-        {commentReplies.map((content) => (
-          <>
-            <h1>Replies to comments</h1>
-            <h2>{content.title}</h2>
-          </>
-        ))}
-      </div>
-      <div className="post-replies">
-        {postReplies.map((content) => (
-          <>
-            <h1>Replies to posts</h1>
             <h2>{content.title}</h2>
           </>
         ))}
@@ -74,6 +62,16 @@ async function getPostReplies() {
     credentials: "include",
   };
   const response = await fetch("/api/blog-posts/get-post-replies/", config);
+  return await response.json();
+}
+
+async function getUserInfo() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/accounts/user-info/", config);
   return await response.json();
 }
 
