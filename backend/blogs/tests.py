@@ -2,6 +2,7 @@ from django.test import TestCase
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
 from rest_framework.test import APIRequestFactory, force_authenticate
+import datetime
 
 from blogs.views import BlogPostList, CommentReplyList, PostReplyList
 
@@ -33,8 +34,9 @@ class BlogTestCase(TestCase):
         Comment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
-        comment = Comment.objects.filter(post=self.blog_post).count()
-        self.assertIsNotNone(comment)
+        comment_count = Comment.objects.filter(post=self.blog_post).count()
+        expected_result = 1
+        self.assertEqual(expected_result, comment_count)
 
 
 class CommentTestCase(TestCase):
@@ -75,12 +77,16 @@ class CommentTestCase(TestCase):
 
         # this comment should *not* show in result of query
         Comment.objects.create(
-            user=self.user, post=self.blog_post, content="This is a reply!"
+            user=self.user,
+            post=self.blog_post,
+            content="This is a reply on a blog post!",
         )
 
         query_res = get_comment_replies(self.comment.id)  # type: ignore
-        expected_length = 2
-        self.assertEqual(expected_length, len(query_res))
+        # this is the content of the comment. Checking that the entire comment is equivalent to a given expected result is too much of a pain
+        expected_result = "This is a reply!"
+        self.assertEqual(expected_result, query_res[0][2])
+        self.assertEqual(expected_result, query_res[1][2])
 
 
 class BlogPostListTestCase(TestCase):
@@ -116,8 +122,9 @@ class BlogPostListTestCase(TestCase):
         request = factory.get("/api/blog-posts/get-posts/")
         force_authenticate(request, user=self.user)
         response = BlogPostList.as_view()(request)
-        expected_length = 1
-        self.assertEqual(expected_length, len(response.data))
+        # expected_title, basically
+        expected_result = "My awesome blog post"
+        self.assertEqual(expected_result, response.data[0].get("title"))
 
 
 class CommentReplyListTestCase(TestCase):
