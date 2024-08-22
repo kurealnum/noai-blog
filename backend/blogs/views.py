@@ -15,6 +15,7 @@ class BlogPostList(generics.ListAPIView):
         return BlogPost.objects.filter(user=user)
 
 
+# This view returns replies to *comments* that a user has made
 class CommentReplyList(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentSerializer
@@ -23,3 +24,14 @@ class CommentReplyList(generics.ListAPIView):
         user = self.request.user
         replyto_query = ReplyTo.objects.values_list("reply", flat=True)
         return Comment.objects.filter(user=user).filter(id__in=Subquery(replyto_query))
+
+
+# This view returns replies to *posts* that a user has made
+class PostReplyList(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        replyto_query = ReplyTo.objects.values_list("reply", flat=True)
+        return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))

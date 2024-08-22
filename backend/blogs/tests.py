@@ -3,7 +3,7 @@ from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
 from rest_framework.test import APIRequestFactory, force_authenticate
 
-from blogs.views import BlogPostList, CommentReplyList
+from blogs.views import BlogPostList, CommentReplyList, PostReplyList
 
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
@@ -135,21 +135,56 @@ class CommentReplyListTestCase(TestCase):
             content="Here's something about my blog post",
         )
         self.comment = Comment.objects.create(
-            user=self.user, post=self.blog_post, content="A really good comment"
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
         self.comment_two = Comment.objects.create(
             user=self.user,
             post=self.blog_post,
-            content="This comment is a reply to another comment!",
+            content="This IS a reply!",
         )
 
         ReplyTo.objects.create(comment=self.comment, reply=self.comment_two)
 
-    # this should return a single comment, as there's only one comment in the database that is a *reply to another comment*
+    # checks to ensure that this view only returns replies to *comments* that a user has made
     def test_commentreplylist_returns_correctly(self):
         factory = APIRequestFactory()
         request = factory.get("/api/blog-posts/get-comment-replies/")
         force_authenticate(request, user=self.user)
         response = CommentReplyList.as_view()(request)
-        expected_length = 1
-        self.assertEqual(expected_length, len(response.data))
+        expected_result = "This IS a reply!"
+        self.assertEqual(expected_result, response.data[0].get("content"))
+
+
+class PostReplyListTestCase(TestCase):
+    def setUp(self) -> None:
+        self.user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+        )
+        self.user.set_password("TerriblePassword123")
+        self.blog_post = BlogPost.objects.create(
+            user=self.user,
+            title="My awesome blog post",
+            content="Here's something about my blog post",
+        )
+        self.comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
+        )
+        self.comment_two = Comment.objects.create(
+            user=self.user,
+            post=self.blog_post,
+            content="This IS a reply!",
+        )
+
+        ReplyTo.objects.create(comment=self.comment, reply=self.comment_two)
+
+    # checks to ensure that this view only returns replies to *posts* that a user has made
+    def test_postreplylist_returns_correctly(self):
+        factory = APIRequestFactory()
+        request = factory.get("/api/blog-posts/get-post-replies/")
+        force_authenticate(request, user=self.user)
+        response = PostReplyList.as_view()(request)
+        expected_result = "This is NOT a reply!"
+        self.assertEqual(expected_result, response.data[0].get("content"))

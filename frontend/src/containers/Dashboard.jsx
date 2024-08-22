@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [commentReplies, setCommentReplies] = useState([]);
+  const [postReplies, setPostReplies] = useState([]);
+
   useEffect(() => {
     getPosts().then((res) => {
       setPosts(res);
@@ -10,7 +12,11 @@ function Dashboard() {
     getCommentReplies().then((res) => {
       setCommentReplies(res);
     });
+    getPostReplies().then((res) => {
+      setPostReplies(res);
+    });
   }, []);
+
   return (
     <>
       <div className="posts">
@@ -25,6 +31,14 @@ function Dashboard() {
         {commentReplies.map((content) => (
           <>
             <h1>Replies to comments</h1>
+            <h2>{content.title}</h2>
+          </>
+        ))}
+      </div>
+      <div className="post-replies">
+        {postReplies.map((content) => (
+          <>
+            <h1>Replies to posts</h1>
             <h2>{content.title}</h2>
           </>
         ))}
@@ -50,6 +64,16 @@ async function getCommentReplies() {
     credentials: "include",
   };
   const response = await fetch("/api/blog-posts/get-comment-replies/", config);
+  return await response.json();
+}
+
+async function getPostReplies() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/get-post-replies/", config);
   return await response.json();
 }
 
