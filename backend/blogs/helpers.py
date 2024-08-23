@@ -2,7 +2,7 @@ from django.db import connection
 
 
 def get_comment_replies(comment_id):
-    query = f"""
+    query = """
         WITH RECURSIVE comments AS (
                 SELECT reply_id 
                 FROM blogs_replyto

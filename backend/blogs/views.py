@@ -1,9 +1,15 @@
-from django.db.models import Count, Subquery
+from django.db.models import F, Count, Subquery, Sum
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 
 from blogs.models import BlogPost, Comment, ReplyTo
-from blogs.serializers import BlogPostSerializer, CommentSerializer
+from blogs.serializers import (
+    BlogPostSerializer,
+    CommentSerializer,
+    FeedBlogPostSerializer,
+)
 
 
 class BlogPostList(generics.ListAPIView):
@@ -37,16 +43,26 @@ class PostReplyList(generics.ListAPIView):
         return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))
 
 
-# This view returns a feed of the top seven posts over the last day as well as the top 3 newest posts
+# This view returns a feed of the top posts mixed in with new posts and posts sorted by number of comments
+# 60% of returned posts will be sorted by # of reactions, 30% will be sorted by newest, and 10% will be sorted by # of comments
 class FeedList(generics.ListAPIView):
     permission_classes = (AllowAny,)
-    serializer_class = BlogPostSerializer
+    serializer_class = FeedBlogPostSerializer
 
     def get_queryset(self):
-        top_subquery = BlogPost.objects.annotate(
-            reactions=Count("PostReaction")
-        ).order_by("reactions")
-        top_posts = BlogPost.objects.filter(id__in=Subquery(top_subquery)).order_by(
-            "-created_date"
+        comment_score = 5
+        reaction_score = 3
+
+        all_posts = (
+            BlogPost.objects.all()
+            .annotate(
+                reactions=Count("postreaction"),
+                comments=Count("comment"),
+                score=(F("reactions") * reaction_score)
+                + (F("comments") * comment_score),
+            )
+            .select_related("user")
+            .order_by("-score")
         )
-        return top_posts
+
+        return all_posts

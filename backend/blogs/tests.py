@@ -4,7 +4,7 @@ from blogs.helpers import get_comment_replies
 from rest_framework.test import APIRequestFactory, force_authenticate
 import datetime
 
-from blogs.views import BlogPostList, CommentReplyList, PostReplyList
+from blogs.views import BlogPostList, CommentReplyList, FeedList, PostReplyList
 
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
@@ -195,3 +195,42 @@ class PostReplyListTestCase(TestCase):
         response = PostReplyList.as_view()(request)
         expected_result = "This is NOT a reply!"
         self.assertEqual(expected_result, response.data[0].get("content"))
+
+
+class FeedListTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+        )
+        self.blog_post_1 = BlogPost.objects.create(
+            user=self.user,
+            title="1",
+            content="Here's something about my blog post",
+        )
+        self.blog_post_2 = BlogPost.objects.create(
+            user=self.user,
+            title="2",
+            content="Here's something about my blog post",
+        )
+        self.blog_post_3 = BlogPost.objects.create(
+            user=self.user,
+            title="3",
+            content="Here's something about my blog post",
+        )
+
+        # adding a comment to test that the 3rd blog post is listed first
+        Comment.objects.create(
+            user=self.user, content="a comment", post=self.blog_post_3
+        )
+
+    def test_feedlist_returns_correctly(self):
+        factory = APIRequestFactory()
+        request = factory.get("/api/blog-posts/feed/")
+        force_authenticate(request, user=self.user)
+        response = FeedList.as_view()(request)
+        # the title of the 3rd blog post is 3
+        expected_result = "3"
+        self.assertEqual(expected_result, response.data[0].get("title"))
