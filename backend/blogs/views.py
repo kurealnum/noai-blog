@@ -1,4 +1,4 @@
-from django.db.models import Subquery
+from django.db.models import Count, Subquery
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
 
@@ -35,3 +35,18 @@ class PostReplyList(generics.ListAPIView):
         user = self.request.user
         replyto_query = ReplyTo.objects.values_list("reply", flat=True)
         return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))
+
+
+# This view returns a feed of the top seven posts over the last day as well as the top 3 newest posts
+class FeedList(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = BlogPostSerializer
+
+    def get_queryset(self):
+        top_subquery = BlogPost.objects.annotate(
+            reactions=Count("PostReaction")
+        ).order_by("reactions")
+        top_posts = BlogPost.objects.filter(id__in=Subquery(top_subquery)).order_by(
+            "-created_date"
+        )
+        return top_posts
