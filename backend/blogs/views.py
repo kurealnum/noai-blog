@@ -1,8 +1,6 @@
-from django.db.models import F, Count, Subquery, Sum
+from django.db.models import F, Count, Subquery
 from rest_framework import generics
 from rest_framework.permissions import AllowAny
-from django.utils.decorators import method_decorator
-from django.views.decorators.cache import cache_page
 
 from blogs.models import BlogPost, Comment, ReplyTo
 from blogs.serializers import (

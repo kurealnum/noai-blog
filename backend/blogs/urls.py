@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.decorators.cache import cache_page
 
 from blogs.views import BlogPostList, CommentReplyList, FeedList, PostReplyList
 
@@ -8,5 +9,5 @@ urlpatterns = [
         "get-comment-replies/", CommentReplyList.as_view(), name="get_comment_replies"
     ),
     path("get-post-replies/", PostReplyList.as_view(), name="get_post_replies"),
-    path("feed/", FeedList.as_view(), name="feed"),
+    path("feed/", cache_page(60 * 20)(FeedList.as_view()), name="feed"),
 ]
