@@ -11,13 +11,21 @@ class BlogPost(models.Model):
 
 
 class Follower(models.Model):
-    follower = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    follower = models.ForeignKey(
+        to=CustomUser, on_delete=models.CASCADE, related_name="follower_id"
+    )
+    user = models.ForeignKey(
+        to=CustomUser, on_delete=models.CASCADE, related_name="follower_user_id"
+    )
 
 
 class Following(models.Model):
-    following = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    following = models.ForeignKey(
+        to=CustomUser, on_delete=models.CASCADE, related_name="following_id"
+    )
+    user = models.ForeignKey(
+        to=CustomUser, on_delete=models.CASCADE, related_name="following_user_id"
+    )
 
 
 class PostReaction(models.Model):
