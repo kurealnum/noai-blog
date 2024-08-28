@@ -8,41 +8,51 @@ import Register from "../containers/Register";
 import Home from "../containers/Home";
 import AboutUs from "../containers/AboutUs";
 import Guidelines from "../containers/Guidelines";
+import { getUserInfo } from "../features/helpers";
+import NavBar from "../containers/NavBar";
 
 const router = createBrowserRouter([
   {
-    path: "/feed",
-    element: <Feed />,
-  },
-  { path: "/register", element: <Register /> },
-  { path: "/", element: <Home /> },
-  {
-    path: "/about-us",
-    element: <AboutUs />,
-  },
-  {
-    path: "/guidelines",
-    element: <Guidelines />,
-  },
-  {
-    path: "/feed",
-    element: <Feed />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/dashboard",
-    element: (
-      <AuthenticatedRoute>
-        <Dashboard />
-      </AuthenticatedRoute>
-    ),
-  },
-  {
-    path: "/logout",
-    element: <Logout />,
+    path: "/",
+    id: "root",
+    element: <NavBar />,
+    loader: getUserInfo,
+    children: [
+      {
+        path: "feed",
+        element: <Feed />,
+      },
+      { path: "register", element: <Register /> },
+      { path: "", element: <Home /> },
+      {
+        path: "about-us",
+        element: <AboutUs />,
+      },
+      {
+        path: "guidelines",
+        element: <Guidelines />,
+      },
+      {
+        path: "feed",
+        element: <Feed />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "dashboard",
+        element: (
+          <AuthenticatedRoute>
+            <Dashboard />
+          </AuthenticatedRoute>
+        ),
+      },
+      {
+        path: "logout",
+        element: <Logout />,
+      },
+    ],
   },
 ]);
 

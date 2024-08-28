@@ -13,4 +13,15 @@ const getCookie = (name) => {
   return cookieValue;
 };
 
+async function getUserInfo() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/accounts/user-info/", config);
+  return await response.json();
+}
+
 export default getCookie;
+export { getUserInfo };

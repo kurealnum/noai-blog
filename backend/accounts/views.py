@@ -54,9 +54,10 @@ def logout_user(request):
         return Response({"error": "Something went wrong"}, status=403)
 
 
-class UserInfoView(generics.RetrieveAPIView):
+class UserInfoView(generics.ListAPIView):
     serializer_class = CustomUserSerializer
     permission_classes = (AllowAny,)
+    lookup_field = ""
 
     def get_queryset(self):
         user_id = self.request.user.id  # type:ignore
