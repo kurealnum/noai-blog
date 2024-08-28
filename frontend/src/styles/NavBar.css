@@ -1,0 +1,25 @@
+nav {
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  background-color: var(--background);
+  padding: 2px 8px;
+  border: 1px solid var(--primary);
+  border-radius: 10px;
+  align-items: center;
+}
+
+nav span {
+  font-size: var(--navbar-font-size);
+}
+
+nav #pfp {
+  border-radius: 50%;
+  height: 54px;
+  width: 54px;
+}
+
+nav #burger-menu {
+  width: 42px;
+}

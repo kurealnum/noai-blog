@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [commentReplies, setCommentReplies] = useState([]);
   const [postReplies, setPostReplies] = useState([]);
-  const userData = useLoaderData();
-  console.log(userData);
 
   useEffect(() => {
     getPosts().then((res) => {
