@@ -1,5 +1,7 @@
+import { Dialog, IconButton } from "@mui/material";
 import "../styles/NavBar.css";
 import { Outlet, useLoaderData } from "react-router-dom";
+import { useState } from "react";
 
 function NavBar() {
   const desktopWidth = 800;
@@ -49,9 +51,23 @@ function FullScreenNavBar({ userData }) {
 
 function MobileNavBar({ userData }) {
   // long asf link to my profile picture. will change when actually using img from api
+  const [open, setOpen] = useState(false);
+  function handleOpen() {
+    setOpen(true);
+  }
+  function handleClose() {
+    setOpen(false);
+  }
   return (
     <nav>
-      <img id="burger-menu" src="../../public/burger-menu.svg"></img>
+      <button onClick={() => handleOpen()}>
+        <img id="burger-menu" src="../../public/burger-menu.svg"></img>
+      </button>
+      <Dialog fullScreen open={open} onClose={() => handleClose()}>
+        <IconButton onClick={() => handleClose()}>
+          <button>Close me!</button>
+        </IconButton>
+      </Dialog>
       <span>{userData.username}</span>
       <img
         id="pfp"

@@ -23,3 +23,8 @@ nav #pfp {
 nav #burger-menu {
   width: 42px;
 }
+
+nav button {
+  background: none;
+  border: none;
+}
