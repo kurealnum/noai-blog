@@ -24,7 +24,33 @@ nav #burger-menu {
   width: 42px;
 }
 
+nav #menu-icon svg,
+nav #menu-icon {
+  width: 42px;
+  height: 42px;
+  padding: 0px;
+}
+
 nav button {
   background: none;
   border: none;
+}
+
+.link-list {
+  margin: 0 auto;
+  list-style: none;
+}
+
+.link-list li {
+  margin-bottom: 30px;
+}
+
+#dialog-close-button {
+  margin-left: auto;
+}
+
+.link-list li a {
+  text-decoration: none;
+  color: var(--dark-text);
+  font-size: var(--navbar-font-size);
 }

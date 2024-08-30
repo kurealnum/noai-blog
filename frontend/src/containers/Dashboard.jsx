@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../styles/Dashboard.css";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -18,20 +19,30 @@ function Dashboard() {
   }, []);
 
   return (
-    <>
+    <div id="dashboard">
       <section className="list-section">
         {" "}
         <h1>Your replies to comments</h1>
         <div className="list">
-          {commentReplies.map((content, index) => (
-            <h2 key={index}>{content.content}</h2>
-          ))}
+          {commentReplies.length == 0 ? (
+            <p>There's nothing here. Go make some comments!</p>
+          ) : (
+            commentReplies.map((content, index) => (
+              <h2 key={index}>{content.content}</h2>
+            ))
+          )}
         </div>
+      </section>
+      <section className="list-section">
         <h1>Your replies to posts</h1>
         <div className="list">
-          {postReplies.map((content, index) => (
-            <h2 key={index}>{content.content}</h2>
-          ))}
+          {postReplies.length == 0 ? (
+            <p>There's nothing here. Go read some posts!</p>
+          ) : (
+            postReplies.map((content, index) => (
+              <h2 key={index}>{content.content}</h2>
+            ))
+          )}
         </div>
       </section>
 
@@ -39,12 +50,14 @@ function Dashboard() {
         {" "}
         <h1>Your posts</h1>
         <div className="list">
-          {posts.map((content, index) => (
-            <h2 key={index}>{content.title}</h2>
-          ))}
+          {posts.length == 0 ? (
+            <p>There's nothing here. Go make some posts!</p>
+          ) : (
+            posts.map((content, index) => <h2 key={index}>{content.title}</h2>)
+          )}
         </div>
       </section>
-    </>
+    </div>
   );
 }
 
