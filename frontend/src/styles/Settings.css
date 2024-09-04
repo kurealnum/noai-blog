@@ -1,0 +1,40 @@
+#settings {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: var(--background);
+  border: 2px var(--primary) solid;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+#settings input {
+  border-radius: 10px;
+  border: 1px var(--primary) solid;
+  padding: 4px;
+}
+
+#settings label {
+  margin-right: 10px;
+  font-size: var(--text-size);
+}
+
+#settings #save {
+  color: var(--light-text);
+  padding: 6px 50px;
+  background: var(--tertiary);
+  border: 0px;
+  border-radius: 10px;
+  font-size: var(--subtext-font-size);
+}
+
+@media (min-width: 800px) {
+  #settings {
+    margin: 0 auto;
+    width: 550px;
+    height: 45vh;
+    justify-content: center;
+  }
+}

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Outlet, useRouteLoaderData } from "react-router-dom";
 import getCookie from "../features/helpers";
 import { Alert, Snackbar } from "@mui/material";
+import "../styles/Settings.css";
 
 function Settings() {
   const userData = useRouteLoaderData("root")[0];
@@ -38,7 +39,7 @@ function Settings() {
       <div id="settings">
         {Object.keys(userData).map((keyName, key) => (
           <div className="item" key={key}>
-            <span>{settingTitleHelper(keyName)}</span>
+            <label>{settingTitleHelper(keyName)}</label>
             <input
               name={keyName}
               onChange={(e) => setNewUserDataHelper(e)}
@@ -47,6 +48,7 @@ function Settings() {
           </div>
         ))}
         <button
+          id="save"
           onClick={() => changeSettings(newUserData, setIsError, setIsSaved)}
         >
           Save
@@ -56,7 +58,7 @@ function Settings() {
           autoHideDuration={5000}
           onClose={handleCloseError}
         >
-          <Alert onClose={handleCloseError} severity="error" variant="standard">
+          <Alert onClose={handleCloseError} severity="error" variant="filled">
             Something went wrong!
           </Alert>
         </Snackbar>
@@ -68,7 +70,7 @@ function Settings() {
           <Alert
             onClose={handleCloseSuccess}
             severity="success"
-            variant="standard"
+            variant="filled"
           >
             Your changes were successfully saved!
           </Alert>
@@ -89,7 +91,7 @@ async function changeSettings(newUserData, setIsError, setIsSaved) {
     method: "PUT",
     body: JSON.stringify(newUserData),
   };
-  const response = fetch(
+  const response = await fetch(
     "/api/accounts/update-user-info/" + getCookie("user_id") + "/",
     config,
   );
