@@ -3,44 +3,33 @@ import "../styles/Dashboard.css";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
-  const [commentReplies, setCommentReplies] = useState([]);
-  const [postReplies, setPostReplies] = useState([]);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     getPosts().then((res) => {
       setPosts(res);
     });
-    getCommentReplies().then((res) => {
-      setCommentReplies(res);
-    });
-    getPostReplies().then((res) => {
-      setPostReplies(res);
+    getComments().then((res) => {
+      setComments(res);
     });
   }, []);
 
   return (
     <div id="dashboard">
       <section className="list-section">
-        {" "}
-        <h1>Your replies to comments</h1>
+        <h1>Your comments</h1>
         <div className="list">
-          {commentReplies.length == 0 ? (
+          {comments.length == 0 ? (
             <p>There's nothing here. Go make some comments!</p>
           ) : (
-            commentReplies.map((content, index) => (
-              <h2 key={index}>{content.content}</h2>
-            ))
-          )}
-        </div>
-      </section>
-      <section className="list-section">
-        <h1>Your replies to posts</h1>
-        <div className="list">
-          {postReplies.length == 0 ? (
-            <p>There's nothing here. Go read some posts!</p>
-          ) : (
-            postReplies.map((content, index) => (
-              <h2 key={index}>{content.content}</h2>
+            comments.map((content, index) => (
+              <div className="comment" key={index}>
+                <p>
+                  {content["content"].length > 100
+                    ? content["content"].slice(0, 101) + "..."
+                    : content.content}
+                </p>
+              </div>
             ))
           )}
         </div>
@@ -53,7 +42,20 @@ function Dashboard() {
           {posts.length == 0 ? (
             <p>There's nothing here. Go make some posts!</p>
           ) : (
-            posts.map((content, index) => <h2 key={index}>{content.title}</h2>)
+            posts.map((content, index) => (
+              <div key={index} className="blog-post">
+                <h2>{content.title}</h2>
+                <div className="info">
+                  <p>{"By " + content.user.username}</p>
+                  <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
+                </div>
+                <p className="hint">
+                  {content["content"].length > 100
+                    ? content["content"].slice(0, 101) + "..."
+                    : content.content}
+                </p>
+              </div>
+            ))
           )}
         </div>
       </section>
@@ -71,23 +73,13 @@ async function getPosts() {
   return await response.json();
 }
 
-async function getCommentReplies() {
+async function getComments() {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/get-comment-replies/", config);
-  return await response.json();
-}
-
-async function getPostReplies() {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch("/api/blog-posts/get-post-replies/", config);
+  const response = await fetch("/api/blog-posts/get-comments/", config);
   return await response.json();
 }
 

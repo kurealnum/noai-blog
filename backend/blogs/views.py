@@ -10,13 +10,22 @@ from blogs.serializers import (
 )
 
 
+class CommentList(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):  # type: ignore
+        user = self.request.user
+        return Comment.objects.filter(user=user)
+
+
 class BlogPostList(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = BlogPostSerializer
 
     def get_queryset(self):  # type: ignore
         user = self.request.user
-        return BlogPost.objects.filter(user=user)
+        return BlogPost.objects.filter(user=user).select_related("user")
 
 
 # This view returns replies to *comments* that a user has made

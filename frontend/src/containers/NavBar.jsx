@@ -29,7 +29,13 @@ function NavBar() {
 function FullScreenNavBar({ userData }) {
   return (
     <nav>
-      <div className="username-box">{userData.username}</div>
+      <div className="username-box">
+        <img
+          id="pfp"
+          src="https://media.dev.to/cdn-cgi/image/width=320,height=320,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1079248%2F6f43bf7a-eebe-414c-9404-4cc9765ac588.jpg"
+        ></img>
+        <span>{userData.username}</span>
+      </div>
       <div className="link-list">
         <li>
           <a href="/guidelines">Policies on AI</a>
