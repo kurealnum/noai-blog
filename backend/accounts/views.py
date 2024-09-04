@@ -1,6 +1,6 @@
 from rest_framework import generics
 from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 
@@ -20,7 +20,9 @@ def login_user(request):
 
         if user is not None:
             login(request, user)
-            return Response({"success": "User authenticated"}, status=200)
+            res = Response({"success": "User authenticated"}, status=200)
+            res.set_cookie("user_id", user.id)  # type: ignore
+            return res
         else:
             return Response({"error": "Error Authenticating"}, status=401)
     except:
@@ -61,4 +63,14 @@ class UserInfoView(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.request.user.id  # type:ignore
+        return CustomUser.objects.filter(id=user_id)
+
+
+class UpdateUserInfo(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = CustomUserSerializer
+    lookup_field = ""
+
+    def get_queryset(self):
+        user_id = self.request.user.id  # type: ignore
         return CustomUser.objects.filter(id=user_id)

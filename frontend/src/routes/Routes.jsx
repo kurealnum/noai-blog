@@ -10,6 +10,7 @@ import AboutUs from "../containers/AboutUs";
 import Guidelines from "../containers/Guidelines";
 import { getUserInfo } from "../features/helpers";
 import NavBar from "../containers/NavBar";
+import Settings from "../containers/Settings";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "about-us",
         element: <AboutUs />,
+      },
+      {
+        path: "settings",
+        element: <Settings />,
       },
       {
         path: "guidelines",
