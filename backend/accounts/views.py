@@ -69,8 +69,4 @@ class UserInfoView(generics.ListAPIView):
 class UpdateUserInfo(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CustomUserSerializer
-    lookup_field = ""
-
-    def get_queryset(self):
-        user_id = self.request.user.id  # type: ignore
-        return CustomUser.objects.filter(id=user_id)
+    queryset = CustomUser.objects.all()

@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Outlet, useRouteLoaderData } from "react-router-dom";
 import getCookie from "../features/helpers";
+import { Alert, Snackbar } from "@mui/material";
 
 function Settings() {
   const userData = useRouteLoaderData("root")[0];
   const [newUserData, setNewUserData] = useState(userData);
+  const [isError, setIsError] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
   function setNewUserDataHelper(e) {
     setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
@@ -14,6 +17,22 @@ function Settings() {
     return (string.charAt(0).toUpperCase() + string.slice(1)).replace(/_/, " ");
   }
 
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsError(false);
+  };
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setIsSaved(false);
+  };
+
   return (
     <>
       <div id="settings">
@@ -21,19 +40,46 @@ function Settings() {
           <div className="item" key={key}>
             <span>{settingTitleHelper(keyName)}</span>
             <input
+              name={keyName}
               onChange={(e) => setNewUserDataHelper(e)}
-              content={userData[keyName]}
+              value={newUserData[keyName]}
             ></input>
           </div>
         ))}
-        <button onClick={() => changeSettings(newUserData)}>Save</button>
+        <button
+          onClick={() => changeSettings(newUserData, setIsError, setIsSaved)}
+        >
+          Save
+        </button>
+        <Snackbar
+          open={isError}
+          autoHideDuration={5000}
+          onClose={handleCloseError}
+        >
+          <Alert onClose={handleCloseError} severity="error" variant="standard">
+            Something went wrong!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={isSaved}
+          autoHideDuration={5000}
+          onClose={handleCloseSuccess}
+        >
+          <Alert
+            onClose={handleCloseSuccess}
+            severity="success"
+            variant="standard"
+          >
+            Your changes were successfully saved!
+          </Alert>
+        </Snackbar>
       </div>
       <Outlet />
     </>
   );
 }
 
-async function changeSettings({ newUserData }) {
+async function changeSettings(newUserData, setIsError, setIsSaved) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -43,8 +89,15 @@ async function changeSettings({ newUserData }) {
     method: "PUT",
     body: JSON.stringify(newUserData),
   };
-  const response = fetch("/api/accounts/update-user-info/", config);
-  console.log(response);
+  const response = fetch(
+    "/api/accounts/update-user-info/" + getCookie("user_id") + "/",
+    config,
+  );
+  if (response.ok) {
+    setIsSaved(true);
+  } else {
+    setIsError(true);
+  }
 }
 
 export default Settings;

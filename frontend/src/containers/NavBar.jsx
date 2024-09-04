@@ -34,7 +34,9 @@ function FullScreenNavBar({ userData }) {
           id="pfp"
           src="https://media.dev.to/cdn-cgi/image/width=320,height=320,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1079248%2F6f43bf7a-eebe-414c-9404-4cc9765ac588.jpg"
         ></img>
-        <span>{userData.username}</span>
+        <span>
+          {userData != null ? userData.username : <a href="/login">Log in</a>}
+        </span>
       </div>
       <div className="link-list">
         <li>
@@ -96,7 +98,9 @@ function MobileNavBar({ userData }) {
           </li>
         </div>
       </Dialog>
-      <span>{userData.username}</span>
+      <span>
+        {userData != null ? userData.username : <a href="/login">Log in</a>}
+      </span>
       <button onClick={() => handleOpen()}>
         <img
           id="pfp"
