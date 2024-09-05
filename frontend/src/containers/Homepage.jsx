@@ -9,15 +9,39 @@ function Homepage() {
 
   useEffect(() => {
     getUserInfo(username, setDoesUserExist).then((res) => {
-      setUserInfo(res);
+      setUserInfo(res[0]);
     });
     getBlogPosts(username).then((res) => {
-      setBlogPosts(res);
+      setBlogPosts(res[0]);
     });
   }, [username]);
 
   if (doesUserExist) {
-    return <p>{username}</p>;
+    return (
+      <>
+        <div className="username-box">
+          <img></img>
+          <span>{userInfo["username"]}</span>
+        </div>
+        <button>Follow</button>
+        <p id="about-me">{userInfo["about_me"]}</p>
+        <div id="member-since">
+          <img></img>
+          <p>Member since {userInfo["date_joined"].replace(/(T.*)/g, "")}</p>
+        </div>
+        <div className="technical-info">
+          <h2>Technical Info</h2>
+          <p>{userInfo["technical_info"]}</p>
+        </div>
+        <div className="links">
+          {userInfo["links"].map((content, index) => {
+            <li key={index}>
+              <a href={content["link"]}>{content["name"]}</a>
+            </li>;
+          })}
+        </div>
+      </>
+    );
   } else {
     return <p>The user {username} does not exist!</p>;
   }

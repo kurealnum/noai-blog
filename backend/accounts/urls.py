@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    LinksByUsername,
     UserInfoView,
     login_user,
     check_is_authenticated,
@@ -22,4 +23,5 @@ urlpatterns = [
         UserInfoByUsernameView.as_view(),
         name="user_info_by_username",
     ),
+    path("user-links/<str:username>/", LinksByUsername.as_view(), name="user_links"),
 ]

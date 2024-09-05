@@ -4,8 +4,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 
-from accounts.models import CustomUser
-from accounts.serializers import CustomUserSerializer
+from accounts.models import CustomUser, Link
+from accounts.serializers import CustomUserSerializer, LinkSerializer
 
 
 @api_view(["POST"])
@@ -71,6 +71,13 @@ class UserInfoByUsernameView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     lookup_field = "username"
     queryset = CustomUser.objects.all()
+
+
+class LinksByUsername(generics.ListAPIView):
+    serializer_class = LinkSerializer
+    permission_classes = (AllowAny,)
+    lookup_field = "username"
+    queryset = Link.objects.select_related("customuser")
 
 
 class UpdateUserInfo(generics.UpdateAPIView):
