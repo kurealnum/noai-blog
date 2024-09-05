@@ -28,6 +28,14 @@ class BlogPostList(generics.ListAPIView):
         return BlogPost.objects.filter(user=user).select_related("user")
 
 
+# gets blog posts by username
+class BlogPostListByUsername(generics.ListAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = BlogPostSerializer
+    lookup_field = "username"
+    queryset = BlogPost.objects.all().select_related("user")
+
+
 # This view returns replies to *comments* that a user has made
 class CommentReplyList(generics.ListAPIView):
     permission_classes = (AllowAny,)

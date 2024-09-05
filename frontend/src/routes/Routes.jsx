@@ -11,6 +11,7 @@ import Guidelines from "../containers/Guidelines";
 import { getUserInfo } from "../features/helpers";
 import NavBar from "../containers/NavBar";
 import Settings from "../containers/Settings";
+import Homepage from "../containers/Homepage";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
     element: <NavBar />,
     loader: getUserInfo,
     children: [
+      {
+        path: "homepage/:username",
+        element: <Homepage />,
+      },
       {
         path: "feed",
         element: <Feed />,

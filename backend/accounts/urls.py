@@ -5,6 +5,7 @@ from .views import (
     check_is_authenticated,
     logout_user,
     UpdateUserInfo,
+    UserInfoByUsernameView,
 )
 
 
@@ -15,5 +16,10 @@ urlpatterns = [
     path("user-info/", UserInfoView.as_view(), name="user_info"),
     path(
         "update-user-info/<int:pk>/", UpdateUserInfo.as_view(), name="update_user_info"
+    ),
+    path(
+        "user-info-by-username/<str:username>/",
+        UserInfoByUsernameView.as_view(),
+        name="user_info_by_username",
     ),
 ]

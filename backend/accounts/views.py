@@ -66,6 +66,13 @@ class UserInfoView(generics.ListAPIView):
         return CustomUser.objects.filter(id=user_id)
 
 
+class UserInfoByUsernameView(generics.ListAPIView):
+    serializer_class = CustomUserSerializer
+    permission_classes = (AllowAny,)
+    lookup_field = "username"
+    queryset = CustomUser.objects.all()
+
+
 class UpdateUserInfo(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CustomUserSerializer
