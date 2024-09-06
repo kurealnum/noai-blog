@@ -7,6 +7,7 @@ class CustomUser(AbstractUser):
     first_name = models.CharField(max_length=50, unique=False)
     last_name = models.CharField(max_length=50, unique=False)
     about_me = models.TextField(max_length=250)
+    technical_info = models.TextField(max_length=150)
     password = models.CharField(max_length=100, unique=False)
 
 
@@ -16,8 +17,8 @@ class Link(models.Model):
     name = models.CharField(unique=False)
 
     # user can have a maximum of five links
-    def save(self, user_id, *args, **kwargs):
-        if Link.objects.filter(user_id).count() == 5:
+    def save(self, *args, **kwargs):
+        if Link.objects.filter(user=self.user).count() == 5:
             return
 
         super().save(*args, **kwargs)

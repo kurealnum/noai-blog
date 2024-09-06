@@ -13,6 +13,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "last_name",
             "about_me",
             "date_joined",
+            "technical_info",
         )
 
 

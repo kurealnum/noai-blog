@@ -87,7 +87,7 @@ h2 {
     height: 88vh;
     margin-right: 40px;
     margin-left: 40px;
-    width: 240px;
+    min-width: 200px;
     justify-content: start;
     border: 2px var(--tertiary) solid;
     border-radius: 0%;

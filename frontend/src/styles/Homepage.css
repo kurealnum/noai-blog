@@ -1,0 +1,128 @@
+.username-box #pfp {
+  border-radius: 50%;
+  height: 54px;
+  width: 54px;
+}
+
+.username-box span {
+  font-size: var(--navbar-font-size);
+}
+
+.username-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+}
+
+#about-me,
+.technical-info p {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  width: 88%;
+  min-height: 2lh;
+}
+
+#follow {
+  color: var(--light-text);
+  padding: 6px 50px;
+  background: var(--tertiary);
+  border: 0px;
+  border-radius: 10px;
+  font-size: var(--subtext-font-size);
+}
+
+#homepage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: right;
+  min-height: 100%;
+}
+
+#member-since {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+#member-since svg {
+  color: var(--primary);
+}
+
+h2 {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.links li {
+  border-left: 2px var(--accent) solid;
+  padding-left: 5px;
+  margin: 12px 0;
+}
+
+.links li a {
+  text-decoration: none;
+  color: var(--dark-text);
+}
+
+.list {
+  overflow: visible;
+  border: none;
+}
+
+.user-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+  margin: 25px 0;
+  margin-bottom: 15px;
+}
+
+@media (min-width: 600px) {
+  .general-info {
+    display: flex;
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 800px) {
+  #homepage {
+    margin-top: 150px;
+  }
+
+  #homepage .username-box {
+    background: none;
+    margin: 0;
+  }
+
+  #homepage .user-box {
+    margin-bottom: 25px;
+  }
+
+  #homepage .username-box span {
+    color: var(--dark-text);
+  }
+}
+
+@media (min-width: 1200px) {
+  .extra-info {
+    display: flex;
+    flex-direction: row;
+  }
+  .links {
+    min-width: 300px;
+  }
+}
