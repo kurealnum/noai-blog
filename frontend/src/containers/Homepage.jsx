@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function Homepage() {
-  const [userInfo, setUserInfo] = useState([]);
-  const [blogPosts, setBlogPosts] = useState([]);
+  const [userInfo, setUserInfo] = useState({});
+  const [blogPosts, setBlogPosts] = useState({});
+  const [links, setLinks] = useState([]);
   const [doesUserExist, setDoesUserExist] = useState(false);
   const { username } = useParams();
 
@@ -14,7 +15,10 @@ function Homepage() {
     getBlogPosts(username).then((res) => {
       setBlogPosts(res[0]);
     });
-  }, [username]);
+    getLinks(username).then((res) => {
+      setLinks(res);
+    });
+  }, [username, setDoesUserExist]);
 
   if (doesUserExist) {
     return (
@@ -34,11 +38,31 @@ function Homepage() {
           <p>{userInfo["technical_info"]}</p>
         </div>
         <div className="links">
-          {userInfo["links"].map((content, index) => {
+          {links.map((content, index) => {
             <li key={index}>
               <a href={content["link"]}>{content["name"]}</a>
             </li>;
           })}
+        </div>
+        <div className="list">
+          {blogPosts.length == 0 ? (
+            <p>There's nothing here. Go make some posts!</p>
+          ) : (
+            blogPosts.map((content, index) => (
+              <div key={index} className="blog-post">
+                <h2>{content.title}</h2>
+                <div className="info">
+                  <p>{"By " + content.user.username}</p>
+                  <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
+                </div>
+                <p className="hint">
+                  {content["content"].length > 100
+                    ? content["content"].slice(0, 101) + "..."
+                    : content.content}
+                </p>
+              </div>
+            ))
+          )}
         </div>
       </>
     );
@@ -72,6 +96,19 @@ async function getBlogPosts(username) {
   };
   const response = await fetch(
     "/api/blog-posts/get-posts-by-username/" + username + "/",
+    config,
+  );
+  return await response.json();
+}
+
+async function getLinks(username) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch(
+    "/api/accounts/user-links/" + username + "/",
     config,
   );
   return await response.json();
