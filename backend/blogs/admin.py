@@ -1,5 +1,9 @@
 from django.contrib import admin
 
-from accounts.models import CustomUser
+from blogs.models import BlogPost, Comment, CommentReaction, PostReaction, ReplyTo
 
-admin.site.register(CustomUser)
+admin.site.register(BlogPost)
+admin.site.register(PostReaction)
+admin.site.register(Comment)
+admin.site.register(CommentReaction)
+admin.site.register(ReplyTo)

@@ -77,7 +77,7 @@ class LinksByUsername(generics.ListAPIView):
     serializer_class = LinkSerializer
     permission_classes = (AllowAny,)
     lookup_field = "username"
-    queryset = Link.objects.select_related("customuser")
+    queryset = Link.objects.select_related("user")
 
 
 class UpdateUserInfo(generics.UpdateAPIView):
