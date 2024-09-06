@@ -2,23 +2,26 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 function Homepage() {
+  const { username } = useParams();
   const [userInfo, setUserInfo] = useState({});
-  const [blogPosts, setBlogPosts] = useState({});
+  const [blogPosts, setBlogPosts] = useState([]);
   const [links, setLinks] = useState([]);
   const [doesUserExist, setDoesUserExist] = useState(false);
-  const { username } = useParams();
 
   useEffect(() => {
-    getUserInfo(username, setDoesUserExist).then((res) => {
+    getUserInfo(username).then((res) => {
       setUserInfo(res[0]);
+      if (res != null) {
+        setDoesUserExist(true);
+      }
     });
     getBlogPosts(username).then((res) => {
-      setBlogPosts(res[0]);
+      setBlogPosts(res);
     });
     getLinks(username).then((res) => {
       setLinks(res);
     });
-  }, [username, setDoesUserExist]);
+  }, [username]);
 
   if (doesUserExist) {
     return (
@@ -71,7 +74,7 @@ function Homepage() {
   }
 }
 
-async function getUserInfo(username, setDoesUserExist) {
+async function getUserInfo(username) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
@@ -82,10 +85,9 @@ async function getUserInfo(username, setDoesUserExist) {
     config,
   );
   if (response.ok) {
-    setDoesUserExist(true);
     return await response.json();
   }
-  return;
+  return null;
 }
 
 async function getBlogPosts(username) {
