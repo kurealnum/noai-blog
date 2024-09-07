@@ -15,7 +15,18 @@
   --subtext-font-size: 20px;
   --link-font-size: 17px;
   --text-size: 20px;
+  --small-text-size: 14px;
   font-family: "Raleway", "Times New Roman", Times, serif;
+}
+
+textarea {
+  resize: none;
+  height: 3lh;
+  font-family: inherit;
+  font-size: var(--small-text-size);
+  border-radius: 10px;
+  border: 1px var(--primary) solid;
+  padding: 4px;
 }
 
 .blog-post,
@@ -67,6 +78,9 @@ h2 {
 }
 
 @media (min-width: 800px) {
+  textarea {
+    width: 320px;
+  }
   html,
   #root {
     position: absolute;

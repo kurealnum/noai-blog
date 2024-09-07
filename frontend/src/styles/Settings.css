@@ -16,9 +16,16 @@
   padding: 4px;
 }
 
+#settings .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 #settings label {
   margin-right: 10px;
   font-size: var(--text-size);
+  text-wrap: nowrap;
 }
 
 #settings #save {
@@ -34,7 +41,6 @@
   #settings {
     margin: 0 auto;
     width: 550px;
-    height: 45vh;
     justify-content: center;
   }
 }

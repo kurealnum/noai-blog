@@ -17,8 +17,8 @@ class Link(models.Model):
     name = models.CharField(unique=False)
 
     # user can have a maximum of five links
-    def save(self, *args, **kwargs):
-        if Link.objects.filter(user=self.user).count() == 5:
-            return
-
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if Link.objects.filter(user=self.user).count() > 5:
+    #         return
+    #
+    #     super().save(*args, **kwargs)

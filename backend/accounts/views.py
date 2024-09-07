@@ -1,11 +1,15 @@
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.views import APIView
 
 from accounts.models import CustomUser, Link
-from accounts.serializers import CustomUserSerializer, LinkSerializer
+from accounts.serializers import (
+    CustomUserSerializer,
+    LinkSerializer,
+)
 
 
 @api_view(["POST"])
@@ -73,11 +77,40 @@ class UserInfoByUsernameView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
 
 
+class Links(generics.ListAPIView):
+    serializer_class = LinkSerializer
+    permission_classes = (AllowAny,)
+    lookup_field = ""
+
+    def get_queryset(self):
+        user_id = self.request.user.id  # type:ignore
+        return Link.objects.filter(user__id=user_id)
+
+
 class LinksByUsername(generics.ListAPIView):
     serializer_class = LinkSerializer
     permission_classes = (AllowAny,)
     lookup_field = "username"
     queryset = Link.objects.select_related("user")
+
+
+class UpdateLinks(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request):
+        user_id = self.request.user.id  # type:ignore
+        initial_instances = Link.objects.filter(user=user_id)
+        data = request.data
+        print(data)
+        for updated_data in data:
+            print(updated_data)
+            instance = initial_instances.get(id=updated_data["id"])
+            serializer = LinkSerializer(data=updated_data, instance=instance)
+            if serializer.is_valid():
+                serializer.save()
+            else:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class UpdateUserInfo(generics.UpdateAPIView):
