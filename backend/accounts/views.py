@@ -103,13 +103,23 @@ class UpdateLinks(APIView):
         data = request.data
         print(data)
         for updated_data in data:
-            print(updated_data)
-            instance = initial_instances.get(id=updated_data["id"])
-            serializer = LinkSerializer(data=updated_data, instance=instance)
-            if serializer.is_valid():
-                serializer.save()
-            else:
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            try:
+                instance = initial_instances.get(id=updated_data["id"])
+                serializer = LinkSerializer(data=updated_data, instance=instance)
+                if serializer.is_valid():
+                    serializer.save()
+                else:
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
+            except Link.DoesNotExist:
+                serializer = LinkSerializer(data=updated_data)
+                if serializer.is_valid() and len(initial_instances) < 5:
+                    serializer.save()
+                else:
+                    return Response(
+                        serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                    )
         return Response(status=status.HTTP_201_CREATED)
 
 

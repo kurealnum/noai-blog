@@ -15,10 +15,3 @@ class Link(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     link = models.CharField(unique=False)
     name = models.CharField(unique=False)
-
-    # user can have a maximum of five links
-    # def save(self, *args, **kwargs):
-    #     if Link.objects.filter(user=self.user).count() > 5:
-    #         return
-    #
-    #     super().save(*args, **kwargs)
