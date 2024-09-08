@@ -1,6 +1,8 @@
 from django.db.models import F, Count, Subquery
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from blogs.models import BlogPost, Comment, ReplyTo
 from blogs.serializers import (
@@ -19,21 +21,19 @@ class CommentList(generics.ListAPIView):
         return Comment.objects.filter(user=user)
 
 
-class BlogPostList(generics.ListAPIView):
+class BlogPostList(APIView):
     permission_classes = (AllowAny,)
-    serializer_class = BlogPostSerializer
 
-    def get_queryset(self):  # type: ignore
-        user = self.request.user
-        return BlogPost.objects.filter(user=user).select_related("user")
-
-
-# gets blog posts by username
-class BlogPostListByUsername(generics.ListAPIView):
-    permission_classes = (AllowAny,)
-    serializer_class = BlogPostSerializer
-    lookup_field = "username"
-    queryset = BlogPost.objects.all().select_related("user")
+    def get(self, request, username=None):
+        username = request.GET.get("username", None)
+        if username:
+            res = BlogPost.objects.select_related("user").filter(username="username")
+            return Response(data=res, status=status.HTTP_200_OK)
+        else:
+            user = self.request.user
+            res = BlogPost.objects.filter(user=user).select_related("user")
+            serializer = BlogPostSerializer(res, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 # This view returns replies to *comments* that a user has made

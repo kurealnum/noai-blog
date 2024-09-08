@@ -118,7 +118,7 @@ async function getBlogPosts(username) {
     credentials: "include",
   };
   const response = await fetch(
-    "/api/blog-posts/get-posts-by-username/" + username + "/",
+    "/api/blog-posts/get-posts/" + username + "/",
     config,
   );
   return await response.json();
