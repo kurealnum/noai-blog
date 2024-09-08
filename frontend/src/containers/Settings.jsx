@@ -148,12 +148,13 @@ function Settings() {
         </div>
         <h2>Links</h2>
         {links.map((content, index) => (
-          <div className="item" key={content["name"] + index}>
+          <div className="item link-item" key={content["name"] + index}>
             <input
               defaultValue={content["name"]}
               name="name"
               onChange={(e) => setNewLinksHelper(e, index)}
             ></input>
+            <p> - </p>
             <input
               name="link"
               defaultValue={content["link"]}
@@ -164,18 +165,24 @@ function Settings() {
             </button>
           </div>
         ))}
-        <button onClick={handleOpen}>Add link</button>
+        <button id="save" onClick={handleOpen}>
+          Add link
+        </button>
         <Modal open={isModalOpen} onClose={handleClose}>
           <div id="modal">
             <input
               name="name"
+              defaultValue="Name"
               onChange={(e) => setSingleNewLinkHelper(e)}
             ></input>
             <input
               name="link"
+              defaultValue="Link"
               onChange={(e) => setSingleNewLinkHelper(e)}
             ></input>
-            <button onClick={() => addNewLinksHelper()}>Save</button>
+            <button id="save" onClick={() => addNewLinksHelper()}>
+              Save
+            </button>
             <ErrorMessage message="Maximum of 5 links" isError={error} />
           </div>
         </Modal>

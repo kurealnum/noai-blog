@@ -10,7 +10,8 @@
   padding: 10px;
 }
 
-#settings input {
+#settings input,
+#modal input {
   border-radius: 10px;
   border: 1px var(--primary) solid;
   padding: 4px;
@@ -28,13 +29,49 @@
   text-wrap: nowrap;
 }
 
-#settings #save {
+#settings #save,
+#modal #save {
   color: var(--light-text);
   padding: 6px 50px;
   background: var(--tertiary);
   border: 0px;
   border-radius: 10px;
   font-size: var(--subtext-font-size);
+}
+
+.link-item {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.link-item button {
+  border: none;
+  background: none;
+}
+
+.link-item svg {
+  color: var(--primary);
+}
+
+.link-item p {
+  margin: 0;
+}
+
+#modal {
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  position: absolute;
+  background: var(--background);
+  opacity: 100%;
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 10px;
 }
 
 @media (min-width: 800px) {
