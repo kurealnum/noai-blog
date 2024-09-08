@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -101,7 +102,6 @@ class UpdateLinks(APIView):
         user_id = self.request.user.id  # type:ignore
         initial_instances = Link.objects.filter(user=user_id)
         data = request.data
-        print(data)
         for updated_data in data:
             try:
                 instance = initial_instances.get(id=updated_data["id"])
@@ -120,6 +120,24 @@ class UpdateLinks(APIView):
                     return Response(
                         serializer.errors, status=status.HTTP_400_BAD_REQUEST
                     )
+        return Response(status=status.HTTP_201_CREATED)
+
+    def delete(self, request):
+        id = request.data["id"]
+        try:
+            link = Link.objects.get(id=id)
+        except Link.DoesNotExist:
+            raise Http404
+        link.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def post(self, request):
+        data = request.data
+        user_id = self.request.user.id  # type:ignore
+        user = CustomUser.objects.get(id=user_id)
+        new_link = Link(**data)
+        new_link.user = user
+        new_link.save()
         return Response(status=status.HTTP_201_CREATED)
 
 

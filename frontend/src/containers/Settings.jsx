@@ -2,15 +2,23 @@ import { useEffect, useState } from "react";
 import { Outlet, useRouteLoaderData } from "react-router-dom";
 import getCookie from "../features/helpers";
 import { Alert, Snackbar } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Modal from "@mui/material/Modal";
 import "../styles/Settings.css";
+import ErrorMessage from "../components/ErrorMessage";
 
 function Settings() {
   const userData = useRouteLoaderData("root")[0];
   const [newUserData, setNewUserData] = useState(userData);
   const [links, setLinks] = useState([]);
   const [newLinks, setNewLinks] = useState([]);
-  const [isError, setIsError] = useState(false);
+  const [singleNewLink, setSingleNewLink] = useState({});
   const [isSaved, setIsSaved] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // modal error
+  const [error, setError] = useState(false);
+  // snackbar error
+  const [isError, setIsError] = useState(false);
 
   useEffect(() => {
     getLinks().then((res) => {
@@ -19,8 +27,18 @@ function Settings() {
     });
   }, []);
 
+  const handleOpen = () => setIsModalOpen(true);
+  const handleClose = () => {
+    setIsModalOpen(false);
+    setError(false);
+  };
+
   function setNewUserDataHelper(e) {
     setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
+  }
+
+  function setSingleNewLinkHelper(e) {
+    setSingleNewLink({ ...singleNewLink, [e.target.name]: e.target.value });
   }
 
   function setNewLinksHelper(e, index) {
@@ -30,6 +48,29 @@ function Settings() {
       [e.target.name]: e.target.value,
     };
     setNewLinks(newLinksTemp);
+  }
+
+  function removeNewLinksHelper(index) {
+    const updatedLinks = newLinks.filter((value, i) => i !== index);
+
+    setLinks(updatedLinks);
+    setNewLinks(updatedLinks);
+    deleteLink(newLinks[index]);
+  }
+
+  function addNewLinksHelper() {
+    if (links.length == 5) {
+      setError(true);
+    } else {
+      createLink(singleNewLink).then((ok) => {
+        if (ok) {
+          getLinks().then((res) => {
+            setLinks(res);
+            setNewLinks(res);
+          });
+        }
+      });
+    }
   }
 
   const handleCloseError = (event, reason) => {
@@ -107,7 +148,7 @@ function Settings() {
         </div>
         <h2>Links</h2>
         {links.map((content, index) => (
-          <div className="item" key={index}>
+          <div className="item" key={content["name"] + index}>
             <input
               defaultValue={content["name"]}
               name="name"
@@ -118,8 +159,26 @@ function Settings() {
               defaultValue={content["link"]}
               onChange={(e) => setNewLinksHelper(e, index)}
             ></input>
+            <button onClick={() => removeNewLinksHelper(index)}>
+              <DeleteIcon />
+            </button>
           </div>
         ))}
+        <button onClick={handleOpen}>Add link</button>
+        <Modal open={isModalOpen} onClose={handleClose}>
+          <div id="modal">
+            <input
+              name="name"
+              onChange={(e) => setSingleNewLinkHelper(e)}
+            ></input>
+            <input
+              name="link"
+              onChange={(e) => setSingleNewLinkHelper(e)}
+            ></input>
+            <button onClick={() => addNewLinksHelper()}>Save</button>
+            <ErrorMessage message="Maximum of 5 links" isError={error} />
+          </div>
+        </Modal>
         <button
           id="save"
           onClick={() =>
@@ -186,6 +245,34 @@ async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
   } else {
     setIsError(true);
   }
+}
+
+async function deleteLink(link) {
+  const linksConfig = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "DELETE",
+    body: JSON.stringify(link),
+  };
+  const linksResponse = await fetch("/api/accounts/save-links/", linksConfig);
+  return linksResponse.ok;
+}
+
+async function createLink(link) {
+  const linksConfig = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "POST",
+    body: JSON.stringify(link),
+  };
+  const linksResponse = await fetch("/api/accounts/save-links/", linksConfig);
+  return linksResponse.ok;
 }
 
 async function getLinks() {
