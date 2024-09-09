@@ -20,7 +20,10 @@ async function getUserInfo() {
     credentials: "include",
   };
   const response = await fetch("/api/accounts/user-info/", config);
-  return await response.json();
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
 }
 
 export default getCookie;

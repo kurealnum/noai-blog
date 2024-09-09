@@ -81,7 +81,11 @@ class UserInfoByUsernameView(generics.ListAPIView):
 
 
 class Links(APIView):
-    permission_classes = (IsAuthenticated,)
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        if self.request.method.lower() != "get":
+            permissions.append(IsAuthenticated())
+        return permissions
 
     def put(self, request):
         user_id = self.request.user.id  # type:ignore
@@ -126,9 +130,8 @@ class Links(APIView):
         return Response(status=status.HTTP_201_CREATED)
 
     def get(self, request, username=None):
-        username = request.GET.get("username", None)
         if username:
-            res = Link.objects.select_related("user").filter(username=username)
+            res = Link.objects.filter(user__username=username)
             serializer = LinkSerializer(instance=res, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:

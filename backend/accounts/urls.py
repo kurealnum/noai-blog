@@ -24,5 +24,5 @@ urlpatterns = [
         name="user_info_by_username",
     ),
     path("manage-links/", Links.as_view(), name="links"),
-    path("manage-links/<str:username>/", Links.as_view(), name="links_by_username"),
+    path("manage-links/<username>/", Links.as_view(), name="links"),
 ]

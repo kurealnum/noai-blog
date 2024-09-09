@@ -61,7 +61,7 @@ function Homepage() {
         <div className="extra-info">
           <div className="links">
             <h2>Links</h2>
-            {links.length == 0 ? (
+            {links === null || links.length === 0 ? (
               <p>This user doesn't have any links!</p>
             ) : (
               links.map((content, index) => (
@@ -73,7 +73,7 @@ function Homepage() {
           </div>
           <div className="list">
             <h2>Blog Posts</h2>
-            {blogPosts.length == 0 ? (
+            {blogPosts === null || blogPosts.length === 0 ? (
               <p>There's nothing here. Go make some posts!</p>
             ) : (
               blogPosts.map((content, index) => (

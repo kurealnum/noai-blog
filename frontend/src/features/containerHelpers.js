@@ -27,7 +27,10 @@ async function getBlogPosts(username) {
     "/api/blog-posts/get-posts/" + username + "/",
     config,
   );
-  return await response.json();
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
 }
 
 async function getLinks(username) {
@@ -40,7 +43,10 @@ async function getLinks(username) {
     "/api/accounts/manage-links/" + username + "/",
     config,
   );
-  return await response.json();
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
 }
 
 async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
@@ -110,7 +116,10 @@ async function getComments() {
     credentials: "include",
   };
   const response = await fetch("/api/blog-posts/get-comments/", config);
-  return await response.json();
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
 }
 
 export {

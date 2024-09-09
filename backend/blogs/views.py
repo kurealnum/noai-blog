@@ -25,9 +25,8 @@ class BlogPostList(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, username=None):
-        username = request.GET.get("username", None)
         if username:
-            res = BlogPost.objects.select_related("user").filter(username="username")
+            res = BlogPost.objects.filter(user__username="username")
             return Response(data=res, status=status.HTTP_200_OK)
         else:
             user = self.request.user

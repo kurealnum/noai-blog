@@ -20,7 +20,7 @@ function Dashboard() {
       <section className="list-section">
         <h1>Your comments</h1>
         <div className="list">
-          {comments.length == 0 ? (
+          {comments === null || comments.length === 0 ? (
             <p>There's nothing here. Go make some comments!</p>
           ) : (
             comments.map((content, index) => (
@@ -40,7 +40,7 @@ function Dashboard() {
         {" "}
         <h1>Your posts</h1>
         <div className="list">
-          {posts.length == 0 ? (
+          {posts.length === null || posts.length === 0 ? (
             <p>There's nothing here. Go make some posts!</p>
           ) : (
             posts.map((content, index) => (
