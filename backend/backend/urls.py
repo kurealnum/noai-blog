@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views  # type: ignore -- not sure why i have to type: ignore this, but pyright is having a spazm
 
 API_URL = "api/"
 
@@ -24,4 +25,34 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(API_URL + "accounts/", include("accounts.urls")),
     path(API_URL + "blog-posts/", include("blogs.urls")),
+    path(
+        "accounts/change-password/",
+        views.PasswordChangeView.as_view(),
+        name="password_change",
+    ),
+    path(
+        "accounts/change-password/done/",
+        views.PasswordChangeDoneView.as_view(),
+        name="password_change_done",
+    ),
+    path(
+        "accounts/reset-password/",
+        views.PasswordResetView.as_view(),
+        name="password_reset",
+    ),
+    path(
+        "accounts/change-password/done/",
+        views.PasswordResetDoneView.as_view(),
+        name="password_reset_done",
+    ),
+    path(
+        "accounts/reset/<uidb64>/<token>/",
+        views.PasswordResetConfirmView.as_view(),
+        name="password_reset_confirm",
+    ),
+    path(
+        "accounts/reset/done/",
+        views.PasswordResetCompleteView.as_view(),
+        name="password_reset_complete",
+    ),
 ]
