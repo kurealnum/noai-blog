@@ -26,7 +26,7 @@ def login_user(request):
         if user is not None:
             login(request, user)
             res = Response({"success": "User authenticated"}, status=200)
-            res.set_cookie("user_id", user.id)  # type: ignore
+            res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
             return res
         else:
             return Response({"error": "Error Authenticating"}, status=401)
@@ -43,7 +43,7 @@ def check_is_authenticated(request):
 
         if isAuthenticated:
             res = Response({"isAuthenticated": "success"}, status=200)
-            res.set_cookie("user_id", user.id)  # type: ignore
+            res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
             return res
         else:
             return Response({"isAuthenticated": "error"}, status=403)
