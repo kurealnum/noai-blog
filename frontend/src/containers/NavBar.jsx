@@ -38,23 +38,7 @@ function FullScreenNavBar({ userData }) {
           {userData != null ? userData.username : <a href="/login">Log in</a>}
         </span>
       </div>
-      <div className="link-list">
-        <li>
-          <a href="/guidelines">Policies on AI</a>
-        </li>
-        <li>
-          <a href="/feed">Feed</a>
-        </li>
-        <li>
-          <a href="/dashboard">Dashboard</a>
-        </li>
-        <li>
-          <a href="/about-us">About Us</a>
-        </li>
-        <li>
-          <a href="/">About Us</a>
-        </li>
-      </div>
+      <NavBarContent />
     </nav>
   );
 }
@@ -80,23 +64,7 @@ function MobileNavBar({ userData }) {
             <CloseIcon fontSize="large" />
           </IconButton>
         </div>
-        <div className="link-list">
-          <li>
-            <a href="/guidelines">Policies on AI</a>
-          </li>
-          <li>
-            <a href="/feed">Feed</a>
-          </li>
-          <li>
-            <a href="/dashboard">Dashboard</a>
-          </li>
-          <li>
-            <a href="/about-us">About Us</a>
-          </li>
-          <li>
-            <a href="/">Homepage</a>
-          </li>
-        </div>
+        <NavBarContent />
       </Dialog>
       <span>
         {userData != null ? userData.username : <a href="/login">Log in</a>}
@@ -108,6 +76,29 @@ function MobileNavBar({ userData }) {
         ></img>
       </button>
     </nav>
+  );
+}
+
+// This is just the content for the nav bar. It's the same across both the mobile and full screen nav bar
+function NavBarContent() {
+  return (
+    <div className="link-list">
+      <li>
+        <a href="/guidelines">Policies on AI</a>
+      </li>
+      <li>
+        <a href="/feed">Feed</a>
+      </li>
+      <li>
+        <a href="/dashboard">Dashboard</a>
+      </li>
+      <li>
+        <a href="/about-us">About Us</a>
+      </li>
+      <li>
+        <a href="/">About Us</a>
+      </li>
+    </div>
   );
 }
 

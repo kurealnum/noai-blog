@@ -36,7 +36,11 @@ const router = createBrowserRouter([
       },
       {
         path: "settings",
-        element: <Settings />,
+        element: (
+          <AuthenticatedRoute>
+            <Settings />
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: "guidelines",
@@ -60,7 +64,11 @@ const router = createBrowserRouter([
       },
       {
         path: "logout",
-        element: <Logout />,
+        element: (
+          <AuthenticatedRoute>
+            <Logout />
+          </AuthenticatedRoute>
+        ),
       },
     ],
   },
