@@ -48,14 +48,22 @@ async function getLinks(username) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/accounts/manage-links/" + username + "/",
-    config,
-  );
-  if (response.ok) {
-    return await response.json();
+  if (username == null) {
+    const response = await fetch("/api/accounts/manage-links/", config);
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
+  } else {
+    const response = await fetch(
+      "/api/accounts/manage-links/" + username + "/",
+      config,
+    );
+    if (response.ok) {
+      return await response.json();
+    }
+    return null;
   }
-  return null;
 }
 
 async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {

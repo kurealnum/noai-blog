@@ -13,7 +13,7 @@ import {
 } from "../features/containerHelpers";
 
 function Settings() {
-  const userData = useRouteLoaderData("root")[0];
+  const userData = useRouteLoaderData("root");
   const [newUserData, setNewUserData] = useState(userData);
   const [newLinks, setNewLinks] = useState([]);
   const [singleNewLink, setSingleNewLink] = useState({});
@@ -27,6 +27,7 @@ function Settings() {
   useEffect(() => {
     getLinks().then((res) => {
       setNewLinks(res);
+      console.log(res);
     });
   }, []);
 

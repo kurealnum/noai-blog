@@ -14,6 +14,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "about_me",
             "date_joined",
             "technical_info",
+            "profile_picture",
         )
 
 
