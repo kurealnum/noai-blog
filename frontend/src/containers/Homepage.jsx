@@ -131,7 +131,7 @@ async function getLinks(username) {
     credentials: "include",
   };
   const response = await fetch(
-    "/api/accounts/user-links/" + username + "/",
+    "/api/accounts/manage-links/" + username + "/",
     config,
   );
   return await response.json();

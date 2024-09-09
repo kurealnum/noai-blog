@@ -1,3 +1,4 @@
+from unittest.case import expectedFailure
 from django.test import TestCase
 
 from accounts.views import UserInfoView
@@ -40,20 +41,13 @@ class UserInfoTestCase(TestCase):
         force_authenticate(request, user=self.user)
         result = UserInfoView.as_view()(request, pk=self.user.id)  # type: ignore
         expected_result = {
-            "id": 2,
-            "last_login": None,
-            "is_superuser": False,
             "username": "",
-            "is_staff": False,
-            "is_active": True,
             "email": "bobbyjoe@gmail.com",
             "first_name": "Bobby",
             "last_name": "Joe",
             "about_me": "I am Bobby Joe, destroyer of worlds.",
-            "password": "",
-            "groups": [],
-            "user_permissions": [],
-        }
-        # remove date joined for testing purposes
-        result.data.pop("date_joined")
-        self.assertEqual(expected_result, result.data)
+            "technical_info": "",
+        }  # remove date joined for testing purposes
+        result.data[0].pop("date_joined")
+        formatted_result = dict(result.data[0])
+        self.assertEqual(expected_result, formatted_result)

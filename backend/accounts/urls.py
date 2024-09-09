@@ -1,14 +1,12 @@
 from django.urls import path
 from .views import (
-    LinksByUsername,
     UserInfoView,
-    Links,
     login_user,
     check_is_authenticated,
     logout_user,
     UpdateUserInfo,
     UserInfoByUsernameView,
-    UpdateLinks,
+    Links,
 )
 
 
@@ -25,7 +23,6 @@ urlpatterns = [
         UserInfoByUsernameView.as_view(),
         name="user_info_by_username",
     ),
-    path("user-links/<str:username>/", LinksByUsername.as_view(), name="user_links"),
-    path("user-links/", Links.as_view(), name="links"),
-    path("save-links/", UpdateLinks.as_view(), name="update_links"),
+    path("manage-links/", Links.as_view(), name="links"),
+    path("manage-links/<str:username>/", Links.as_view(), name="links_by_username"),
 ]

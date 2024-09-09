@@ -30,7 +30,7 @@ def login_user(request):
             return res
         else:
             return Response({"error": "Error Authenticating"}, status=401)
-    except:
+    except Exception:
         return Response({"error": "Something went wrong when logging in"}, status=401)
 
 
@@ -42,10 +42,12 @@ def check_is_authenticated(request):
         isAuthenticated = user.is_authenticated
 
         if isAuthenticated:
-            return Response({"isAuthenticated": "success"}, status=200)
+            res = Response({"isAuthenticated": "success"}, status=200)
+            res.set_cookie("user_id", user.id)  # type: ignore
+            return res
         else:
             return Response({"isAuthenticated": "error"}, status=403)
-    except:
+    except Exception:
         return Response(
             {"error": "Something went wrong when checking authentication status"},
             status=404,
@@ -57,7 +59,7 @@ def logout_user(request):
     try:
         logout(request)
         return Response({"success": "You have been logged out"}, status=200)
-    except:
+    except Exception:
         return Response({"error": "Something went wrong"}, status=403)
 
 
@@ -78,24 +80,7 @@ class UserInfoByUsernameView(generics.ListAPIView):
     queryset = CustomUser.objects.all()
 
 
-class Links(generics.ListAPIView):
-    serializer_class = LinkSerializer
-    permission_classes = (AllowAny,)
-    lookup_field = ""
-
-    def get_queryset(self):
-        user_id = self.request.user.id  # type:ignore
-        return Link.objects.filter(user__id=user_id)
-
-
-class LinksByUsername(generics.ListAPIView):
-    serializer_class = LinkSerializer
-    permission_classes = (AllowAny,)
-    lookup_field = "username"
-    queryset = Link.objects.select_related("user")
-
-
-class UpdateLinks(APIView):
+class Links(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request):
@@ -139,6 +124,18 @@ class UpdateLinks(APIView):
         new_link.user = user
         new_link.save()
         return Response(status=status.HTTP_201_CREATED)
+
+    def get(self, request, username=None):
+        username = request.GET.get("username", None)
+        if username:
+            res = Link.objects.select_related("user").filter(username=username)
+            serializer = LinkSerializer(instance=res, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            user = self.request.user
+            res = Link.objects.filter(user=user)
+            serializer = LinkSerializer(instance=res, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class UpdateUserInfo(generics.UpdateAPIView):

@@ -246,7 +246,7 @@ async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
     method: "PUT",
     body: JSON.stringify(newLinks),
   };
-  const linksResponse = await fetch("/api/accounts/save-links/", linksConfig);
+  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
   if (userInfoResponse.ok && linksResponse.ok) {
     setIsSaved(true);
   } else {
@@ -264,7 +264,7 @@ async function deleteLink(link) {
     method: "DELETE",
     body: JSON.stringify(link),
   };
-  const linksResponse = await fetch("/api/accounts/save-links/", linksConfig);
+  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
   return linksResponse.ok;
 }
 
@@ -278,7 +278,7 @@ async function createLink(link) {
     method: "POST",
     body: JSON.stringify(link),
   };
-  const linksResponse = await fetch("/api/accounts/save-links/", linksConfig);
+  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
   return linksResponse.ok;
 }
 
@@ -288,7 +288,7 @@ async function getLinks() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/accounts/user-links/", config);
+  const response = await fetch("/api/accounts/manage-links/", config);
   return await response.json();
 }
 
