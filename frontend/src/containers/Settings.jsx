@@ -27,7 +27,6 @@ function Settings() {
   useEffect(() => {
     getLinks().then((res) => {
       setNewLinks(res);
-      console.log(res);
     });
   }, []);
 

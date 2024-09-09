@@ -17,6 +17,8 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib.auth import views  # type: ignore -- not sure why i have to type: ignore this, but pyright is having a spazm
 
 API_URL = "api/"
@@ -56,3 +58,8 @@ urlpatterns = [
         name="password_reset_complete",
     ),
 ]
+
+if settings.DEBUG:
+    urlpatterns.extend(
+        static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    )

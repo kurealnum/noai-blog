@@ -9,9 +9,7 @@ class CustomUser(AbstractUser):
     about_me = models.TextField(max_length=250)
     technical_info = models.TextField(max_length=150)
     password = models.CharField(max_length=100, unique=False)
-    profile_picture = models.ImageField(
-        width_field="64", height_field="64", upload_to="profile_pictures/", blank=True
-    )
+    profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
 
 
 class Link(models.Model):
