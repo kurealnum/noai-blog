@@ -1,4 +1,5 @@
 from django.db.models import F, Count, Subquery
+from django.http.response import Http404
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -26,8 +27,12 @@ class BlogPostList(APIView):
 
     def get(self, request, username=None):
         if username:
-            res = BlogPost.objects.filter(user__username="username")
-            return Response(data=res, status=status.HTTP_200_OK)
+            try:
+                res = BlogPost.objects.filter(user__username=username)
+                serializer = BlogPostSerializer(res, many=True)
+            except BlogPost.DoesNotExist:
+                raise Http404
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user
             res = BlogPost.objects.filter(user=user).select_related("user")

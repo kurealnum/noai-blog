@@ -9,7 +9,7 @@ function NavBar() {
   const desktopWidth = 800;
   const isDesktop = window.innerWidth > desktopWidth;
   // index here because DRF sends models in a silly way
-  const userData = useLoaderData()[0];
+  let userData = useLoaderData();
   if (isDesktop) {
     return (
       <>

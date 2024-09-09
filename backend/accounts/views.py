@@ -63,28 +63,28 @@ def logout_user(request):
         return Response({"error": "Something went wrong"}, status=403)
 
 
-class UserInfoView(generics.ListAPIView):
-    serializer_class = CustomUserSerializer
-    permission_classes = (AllowAny,)
-    lookup_field = ""
+class UserInfoView(APIView):
+    def get(self, request, username=None):
+        if username:
+            try:
+                res = CustomUser.objects.get(username=username)
+                serializer = CustomUserSerializer(res)
+            except CustomUser.DoesNotExist:
+                raise Http404
 
-    def get_queryset(self):
-        user_id = self.request.user.id  # type:ignore
-        return CustomUser.objects.filter(id=user_id)
-
-
-class UserInfoByUsernameView(generics.ListAPIView):
-    serializer_class = CustomUserSerializer
-    permission_classes = (AllowAny,)
-    lookup_field = "username"
-    queryset = CustomUser.objects.all()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            user = self.request.user.id  # type: ignore
+            res = generics.get_object_or_404(CustomUser, id=user)
+            serializer = CustomUserSerializer(res)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class Links(APIView):
     def get_permissions(self):
         permissions = super().get_permissions()
-        if self.request.method.lower() != "get":
-            permissions.append(IsAuthenticated())
+        if self.request.method.lower() != "get":  # type: ignore
+            permissions.append(IsAuthenticated())  # type: ignore
         return permissions
 
     def put(self, request):
@@ -131,8 +131,11 @@ class Links(APIView):
 
     def get(self, request, username=None):
         if username:
-            res = Link.objects.filter(user__username=username)
-            serializer = LinkSerializer(instance=res, many=True)
+            try:
+                res = Link.objects.filter(user__username=username)
+                serializer = LinkSerializer(instance=res, many=True)
+            except Link.DoesNotExist:
+                raise Http404
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user

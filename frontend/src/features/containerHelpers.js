@@ -8,7 +8,7 @@ async function getUserInfo(username) {
     credentials: "include",
   };
   const response = await fetch(
-    "/api/accounts/user-info-by-username/" + username + "/",
+    "/api/accounts/user-info/" + username + "/",
     config,
   );
   if (response.ok) {
@@ -23,12 +23,21 @@ async function getBlogPosts(username) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/blog-posts/get-posts/" + username + "/",
-    config,
-  );
-  if (response.ok) {
-    return await response.json();
+
+  // this code is weirdly written, but my lsp keeps yelling at me unless i do it this way
+  if (username == null) {
+    const response = await fetch("/api/blog-posts/get-posts/", config);
+    if (response.ok) {
+      return await response.json();
+    }
+  } else {
+    const response = await fetch(
+      "/api/blog-posts/get-posts/" + username + "/",
+      config,
+    );
+    if (response.ok) {
+      return await response.json();
+    }
   }
   return null;
 }

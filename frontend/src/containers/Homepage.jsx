@@ -17,7 +17,7 @@ function Homepage() {
 
   useEffect(() => {
     getUserInfo(username).then((res) => {
-      setUserInfo(res[0]);
+      setUserInfo(res);
       if (res != null) {
         setDoesUserExist(true);
       }
