@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
+import { getBlogPosts, getComments } from "../features/containerHelpers";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    getPosts().then((res) => {
+    getBlogPosts().then((res) => {
       setPosts(res);
     });
     getComments().then((res) => {
@@ -61,26 +62,6 @@ function Dashboard() {
       </section>
     </div>
   );
-}
-
-async function getPosts() {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch("/api/blog-posts/get-posts/", config);
-  return await response.json();
-}
-
-async function getComments() {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch("/api/blog-posts/get-comments/", config);
-  return await response.json();
 }
 
 export default Dashboard;

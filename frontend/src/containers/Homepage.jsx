@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/Homepage.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import {
+  getUserInfo,
+  getBlogPosts,
+  getLinks,
+} from "../features/containerHelpers";
 
 function Homepage() {
   const { username } = useParams();
@@ -93,48 +98,6 @@ function Homepage() {
   } else {
     return <p>The user {username} does not exist!</p>;
   }
-}
-
-async function getUserInfo(username) {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch(
-    "/api/accounts/user-info-by-username/" + username + "/",
-    config,
-  );
-  if (response.ok) {
-    return await response.json();
-  }
-  return null;
-}
-
-async function getBlogPosts(username) {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch(
-    "/api/blog-posts/get-posts/" + username + "/",
-    config,
-  );
-  return await response.json();
-}
-
-async function getLinks(username) {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch(
-    "/api/accounts/manage-links/" + username + "/",
-    config,
-  );
-  return await response.json();
 }
 
 export default Homepage;

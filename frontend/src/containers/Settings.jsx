@@ -1,16 +1,20 @@
 import { useEffect, useState } from "react";
 import { Outlet, useRouteLoaderData } from "react-router-dom";
-import getCookie from "../features/helpers";
 import { Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
 import "../styles/Settings.css";
 import ErrorMessage from "../components/ErrorMessage";
+import {
+  getLinks,
+  deleteLink,
+  createLink,
+  changeSettings,
+} from "../features/containerHelpers";
 
 function Settings() {
   const userData = useRouteLoaderData("root")[0];
   const [newUserData, setNewUserData] = useState(userData);
-  const [links, setLinks] = useState([]);
   const [newLinks, setNewLinks] = useState([]);
   const [singleNewLink, setSingleNewLink] = useState({});
   const [isSaved, setIsSaved] = useState(false);
@@ -22,7 +26,6 @@ function Settings() {
 
   useEffect(() => {
     getLinks().then((res) => {
-      setLinks(res);
       setNewLinks(res);
     });
   }, []);
@@ -53,19 +56,17 @@ function Settings() {
   function removeNewLinksHelper(index) {
     const updatedLinks = newLinks.filter((value, i) => i !== index);
 
-    setLinks(updatedLinks);
     setNewLinks(updatedLinks);
     deleteLink(newLinks[index]);
   }
 
   function addNewLinksHelper() {
-    if (links.length == 5) {
+    if (newLinks.length == 5) {
       setError(true);
     } else {
       createLink(singleNewLink).then((ok) => {
         if (ok) {
           getLinks().then((res) => {
-            setLinks(res);
             setNewLinks(res);
           });
         }
@@ -147,7 +148,7 @@ function Settings() {
           ></textarea>
         </div>
         <h2>Links</h2>
-        {links.map((content, index) => (
+        {newLinks.map((content, index) => (
           <div className="item link-item" key={content["name"] + index}>
             <input
               defaultValue={content["name"]}
@@ -220,76 +221,6 @@ function Settings() {
       <Outlet />
     </>
   );
-}
-
-async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
-  const userInfoConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    credentials: "include",
-    method: "PUT",
-    body: JSON.stringify(newUserData),
-  };
-  const userInfoResponse = await fetch(
-    "/api/accounts/update-user-info/" + getCookie("user_id") + "/",
-    userInfoConfig,
-  );
-
-  const linksConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    credentials: "include",
-    method: "PUT",
-    body: JSON.stringify(newLinks),
-  };
-  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
-  if (userInfoResponse.ok && linksResponse.ok) {
-    setIsSaved(true);
-  } else {
-    setIsError(true);
-  }
-}
-
-async function deleteLink(link) {
-  const linksConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    credentials: "include",
-    method: "DELETE",
-    body: JSON.stringify(link),
-  };
-  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
-  return linksResponse.ok;
-}
-
-async function createLink(link) {
-  const linksConfig = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    credentials: "include",
-    method: "POST",
-    body: JSON.stringify(link),
-  };
-  const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
-  return linksResponse.ok;
-}
-
-async function getLinks() {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch("/api/accounts/manage-links/", config);
-  return await response.json();
 }
 
 export default Settings;
