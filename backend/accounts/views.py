@@ -1,6 +1,7 @@
 from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
@@ -82,15 +83,21 @@ class UserInfoView(APIView):
 
 class ChangeProfilePictureView(APIView):
     permission_classes = (IsAuthenticated,)
+    parser_classes = (MultiPartParser, FormParser)
 
     # the image field should look something like {profile-picture: imagehere}
-    def post(self, request):
-        image = request.data["profile_picture"]
-        id = self.request.user.id  # type:ignore
-        user_object = generics.get_object_or_404(CustomUser, id=id)
-        serializer = CustomUserSerializer(user_object, image)
-        serializer.save()
-        return Response(status.HTTP_201_CREATED)
+    def patch(self, request):
+        image_data = {"profile_picture": request.data["profile_picture"]}
+        user = self.request.user.id  # type:ignore
+        user_object = generics.get_object_or_404(CustomUser, id=user)
+        serializer = CustomUserSerializer(
+            data=image_data, instance=user_object, partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
 class Links(APIView):

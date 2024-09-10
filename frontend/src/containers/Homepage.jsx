@@ -35,10 +35,7 @@ function Homepage() {
       <div id="homepage">
         <div className="user-box">
           <div className="username-box">
-            <img
-              id="pfp"
-              src="https://media.dev.to/cdn-cgi/image/width=320,height=320,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Fuser%2Fprofile_image%2F1079248%2F6f43bf7a-eebe-414c-9404-4cc9765ac588.jpg"
-            ></img>
+            <img id="pfp" src={userInfo["profile_picture"]}></img>
             <span>{userInfo["username"]}</span>
           </div>
           <button id="follow">Follow</button>

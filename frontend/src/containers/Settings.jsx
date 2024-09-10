@@ -48,7 +48,7 @@ function Settings() {
 
   function setProfilePictureHelper(e) {
     setProfilePicture({
-      [e.target.name]: URL.createObjectURL(e.target.files[0]),
+      [e.target.name]: e.target.files[0],
     });
   }
 

@@ -164,3 +164,6 @@ CORS_EXPOSE_HEADERS = environ.get("CORS_EXPOSE_HEADERS")
 CORS_ALLOW_CREDENTIALS = environ.get("SESSION_COOKIE_HTTPONLY", "False") == "True"
 
 LOGIN_URL = "/login"
+
+# for drf files
+UPLOADED_FILES_USE_URL = True

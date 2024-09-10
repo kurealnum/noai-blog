@@ -98,20 +98,37 @@ async function changeSettings(
   };
   const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
 
-  const imageFetchConfig = {
-    headers: {
-      "X-CSRFToken": getCookie("csrftoken"),
-    },
-    credentials: "include",
-    method: "POST",
-    body: profilePicture,
-  };
-  const imageResponse = await fetch(
-    "/api/accounts/save-profile-picture/",
-    imageFetchConfig,
-  );
+  // do this in case the user hasn't selected an image (doesn't mess up the other requests, but messes up the UI)
+  var isImageUploadOk = false;
 
-  if (userInfoResponse.ok && linksResponse.ok && imageResponse.ok) {
+  if (profilePicture == null) {
+    isImageUploadOk = true;
+  } else {
+    // we use form data to send images
+    let data = new FormData();
+    data.append("profile_picture", profilePicture["profile_picture"]);
+    data.append("user", "hubot");
+
+    const imageFetchConfig = {
+      headers: {
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      credentials: "include",
+      method: "PATCH",
+      body: data,
+    };
+    const imageResponse = await fetch(
+      "/api/accounts/save-profile-picture/",
+      imageFetchConfig,
+    );
+    if (imageResponse.ok) {
+      isImageUploadOk = true;
+    } else {
+      isImageUploadOk = false;
+    }
+  }
+
+  if (userInfoResponse.ok && linksResponse.ok && isImageUploadOk) {
     setIsSaved(true);
   } else {
     setIsError(true);
