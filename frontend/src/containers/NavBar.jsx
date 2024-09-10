@@ -30,7 +30,10 @@ function FullScreenNavBar({ userData }) {
   return (
     <nav>
       <div className="username-box">
-        <img id="pfp" src={userData["profile_picture"]}></img>
+        <img
+          id="pfp"
+          src={userData == null ? null : userData["profile_picture"]}
+        ></img>
         <span>
           {userData != null ? userData.username : <a href="/login">Log in</a>}
         </span>
