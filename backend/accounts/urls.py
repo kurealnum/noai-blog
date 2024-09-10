@@ -5,6 +5,7 @@ from .views import (
     check_is_authenticated,
     logout_user,
     UpdateUserInfo,
+    ChangeProfilePictureView,
     Links,
 )
 
@@ -24,4 +25,9 @@ urlpatterns = [
     ),
     path("manage-links/", Links.as_view(), name="links"),
     path("manage-links/<username>/", Links.as_view(), name="links"),
+    path(
+        "save-profile-picture/",
+        ChangeProfilePictureView.as_view(),
+        name="change_profile_picture",
+    ),
 ]

@@ -80,6 +80,19 @@ class UserInfoView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+class ChangeProfilePictureView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    # the image field should look something like {profile-picture: imagehere}
+    def post(self, request):
+        image = request.data["profile_picture"]
+        id = self.request.user.id  # type:ignore
+        user_object = generics.get_object_or_404(CustomUser, id=id)
+        serializer = CustomUserSerializer(user_object, image)
+        serializer.save()
+        return Response(status.HTTP_201_CREATED)
+
+
 class Links(APIView):
     def get_permissions(self):
         permissions = super().get_permissions()

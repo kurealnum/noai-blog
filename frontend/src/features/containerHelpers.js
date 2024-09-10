@@ -66,7 +66,13 @@ async function getLinks(username) {
   }
 }
 
-async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
+async function changeSettings(
+  newUserData,
+  setIsError,
+  setIsSaved,
+  newLinks,
+  profilePicture,
+) {
   const userInfoConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -91,7 +97,21 @@ async function changeSettings(newUserData, setIsError, setIsSaved, newLinks) {
     body: JSON.stringify(newLinks),
   };
   const linksResponse = await fetch("/api/accounts/manage-links/", linksConfig);
-  if (userInfoResponse.ok && linksResponse.ok) {
+
+  const imageFetchConfig = {
+    headers: {
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "POST",
+    body: profilePicture,
+  };
+  const imageResponse = await fetch(
+    "/api/accounts/save-profile-picture/",
+    imageFetchConfig,
+  );
+
+  if (userInfoResponse.ok && linksResponse.ok && imageResponse.ok) {
     setIsSaved(true);
   } else {
     setIsError(true);

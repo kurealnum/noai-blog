@@ -14,11 +14,17 @@ import {
 
 function Settings() {
   const userData = useRouteLoaderData("root");
+
+  // removing the image path from data
+  delete userData["profile_picture"];
+
   const [newUserData, setNewUserData] = useState(userData);
   const [newLinks, setNewLinks] = useState([]);
   const [singleNewLink, setSingleNewLink] = useState({});
   const [isSaved, setIsSaved] = useState(false);
+  const [profilePicture, setProfilePicture] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   // modal error
   const [error, setError] = useState(false);
   // snackbar error
@@ -38,6 +44,12 @@ function Settings() {
 
   function setNewUserDataHelper(e) {
     setNewUserData({ ...newUserData, [e.target.name]: e.target.value });
+  }
+
+  function setProfilePictureHelper(e) {
+    setProfilePicture({
+      [e.target.name]: URL.createObjectURL(e.target.files[0]),
+    });
   }
 
   function setSingleNewLinkHelper(e) {
@@ -92,7 +104,12 @@ function Settings() {
 
   return (
     <>
-      <div id="settings">
+      <form
+        id="settings"
+        encType="multipart/form-data"
+        method="POST"
+        onSubmit={(e) => e.preventDefault()}
+      >
         <div className="item">
           <label>Username</label>
           <input
@@ -147,6 +164,15 @@ function Settings() {
             maxLength={150}
           ></textarea>
         </div>
+        <div className="item">
+          <label>Profile Picture (PNG or JPEG)</label>
+          <input
+            name="profile_picture"
+            onChange={(e) => setProfilePictureHelper(e)}
+            type="file"
+            accept="image/png, image/jpeg"
+          ></input>
+        </div>
         <h2>Links</h2>
         {newLinks.map((content, index) => (
           <div className="item link-item" key={content["name"] + index}>
@@ -190,8 +216,15 @@ function Settings() {
         <button
           id="save"
           onClick={() =>
-            changeSettings(newUserData, setIsError, setIsSaved, newLinks)
+            changeSettings(
+              newUserData,
+              setIsError,
+              setIsSaved,
+              newLinks,
+              profilePicture,
+            )
           }
+          type="submit"
         >
           Save
         </button>
@@ -217,7 +250,7 @@ function Settings() {
             Your changes were successfully saved!
           </Alert>
         </Snackbar>
-      </div>
+      </form>
       <Outlet />
     </>
   );
