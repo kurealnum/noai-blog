@@ -11,7 +11,7 @@ server
 	listen 80;
 	server_name 127.0.0.1 localhost;
 
-	location ~ ^/(api|admin|static|accounts|media)/
+	location ~ ^/(api|admin|static|accounts|media|manage-password)/
 	{
 		proxy_pass http://backend_upstream;
 		proxy_http_version 1.1;

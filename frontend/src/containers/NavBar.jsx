@@ -44,7 +44,6 @@ function FullScreenNavBar({ userData }) {
 }
 
 function MobileNavBar({ userData }) {
-  // long asf link to my profile picture. will change when actually using img from api
   const [open, setOpen] = useState(false);
   function handleOpen() {
     setOpen(true);
