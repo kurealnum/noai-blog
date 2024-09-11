@@ -27,11 +27,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path(API_URL + "accounts/", include("accounts.urls")),
     path(API_URL + "blog-posts/", include("blogs.urls")),
-    path(
-        "accounts/change-password/",
-        views.PasswordChangeView.as_view(),
-        name="password_change",
-    ),
+    path("manage-password/", include("password_management.urls")),
     path(
         "accounts/change-password/done/",
         views.PasswordChangeDoneView.as_view(),
