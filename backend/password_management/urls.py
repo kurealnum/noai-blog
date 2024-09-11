@@ -19,7 +19,7 @@ urlpatterns = [
         name="password_reset",
     ),
     path(
-        "change-password/done/",
+        "reset-password/done/",
         views.CustomPasswordResetDoneView.as_view(),
         name="password_reset_done",
     ),

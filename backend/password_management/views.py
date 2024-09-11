@@ -6,7 +6,6 @@ from django.contrib.auth.views import (
     PasswordResetDoneView,
     PasswordResetView,
 )
-from django.shortcuts import render
 
 
 # Password reset views. Almost everything except the template is default.
