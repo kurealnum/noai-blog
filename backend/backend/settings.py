@@ -167,3 +167,10 @@ LOGIN_URL = "/login"
 
 # for drf files
 UPLOADED_FILES_USE_URL = True
+
+# for emails (not in use as of sep 11, 2024)
+EMAIL_HOST = environ.get("EMAIL_HOST")
+EMAIL_PORT = environ.get("EMAIL_PORT")
+EMAIL_HOST_PASSWORD = environ.get("EMAIL_HOST_PASSWORD")
+EMAIL_HOST_USER = environ.get("EMAIL_HOST_USER")
+EMAIL_USE_TLS = environ.get("EMAIL_USE_TLS")
