@@ -1,8 +1,8 @@
 from django.test import TestCase
+from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
-from rest_framework.test import APIRequestFactory, force_authenticate
-import datetime
+from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
 from blogs.views import BlogPostList, CommentReplyList, FeedList, PostReplyList
 
@@ -89,6 +89,37 @@ class CommentTestCase(TestCase):
         self.assertEqual(expected_result, query_res[1][2])
 
 
+class CommentListTestCase(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+            username="bobby",
+        )
+        self.user.set_password("TerriblePassword123")
+        self.blog_post = BlogPost.objects.create(
+            user=self.user,
+            title="My awesome blog post",
+            content="Here's something about my blog post",
+        )
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
+        )
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
+        )
+
+    def test_view(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.get(reverse_lazy("get_comments"))
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
+
+
 class BlogPostListTestCase(TestCase):
     def setUp(self) -> None:
         self.user = CustomUser.objects.create(
@@ -96,6 +127,7 @@ class BlogPostListTestCase(TestCase):
             first_name="Bobby",
             last_name="Joe",
             about_me="I am Bobby Joe, destroyer of worlds.",
+            username="bobby",
         )
         self.user.set_password("TerriblePassword123")
         self.blog_post = BlogPost.objects.create(
@@ -125,6 +157,18 @@ class BlogPostListTestCase(TestCase):
         # expected_title, basically
         expected_result = "My awesome blog post"
         self.assertEqual(expected_result, response.data[0].get("title"))
+
+    def test_with_username(self):
+        client = APIClient()
+        request = client.get(reverse_lazy("get_posts") + "bobby/")
+        expected_result = 200
+        self.assertEqual(request.status_code, expected_result)
+
+    def test_with_incorrect_username(self):
+        client = APIClient()
+        request = client.get(reverse_lazy("get_posts") + "thewrongusername/")
+        expected_result = 404
+        self.assertEqual(request.status_code, expected_result)
 
 
 class CommentReplyListTestCase(TestCase):

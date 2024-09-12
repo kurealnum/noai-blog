@@ -18,7 +18,7 @@ class CommentList(generics.ListAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):  # type: ignore
-        user = self.request.user
+        user = self.request.user.id  # type: ignore
         return Comment.objects.filter(user=user)
 
 
@@ -29,6 +29,8 @@ class BlogPostList(APIView):
         if username:
             try:
                 res = BlogPost.objects.filter(user__username=username)
+                if len(res) == 0:
+                    raise BlogPost.DoesNotExist
                 serializer = BlogPostSerializer(res, many=True)
             except BlogPost.DoesNotExist:
                 raise Http404
