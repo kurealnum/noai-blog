@@ -1,4 +1,5 @@
 from io import BytesIO
+import json
 from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -182,34 +183,187 @@ class LinksTestCase(CustomTestCase):
     def setUp(self):
         # just doing this so i can add two new links to test a put and delete request on
         super().setUp()
-        Link.objects.create(link="google.com", name="MyLink1", user=self.user)
-        Link.objects.create(link="google.com", name="MyLink2", user=self.user)
+        self.linkone = Link.objects.create(
+            link="google.com", name="MyLink1", user=self.user
+        )
+        self.linktwo = Link.objects.create(
+            link="google.com", name="MyLink2", user=self.user
+        )
 
     # need to actually test a method here
     def test_get_permissions_with_anything_but_get(self):
         instance = Links()
         request = self.factory.put(reverse_lazy("links"))
         instance.request = request
-        excpected_result = (type(AllowAny()), type(IsAuthenticated()))
+        expected_result = (type(AllowAny()), type(IsAuthenticated()))
         result = instance.get_permissions()
         formatted_result = (type(result[0]), type(result[1]))
-        self.assertEqual(excpected_result, formatted_result)
+        self.assertEqual(expected_result, formatted_result)
 
     # see above
     def test_get_permissions_with_get_itself(self):
         instance = Links()
         request = self.factory.get(reverse_lazy("links"))
         instance.request = request
-        excpected_result = type(AllowAny())
+        expected_result = type(AllowAny())
         formatted_result = type(instance.get_permissions()[0])
-        self.assertEqual(excpected_result, formatted_result)
+        self.assertEqual(expected_result, formatted_result)
 
+    # a put request where both links already exist
     def test_put_request(self):
         # temp client to log in
-        temp_factory = APIRequestFactory()
-        data = [{"link": "yahoo.com", "name": "newName1"}]
-        request = temp_factory.put(reverse_lazy("links"), data=data)
-        force_authenticate(request)
-        result = Links.as_view()(request)
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        # type:ignore is again because the id field isnt detected
+        # we have to use json.dumps because of the content_type in the put request
+        data = json.dumps(
+            [
+                {
+                    "link": "yahoo.com",
+                    "name": "newName1",
+                    "user": self.user.id,  # type: ignore
+                    "id": self.linkone.id,  # type: ignore
+                },
+                {
+                    "link": "yahoo.com",
+                    "name": "newName2",
+                    "user": self.user.id,  # type: ignore
+                    "id": self.linktwo.id,  # type: ignore
+                },
+            ]
+        )
 
-        print(result.status_code)
+        result = temp_client.put(
+            reverse_lazy("links"), data, content_type="application/json"
+        )
+
+        expected_result = 201
+        self.assertEqual(expected_result, result.status_code)
+
+    def test_put_request_with_invalid_data(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+
+        # type:ignore is again because the id field isnt detected
+        # we have to use json.dumps because of the content_type in the put request
+        data = json.dumps(
+            [
+                {
+                    "name": "newName1",
+                    "user": self.user.id,  # type: ignore
+                    "id": self.linkone.id,  # type: ignore
+                },
+            ]
+        )
+
+        result = temp_client.put(
+            reverse_lazy("links"), data, content_type="application/json"
+        )
+
+        expected_result = 400
+        self.assertEqual(expected_result, result.status_code)
+
+    # the data in this is purposefully invalid
+    def test_put_request_with_link_that_does_not_exist(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+
+        # type:ignore is again because the id field isnt detected
+        # we have to use json.dumps because of the content_type in the put request
+        data = json.dumps(
+            [
+                {
+                    "name": "newName1",
+                    "user": self.user.id,  # type: ignore
+                    "id": 999,
+                },
+            ]
+        )
+
+        result = temp_client.put(
+            reverse_lazy("links"), data, content_type="application/json"
+        )
+
+        expected_result = 400
+        self.assertEqual(expected_result, result.status_code)
+
+    # same as above, but with valid data
+    def test_put_request_with_link_that_does_not_exist_with_valid_data(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+
+        # type:ignore is again because the id field isnt detected
+        # we have to use json.dumps because of the content_type in the put request
+        data = json.dumps(
+            [
+                {
+                    "link": "google.com",
+                    "name": "newName1",
+                    "user": self.user.id,  # type: ignore
+                },
+            ]
+        )
+
+        result = temp_client.put(
+            reverse_lazy("links"), data, content_type="application/json"
+        )
+
+        expected_result = 201
+        self.assertEqual(expected_result, result.status_code)
+
+    def test_delete_request_when_object_exists(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {"id": self.linkone.id}  # type: ignore (because .id again)
+
+        result = temp_client.delete(reverse_lazy("links"), data)
+
+        expected_result = 204
+        self.assertEqual(expected_result, result.status_code)
+
+    def test_delete_request_when_object_does_not_exist(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {"id": 999}  # type: ignore (because .id again)
+
+        result = temp_client.delete(reverse_lazy("links"), data)
+
+        expected_result = 404
+        self.assertEqual(expected_result, result.status_code)
+
+    def test_post_request(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "link": "google.com",
+            "name": "MyNewLink",
+        }
+
+        result = temp_client.post(reverse_lazy("links"), data)
+        expected_result = 201
+        self.assertEqual(expected_result, result.status_code)
+
+    def test_get_request_with_correct_username(self):
+        request = self.client.get(reverse_lazy("links") + "bobby/")
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
+
+    def test_get_request_with_incorrect_username(self):
+        request = self.client.get(reverse_lazy("links") + "anincorrectusername/")
+        expected_result = 404
+        self.assertEqual(expected_result, request.status_code)
+
+    # using self.request.user to query instead of username (see view for more info)
+    def test_get_request_with_logged_in_user(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.get(reverse_lazy("links"))
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)

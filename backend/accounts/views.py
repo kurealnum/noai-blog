@@ -115,7 +115,6 @@ class Links(APIView):
         user_id = self.request.user.id  # type:ignore
         initial_instances = Link.objects.filter(user=user_id)
         data = request.data
-        print(request.data)
         for updated_data in data:
             try:
                 instance = initial_instances.get(id=updated_data["id"])
@@ -126,7 +125,8 @@ class Links(APIView):
                     return Response(
                         serializer.errors, status=status.HTTP_400_BAD_REQUEST
                     )
-            except Link.DoesNotExist:
+            # a KeyError could be caused by the instantiation of `instance`, same thing with Link.DoesNotExist
+            except (KeyError, Link.DoesNotExist):
                 serializer = LinkSerializer(data=updated_data)
                 if serializer.is_valid() and len(initial_instances) < 5:
                     serializer.save()
@@ -158,6 +158,9 @@ class Links(APIView):
         if username:
             try:
                 res = Link.objects.filter(user__username=username)
+                # scuffed? perhaps. but i want to go play battlebit
+                if len(res) == 0:
+                    raise Link.DoesNotExist
                 serializer = LinkSerializer(instance=res, many=True)
             except Link.DoesNotExist:
                 raise Http404
