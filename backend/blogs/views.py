@@ -36,7 +36,7 @@ class BlogPostList(APIView):
                 raise Http404
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
-            user = self.request.user
+            user = self.request.user.id  # type:ignore
             res = BlogPost.objects.filter(user=user).select_related("user")
             serializer = BlogPostSerializer(res, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)

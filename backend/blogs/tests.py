@@ -9,20 +9,29 @@ from blogs.views import BlogPostList, CommentReplyList, FeedList, PostReplyList
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
 
-class BlogTestCase(TestCase):
-    def setUp(self) -> None:
+class CustomTestCase(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+        self.factory = APIRequestFactory()
         self.user = CustomUser.objects.create(
             email="bobbyjoe@gmail.com",
             first_name="Bobby",
             last_name="Joe",
             about_me="I am Bobby Joe, destroyer of worlds.",
+            username="bobby",
         )
         self.user.set_password("TerriblePassword123")
+        self.user.save()
         self.blog_post = BlogPost.objects.create(
             user=self.user,
             title="My awesome blog post",
             content="Here's something about my blog post",
         )
+
+
+class BlogTestCase(CustomTestCase):
+    def setUp(self) -> None:
+        super().setUp()
 
     def test_does_react_count(self):
         PostReaction.objects.create(user=self.user, post=self.blog_post)
@@ -39,20 +48,9 @@ class BlogTestCase(TestCase):
         self.assertEqual(expected_result, comment_count)
 
 
-class CommentTestCase(TestCase):
+class CommentTestCase(CustomTestCase):
     def setUp(self) -> None:
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-        )
-        self.user.set_password("TerriblePassword123")
-        self.blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="My awesome blog post",
-            content="Here's something about my blog post",
-        )
+        super().setUp()
         self.comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is a very polite comment"
         )
@@ -89,21 +87,9 @@ class CommentTestCase(TestCase):
         self.assertEqual(expected_result, query_res[1][2])
 
 
-class CommentListTestCase(TestCase):
+class CommentListTestCase(CustomTestCase):
     def setUp(self):
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-            username="bobby",
-        )
-        self.user.set_password("TerriblePassword123")
-        self.blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="My awesome blog post",
-            content="Here's something about my blog post",
-        )
+        super().setUp()
         Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
@@ -120,21 +106,9 @@ class CommentListTestCase(TestCase):
         self.assertEqual(expected_result, request.status_code)
 
 
-class BlogPostListTestCase(TestCase):
+class BlogPostListTestCase(CustomTestCase):
     def setUp(self) -> None:
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-            username="bobby",
-        )
-        self.user.set_password("TerriblePassword123")
-        self.blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="My awesome blog post",
-            content="Here's something about my blog post",
-        )
+        super().setUp()
         # alternative user
         self.alternative_user = CustomUser.objects.create(
             email="marysue@gmail.com",
@@ -150,41 +124,29 @@ class BlogPostListTestCase(TestCase):
         )
 
     def test_blogpostlist_returns_correctly(self):
-        factory = APIRequestFactory()
-        request = factory.get("/api/blog-posts/get-posts/")
-        force_authenticate(request, user=self.user)
-        response = BlogPostList.as_view()(request)
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("get_posts"))
+
         # expected_title, basically
         expected_result = "My awesome blog post"
         self.assertEqual(expected_result, response.data[0].get("title"))
 
     def test_with_username(self):
-        client = APIClient()
-        request = client.get(reverse_lazy("get_posts") + "bobby/")
+        request = self.client.get(reverse_lazy("get_posts") + "bobby/")
         expected_result = 200
         self.assertEqual(request.status_code, expected_result)
 
     def test_with_incorrect_username(self):
-        client = APIClient()
-        request = client.get(reverse_lazy("get_posts") + "thewrongusername/")
+        request = self.client.get(reverse_lazy("get_posts") + "thewrongusername/")
         expected_result = 404
         self.assertEqual(request.status_code, expected_result)
 
 
-class CommentReplyListTestCase(TestCase):
+class CommentReplyListTestCase(CustomTestCase):
     def setUp(self) -> None:
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-        )
-        self.user.set_password("TerriblePassword123")
-        self.blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="My awesome blog post",
-            content="Here's something about my blog post",
-        )
+        super().setUp()
         self.comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
@@ -198,28 +160,17 @@ class CommentReplyListTestCase(TestCase):
 
     # checks to ensure that this view only returns replies to *comments* that a user has made
     def test_commentreplylist_returns_correctly(self):
-        factory = APIRequestFactory()
-        request = factory.get("/api/blog-posts/get-comment-replies/")
-        force_authenticate(request, user=self.user)
-        response = CommentReplyList.as_view()(request)
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("get_comment_replies"))
         expected_result = "This IS a reply!"
         self.assertEqual(expected_result, response.data[0].get("content"))
 
 
-class PostReplyListTestCase(TestCase):
+class PostReplyListTestCase(CustomTestCase):
     def setUp(self) -> None:
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-        )
-        self.user.set_password("TerriblePassword123")
-        self.blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="My awesome blog post",
-            content="Here's something about my blog post",
-        )
+        super().setUp()
         self.comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
@@ -233,22 +184,17 @@ class PostReplyListTestCase(TestCase):
 
     # checks to ensure that this view only returns replies to *posts* that a user has made
     def test_postreplylist_returns_correctly(self):
-        factory = APIRequestFactory()
-        request = factory.get("/api/blog-posts/get-post-replies/")
-        force_authenticate(request, user=self.user)
-        response = PostReplyList.as_view()(request)
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("get_post_replies"))
         expected_result = "This is NOT a reply!"
         self.assertEqual(expected_result, response.data[0].get("content"))
 
 
-class FeedListTestCase(TestCase):
+class FeedListTestCase(CustomTestCase):
     def setUp(self):
-        self.user = CustomUser.objects.create(
-            email="bobbyjoe@gmail.com",
-            first_name="Bobby",
-            last_name="Joe",
-            about_me="I am Bobby Joe, destroyer of worlds.",
-        )
+        super().setUp()
         self.blog_post_1 = BlogPost.objects.create(
             user=self.user,
             title="1",
@@ -271,10 +217,10 @@ class FeedListTestCase(TestCase):
         )
 
     def test_feedlist_returns_correctly(self):
-        factory = APIRequestFactory()
-        request = factory.get("/api/blog-posts/feed/")
-        force_authenticate(request, user=self.user)
-        response = FeedList.as_view()(request)
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("feed"))
         # the title of the 3rd blog post is 3
         expected_result = "3"
         self.assertEqual(expected_result, response.data[0].get("title"))
