@@ -1,7 +1,7 @@
 from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
@@ -14,54 +14,58 @@ from accounts.serializers import (
 )
 
 
-@api_view(["POST"])
-def login_user(request):
-    data = request.data
+class LoginUserView(APIView):
+    permission_classes = (AllowAny,)
 
-    username = data["username"]
-    password = data["password"]
+    def post(self, request):
+        data = request.data
 
-    try:
-        user = authenticate(request, username=username, password=password)
+        username = data["username"]
+        password = data["password"]
 
-        if user is not None:
-            login(request, user)
-            res = Response({"success": "User authenticated"}, status=200)
-            res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
-            return res
-        else:
-            return Response({"error": "Error Authenticating"}, status=401)
-    except Exception:
-        return Response({"error": "Something went wrong when logging in"}, status=401)
+        try:
+            user = authenticate(request, username=username, password=password)
 
-
-@api_view(["GET"])
-def check_is_authenticated(request):
-    user = request.user
-
-    try:
-        isAuthenticated = user.is_authenticated
-
-        if isAuthenticated:
-            res = Response({"isAuthenticated": "success"}, status=200)
-            res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
-            return res
-        else:
-            return Response({"isAuthenticated": "error"}, status=403)
-    except Exception:
-        return Response(
-            {"error": "Something went wrong when checking authentication status"},
-            status=404,
-        )
+            if user is not None:
+                login(request, user)
+                res = Response({"success": "User authenticated"}, status=200)
+                res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
+                return res
+            else:
+                return Response({"error": "Error Authenticating"}, status=401)
+        except Exception:
+            return Response(
+                {"error": "Something went wrong when logging in"}, status=401
+            )
 
 
-@api_view(["POST"])
-def logout_user(request):
-    try:
-        logout(request)
-        return Response({"success": "You have been logged out"}, status=200)
-    except Exception:
-        return Response({"error": "Something went wrong"}, status=403)
+class CheckAuthenticatedView(APIView):
+    def post(self, request):
+        user = request.user
+
+        try:
+            isAuthenticated = user.is_authenticated
+
+            if isAuthenticated:
+                res = Response({"isAuthenticated": "success"}, status=200)
+                res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
+                return res
+            else:
+                return Response({"isAuthenticated": "error"}, status=403)
+        except Exception:
+            return Response(
+                {"error": "Something went wrong when checking authentication status"},
+                status=404,
+            )
+
+
+class LogoutUserView(APIView):
+    def post(self, request):
+        try:
+            logout(request)
+            return Response({"success": "You have been logged out"}, status=200)
+        except Exception:
+            return Response({"error": "Something went wrong"}, status=403)
 
 
 class UserInfoView(APIView):
@@ -95,7 +99,7 @@ class ChangeProfilePictureView(APIView):
         )
         if serializer.is_valid():
             serializer.save()
-            return Response(status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
@@ -111,6 +115,7 @@ class Links(APIView):
         user_id = self.request.user.id  # type:ignore
         initial_instances = Link.objects.filter(user=user_id)
         data = request.data
+        print(request.data)
         for updated_data in data:
             try:
                 instance = initial_instances.get(id=updated_data["id"])
