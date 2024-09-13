@@ -40,7 +40,7 @@ class LoginUserView(APIView):
 
 
 class CheckAuthenticatedView(APIView):
-    def post(self, request):
+    def get(self, request):
         user = request.user
 
         try:
