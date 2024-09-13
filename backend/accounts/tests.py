@@ -1,5 +1,6 @@
 from io import BytesIO
 import json
+from unittest.case import expectedFailure
 from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -62,7 +63,7 @@ class LoginUserTestCase(CustomTestCase):
 
 class CheckAuthenticatedTestCase(CustomTestCase):
     def test_does_unauthenticated_user_fail(self):
-        request = self.client.post(reverse_lazy("is_authenticated"))
+        request = self.client.get(reverse_lazy("is_authenticated"))
         expected_result = "error"
         self.assertEqual(expected_result, request.data["isAuthenticated"])  # type: ignore (for request.data)
 
@@ -70,7 +71,7 @@ class CheckAuthenticatedTestCase(CustomTestCase):
         # making a temp client because we have to authenticate
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        request = temp_client.post(reverse_lazy("is_authenticated"))
+        request = temp_client.get(reverse_lazy("is_authenticated"))
         expected_result = "success"
         self.assertEqual(expected_result, request.data["isAuthenticated"])  # type: ignore (for request.data)
 
@@ -110,12 +111,14 @@ class UserInfoTestCase(CustomTestCase):
         self.assertEqual(expected_result, formatted_result)
 
     def test_output_when_user_does_not_exist(self):
-        request = self.factory.get(reverse_lazy("user_info"))
-        force_authenticate(request)
-        result = UserInfoView.as_view()(request, username="NotCorrectName")  # type: ignore
-        expected_result = 404
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.get(reverse_lazy("user_info") + "thewrongusername/")
+        expected_result = "Not found."
+        result = request.data
 
-        self.assertEqual(expected_result, result.status_code)
+        self.assertEqual(expected_result, result["detail"])
 
     # testing output with no username, instead using user.id (see view for more details)
     def test_output_with_logged_in_user(self):
@@ -174,9 +177,12 @@ class ChangeProfilePictureTestCase(CustomTestCase):
             },  # this is the incorrect part (.getvalue())
             format="multipart",
         )
+        result = str(result.data["profile_picture"][0])
 
-        expected_result = 400
-        self.assertEqual(expected_result, result.status_code)
+        expected_result = (
+            "The submitted data was not a file. Check the encoding type on the form."
+        )
+        self.assertEqual(expected_result, result)
 
 
 class LinksTestCase(CustomTestCase):
@@ -260,9 +266,10 @@ class LinksTestCase(CustomTestCase):
         result = temp_client.put(
             reverse_lazy("links"), data, content_type="application/json"
         )
+        result = str(result.data["link"][0])
 
-        expected_result = 400
-        self.assertEqual(expected_result, result.status_code)
+        expected_result = "This field is required."
+        self.assertEqual(expected_result, result)
 
     # the data in this is purposefully invalid
     def test_put_request_with_link_that_does_not_exist(self):
@@ -285,9 +292,10 @@ class LinksTestCase(CustomTestCase):
         result = temp_client.put(
             reverse_lazy("links"), data, content_type="application/json"
         )
+        result = str(result.data["link"][0])
+        expected_result = "This field is required."
 
-        expected_result = 400
-        self.assertEqual(expected_result, result.status_code)
+        self.assertEqual(expected_result, result)
 
     # same as above, but with valid data
     def test_put_request_with_link_that_does_not_exist_with_valid_data(self):
@@ -332,9 +340,10 @@ class LinksTestCase(CustomTestCase):
         data = {"id": 999}  # type: ignore (because .id again)
 
         result = temp_client.delete(reverse_lazy("links"), data)
+        result = str(result.data["detail"])
+        expected_result = "Not found."
 
-        expected_result = 404
-        self.assertEqual(expected_result, result.status_code)
+        self.assertEqual(expected_result, result)
 
     def test_post_request(self):
         # temp client to log in
@@ -356,8 +365,9 @@ class LinksTestCase(CustomTestCase):
 
     def test_get_request_with_incorrect_username(self):
         request = self.client.get(reverse_lazy("links") + "anincorrectusername/")
-        expected_result = 404
-        self.assertEqual(expected_result, request.status_code)
+        result = str(request.data["detail"])  # type: ignore because of .data (it's valid tho)
+        expected_result = "Not found."
+        self.assertEqual(expected_result, result)
 
     # using self.request.user to query instead of username (see view for more info)
     def test_get_request_with_logged_in_user(self):

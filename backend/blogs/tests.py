@@ -1,10 +1,9 @@
+import json
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
-from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
-
-from blogs.views import BlogPostList, CommentReplyList, FeedList, PostReplyList
+from rest_framework.test import APIClient, APIRequestFactory
 
 from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
 
@@ -102,8 +101,11 @@ class CommentListTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.get(reverse_lazy("get_comments"))
-        expected_result = 200
-        self.assertEqual(expected_result, request.status_code)
+        # expected result for both
+        expected_result = "This is NOT a reply!"
+        result = json.loads(request.content)
+        self.assertEqual(expected_result, result[0].get("content"))
+        self.assertEqual(expected_result, result[1].get("content"))
 
 
 class BlogPostListTestCase(CustomTestCase):
@@ -135,13 +137,14 @@ class BlogPostListTestCase(CustomTestCase):
 
     def test_with_username(self):
         request = self.client.get(reverse_lazy("get_posts") + "bobby/")
-        expected_result = 200
-        self.assertEqual(request.status_code, expected_result)
+        expected_result = "My awesome blog post"
+        result = json.loads(request.content)[0].get("title")
+        self.assertEqual(result, expected_result)
 
     def test_with_incorrect_username(self):
         request = self.client.get(reverse_lazy("get_posts") + "thewrongusername/")
-        expected_result = 404
-        self.assertEqual(request.status_code, expected_result)
+        expected_result = "Not found."
+        self.assertEqual(json.loads(request.content)["detail"], expected_result)
 
 
 class CommentReplyListTestCase(CustomTestCase):
