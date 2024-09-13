@@ -7,4 +7,23 @@ export default defineConfig({
   server: {
     port: 6901,
   },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    coverage: {
+      provider: "v8",
+    },
+    setupFiles: "./tests/setup.js",
+    exclude: [
+      // all of the default defaults (couldn't figure out how to just import these)
+      "**/node_modules/**",
+      "**/dist/**",
+      "**/cypress/**",
+      "**/.{idea,git,cache,output,temp}/**",
+      "**/{karma,rollup,webpack,vite,vitest,jest,ava,babel,nyc,cypress,tsup,build}.config.*",
+
+      // custom exclusions (not currently working for some reason)
+      "**/src/containers/**",
+    ],
+  },
 });
