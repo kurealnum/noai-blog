@@ -1,5 +1,6 @@
 # Custom
 node_modules/
+coverage/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
