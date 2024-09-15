@@ -19,46 +19,48 @@ function Dashboard() {
     <div id="dashboard">
       <section className="list-section">
         <h1>Your comments</h1>
-        <div className="list">
+        <ul className="list">
           {comments === null || comments.length === 0 ? (
-            <p>There's nothing here. Go make some comments!</p>
+            <p role="progressbar">
+              There's nothing here. Go make some comments!
+            </p>
           ) : (
             comments.map((content, index) => (
-              <div className="comment" key={index}>
-                <p>
+              <li className="comment" key={index}>
+                <p data-testid="comment-content">
                   {content["content"].length > 100
                     ? content["content"].slice(0, 101) + "..."
                     : content.content}
                 </p>
-              </div>
+              </li>
             ))
           )}
-        </div>
+        </ul>
       </section>
 
       <section className="list-section">
         {" "}
         <h1>Your posts</h1>
-        <div className="list">
+        <ul className="list">
           {posts.length === null || posts.length === 0 ? (
-            <p>There's nothing here. Go make some posts!</p>
+            <p role="progressbar">There's nothing here. Go make some posts!</p>
           ) : (
             posts.map((content, index) => (
-              <div key={index} className="blog-post">
+              <li key={index} className="blog-post">
                 <h2>{content.title}</h2>
                 <div className="info">
                   <p>{"By " + content.user.username}</p>
                   <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
                 </div>
-                <p className="hint">
+                <p className="hint" data-testid="post-content">
                   {content["content"].length > 100
                     ? content["content"].slice(0, 101) + "..."
                     : content.content}
                 </p>
-              </div>
+              </li>
             ))
           )}
-        </div>
+        </ul>
       </section>
     </div>
   );

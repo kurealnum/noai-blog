@@ -27,7 +27,7 @@ function Login() {
         isError={isError}
         message={"Username or password is incorrect"}
       />
-      <form onSubmit={(e) => onFormSubmit(e)}>
+      <form onSubmit={(e) => onFormSubmit(e)} aria-label="Log in">
         <input name="username" onChange={(e) => onFormChange(e)}></input>
         <input
           name="password"
