@@ -39,6 +39,7 @@ const userInfo = {
   profile_picture: "/media/profile_pictures/2024-08-26_13-44.png",
 };
 const loginSuccess = true;
+const logoutSuccess = true;
 
 // I use "oscar" as the username field for almost everything
 export const restHandlers = [
@@ -57,8 +58,14 @@ export const restHandlers = [
   http.get("/api/accounts/user-info/oscar/", () => {
     return HttpResponse.json(userInfo);
   }),
-  http.get("/api/accounts/login/", () => {
+  http.get("/api/accounts/user-info/", () => {
+    return HttpResponse.json(userInfo);
+  }),
+  http.post("/api/accounts/login/", () => {
     return HttpResponse.json(loginSuccess);
+  }),
+  http.post("/api/accounts/logout/", () => {
+    return HttpResponse.json(logoutSuccess);
   }),
 ];
 

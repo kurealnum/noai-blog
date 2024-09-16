@@ -1,19 +1,15 @@
-import { render } from "@testing-library/react";
+import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it, vi } from "vitest";
 import Login from "../../../src/containers/Login";
-import {
-  MemoryRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-} from "react-router-dom";
+import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Dashboard } from "@mui/icons-material";
 
+const mockUseNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const reactRouter = await vi.importActual("react-router-dom");
-  return { ...reactRouter };
+  return { ...reactRouter, useNavigate: () => mockUseNavigate };
 });
 
 describe("Login", () => {
@@ -39,14 +35,14 @@ describe("Login", () => {
       </Router>,
     );
 
-    const form = rendered.getByRole("form");
+    const button = rendered.getByRole("button");
     const username = rendered.getByLabelText("Username");
     const password = rendered.getByLabelText("Password");
 
     await user.type(username, "MyUsername");
     await user.type(password, "SecurePassword123");
-    await user.click(form);
+    await user.click(button);
 
-    expect(useNavigate).toHaveBeenCalled();
+    await waitFor(() => expect(mockUseNavigate).toHaveBeenCalled());
   });
 });

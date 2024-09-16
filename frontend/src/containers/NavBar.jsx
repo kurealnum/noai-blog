@@ -8,7 +8,6 @@ import MenuIcon from "@mui/icons-material/Menu";
 function NavBar() {
   const desktopWidth = 800;
   const isDesktop = window.innerWidth > desktopWidth;
-  // index here because DRF sends models in a silly way
   let userData = useLoaderData();
   if (isDesktop) {
     return (
