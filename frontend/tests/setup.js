@@ -42,6 +42,11 @@ const loginSuccess = true;
 const logoutSuccess = true;
 
 // I use "oscar" as the username field for almost everything
+// also, there are a lot of "duplicate" urls, such as:
+// /api/accounts/manage-links/oscar/
+// and
+// /api/accounts/manage-links/
+// this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
   http.get("/api/blog-posts/get-posts/oscar/", () => {
     return HttpResponse.json(posts);
@@ -53,6 +58,9 @@ export const restHandlers = [
     return HttpResponse.json(comments);
   }),
   http.get("/api/accounts/manage-links/oscar/", () => {
+    return HttpResponse.json(manageLinks);
+  }),
+  http.get("/api/accounts/manage-links/", () => {
     return HttpResponse.json(manageLinks);
   }),
   http.get("/api/accounts/user-info/oscar/", () => {

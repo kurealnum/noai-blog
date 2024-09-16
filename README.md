@@ -12,6 +12,8 @@ The frontend is tested with React Testing Library and Vitest. React Testing Libr
 
 The "middleware" (Nginx and Docker) is not tested.
 
+Aim for 80% coverage or higher. If you have nothing else to do, write more tests!
+
 ## Technologies used/that I would like to use
 
 Technologies that are currently in use:

@@ -105,23 +105,26 @@ function Settings() {
   return (
     <>
       <form
+        aria-label="Settings"
         id="settings"
         encType="multipart/form-data"
         method="POST"
         onSubmit={(e) => e.preventDefault()}
       >
         <div className="item">
-          <label>Username</label>
+          <label htmlFor="username">Username</label>
           <input
             name="username"
+            id="username"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["username"]}
             maxLength={150}
           ></input>
         </div>
         <div className="item">
-          <label>Email</label>
+          <label htmlFor="email">Email</label>
           <input
+            id="email"
             name="email"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["email"]}
@@ -129,8 +132,9 @@ function Settings() {
           ></input>
         </div>
         <div className="item">
-          <label>First name</label>
+          <label htmlFor="first_name">First name</label>
           <input
+            id="first_name"
             name="first_name"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["first_name"]}
@@ -138,8 +142,9 @@ function Settings() {
           ></input>
         </div>
         <div className="item">
-          <label>Last name</label>
+          <label htmlFor="last_name">Last name</label>
           <input
+            id="last_name"
             name="last_name"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["last_name"]}
@@ -147,8 +152,9 @@ function Settings() {
           ></input>
         </div>
         <div className="item">
-          <label>About me</label>
+          <label htmlFor="about_me">About me</label>
           <textarea
+            id="about_me"
             name="about_me"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["about_me"]}
@@ -156,8 +162,9 @@ function Settings() {
           ></textarea>
         </div>
         <div className="item">
-          <label>Technical Info</label>
+          <label htmlFor="technical_info">Technical Info</label>
           <textarea
+            id="technical_info"
             name="technical_info"
             onChange={(e) => setNewUserDataHelper(e)}
             value={newUserData["technical_info"]}
@@ -165,8 +172,9 @@ function Settings() {
           ></textarea>
         </div>
         <div className="item">
-          <label>Profile Picture (PNG or JPEG)</label>
+          <label htmlFor="profile_picture">Profile Picture (PNG or JPEG)</label>
           <input
+            id="profile_picture"
             name="profile_picture"
             onChange={(e) => setProfilePictureHelper(e)}
             type="file"
@@ -192,7 +200,7 @@ function Settings() {
             </button>
           </div>
         ))}
-        <button id="save" onClick={handleOpen}>
+        <button id="save" type="button" onClick={handleOpen}>
           Add link
         </button>
         <Modal open={isModalOpen} onClose={handleClose}>
