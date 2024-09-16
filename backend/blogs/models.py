@@ -35,7 +35,9 @@ class PostReaction(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
+    post = models.ForeignKey(
+        to=BlogPost, on_delete=models.SET_NULL, null=True, blank=True
+    )
     content = models.TextField(max_length=10000)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
