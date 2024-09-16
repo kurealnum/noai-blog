@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import "./styles/App.css";
 import { RouterProvider } from "react-router-dom";
 import router from "./routes/Routes";
