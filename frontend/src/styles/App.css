@@ -19,6 +19,53 @@
   font-family: "Raleway", "Times New Roman", Times, serif;
 }
 
+.info-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 70%;
+  margin: 0 auto;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 50px;
+}
+
+.info-bar-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+}
+
+.username-box span {
+  font-size: var(--navbar-font-size);
+}
+
+.username-box-no-change {
+  margin: 0 !important;
+  background: none !important;
+}
+
+.username-box-no-change span {
+  color: var(--dark-text) !important;
+}
+
+#member-since {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  margin: 0 auto;
+  width: fit-content;
+}
+
+.username-box #pfp {
+  border-radius: 50%;
+  height: 54px;
+  width: 54px;
+}
+
 textarea {
   resize: none;
   height: 3lh;
@@ -153,5 +200,9 @@ h2 {
 
   .username-box span {
     color: var(--tertiary);
+  }
+
+  .info-bar-box {
+    align-items: center;
   }
 }

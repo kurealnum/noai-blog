@@ -1,0 +1,33 @@
+h1 {
+  font-weight: 400;
+}
+
+img {
+  width: 52px;
+}
+
+.likes {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+p {
+  width: 91vw;
+  margin: 0 auto;
+}
+
+#member-since {
+  margin: 0;
+  margin-left: 40px;
+}
+
+@media (min-width: 800px) {
+  p {
+    width: 100%;
+  }
+  #blog-post {
+    max-width: 65%;
+    margin: 0 auto;
+  }
+}

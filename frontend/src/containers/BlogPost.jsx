@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { getBlogPost } from "../features/containerHelpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import "../styles/BlogPost.css";
 
 function BlogPost() {
   const { username, slug } = useParams();
@@ -19,20 +20,22 @@ function BlogPost() {
       <div id="blog-post">
         <h1>{blogPost.title}</h1>
         <div className="info-bar">
-          <div className="username-box">
-            <img src={blogPost["user"]["profile_picture"]}></img>
-            <span>{blogPost["user"]["username"]}</span>
+          <div className="info-bar-box">
+            <div className="username-box username-box-no-change">
+              <img id="pfp" src={blogPost["user"]["profile_picture"]}></img>
+              <span>By {blogPost["user"]["username"]}</span>
+            </div>
+            <div className="likes">
+              <span>{blogPost["likes"]}</span>
+              <FavoriteBorderIcon />
+            </div>
           </div>
-          <div className="likes">
-            <span>{blogPost["likes"]}</span>
-            <FavoriteBorderIcon />
-          </div>
-          <div className="date">
+          <div id="member-since">
             <CalendarMonthIcon />
             <span>{blogPost["created_date"].replace(/(T.*)/g, "")}</span>
           </div>
-          <p>{blogPost["content"]}</p>
         </div>
+        <p>{blogPost["content"]}</p>
       </div>
     );
   }
