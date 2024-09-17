@@ -176,6 +176,22 @@ async function getComments() {
   return null;
 }
 
+async function getBlogPost({ username, slug }) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch(
+    "/api/blog-posts/get-post/" + username + "/" + slug + "/",
+    config,
+  );
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
+}
+
 export {
   getLinks,
   getUserInfo,
@@ -184,4 +200,5 @@ export {
   deleteLink,
   changeSettings,
   getComments,
+  getBlogPost,
 };
