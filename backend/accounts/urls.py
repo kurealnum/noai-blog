@@ -4,9 +4,9 @@ from .views import (
     LoginUserView,
     CheckAuthenticatedView,
     LogoutUserView,
-    UpdateUserInfo,
+    UpdateUserInfoView,
     ChangeProfilePictureView,
-    Links,
+    LinksView,
 )
 
 
@@ -17,7 +17,9 @@ urlpatterns = [
     ),
     path("logout/", LogoutUserView.as_view(), name="logout"),
     path(
-        "update-user-info/<int:pk>/", UpdateUserInfo.as_view(), name="update_user_info"
+        "update-user-info/<int:pk>/",
+        UpdateUserInfoView.as_view(),
+        name="update_user_info",
     ),
     path("user-info/", UserInfoView.as_view(), name="user_info"),
     path(
@@ -25,8 +27,8 @@ urlpatterns = [
         UserInfoView.as_view(),
         name="user_info_by_username",
     ),
-    path("manage-links/", Links.as_view(), name="links"),
-    path("manage-links/<username>/", Links.as_view(), name="links"),
+    path("manage-links/", LinksView.as_view(), name="links"),
+    path("manage-links/<username>/", LinksView.as_view(), name="links"),
     path(
         "save-profile-picture/",
         ChangeProfilePictureView.as_view(),

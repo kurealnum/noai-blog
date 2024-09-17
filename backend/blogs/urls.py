@@ -2,25 +2,27 @@ from django.urls import path
 from django.views.decorators.cache import cache_page
 
 from blogs.views import (
-    BlogPostList,
+    BlogPostListView,
     BlogPostView,
-    CommentReplyList,
-    FeedList,
-    PostReplyList,
-    CommentList,
+    CommentReplyListView,
+    FeedListView,
+    PostReplyListView,
+    CommentListView,
 )
 
 urlpatterns = [
-    path("get-comments/", CommentList.as_view(), name="get_comments"),
+    path("get-comments/", CommentListView.as_view(), name="get_comments"),
     path(
-        "get-comment-replies/", CommentReplyList.as_view(), name="get_comment_replies"
+        "get-comment-replies/",
+        CommentReplyListView.as_view(),
+        name="get_comment_replies",
     ),
-    path("get-post-replies/", PostReplyList.as_view(), name="get_post_replies"),
-    path("feed/", cache_page(60 * 20)(FeedList.as_view()), name="feed"),
+    path("get-post-replies/", PostReplyListView.as_view(), name="get_post_replies"),
+    path("feed/", cache_page(60 * 20)(FeedListView.as_view()), name="feed"),
     # re_path(
     #     r"^get-posts/(?P<username>\w+/|)$", BlogPostList.as_view(), name="get_posts"
     # ),
-    path("get-posts/", BlogPostList.as_view(), name="get_posts"),
-    path("get-posts/<username>/", BlogPostList.as_view(), name="get_posts"),
+    path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
+    path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),
     path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
 ]

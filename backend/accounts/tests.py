@@ -4,7 +4,7 @@ from unittest.case import expectedFailure
 from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from accounts.views import Links, UserInfoView
+from accounts.views import LinksView
 from .models import CustomUser, Link
 from blogs.models import BlogPost
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
@@ -198,7 +198,7 @@ class LinksTestCase(CustomTestCase):
 
     # need to actually test a method here
     def test_get_permissions_with_anything_but_get(self):
-        instance = Links()
+        instance = LinksView()
         request = self.factory.put(reverse_lazy("links"))
         instance.request = request
         expected_result = (type(AllowAny()), type(IsAuthenticated()))
@@ -208,7 +208,7 @@ class LinksTestCase(CustomTestCase):
 
     # see above
     def test_get_permissions_with_get_itself(self):
-        instance = Links()
+        instance = LinksView()
         request = self.factory.get(reverse_lazy("links"))
         instance.request = request
         expected_result = type(AllowAny())

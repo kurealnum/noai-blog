@@ -13,7 +13,7 @@ from blogs.serializers import (
 )
 
 
-class CommentList(generics.ListAPIView):
+class CommentListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentSerializer
 
@@ -34,7 +34,7 @@ class BlogPostView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-class BlogPostList(APIView):
+class BlogPostListView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, username=None):
@@ -55,7 +55,7 @@ class BlogPostList(APIView):
 
 
 # This view returns replies to *comments* that a user has made
-class CommentReplyList(generics.ListAPIView):
+class CommentReplyListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentSerializer
 
@@ -66,7 +66,7 @@ class CommentReplyList(generics.ListAPIView):
 
 
 # This view returns replies to *posts* that a user has made
-class PostReplyList(generics.ListAPIView):
+class PostReplyListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentSerializer
 
@@ -78,7 +78,7 @@ class PostReplyList(generics.ListAPIView):
 
 # This view returns a feed of the top posts mixed in with new posts and posts sorted by number of comments
 # 60% of returned posts will be sorted by # of reactions, 30% will be sorted by newest, and 10% will be sorted by # of comments
-class FeedList(generics.ListAPIView):
+class FeedListView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = FeedBlogPostSerializer
 

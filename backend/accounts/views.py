@@ -1,6 +1,5 @@
 from django.http import Http404
 from rest_framework import generics, status
-from rest_framework.decorators import api_view
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -104,7 +103,7 @@ class ChangeProfilePictureView(APIView):
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
 
-class Links(APIView):
+class LinksView(APIView):
     def get_permissions(self):
         permissions = super().get_permissions()
         if self.request.method.lower() != "get":  # type: ignore
@@ -172,7 +171,7 @@ class Links(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-class UpdateUserInfo(generics.UpdateAPIView):
+class UpdateUserInfoView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CustomUserSerializer
     queryset = CustomUser.objects.all()
