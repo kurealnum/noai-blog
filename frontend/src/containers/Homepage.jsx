@@ -7,6 +7,7 @@ import {
   getBlogPosts,
   getLinks,
 } from "../features/containerHelpers";
+import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Homepage() {
   const { username } = useParams();
@@ -74,18 +75,13 @@ function Homepage() {
               <p>There's nothing here. Go make some posts!</p>
             ) : (
               blogPosts.map((content, index) => (
-                <div key={index} className="blog-post">
-                  <h2>{content.title}</h2>
-                  <div className="info">
-                    <p>{"By " + content.user.username}</p>
-                    <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
-                  </div>
-                  <p className="hint">
-                    {content["content"].length > 100
-                      ? content["content"].slice(0, 101) + "..."
-                      : content.content}
-                  </p>
-                </div>
+                <BlogPostThumbnail
+                  key={index}
+                  title={content.title}
+                  username={content.user.username}
+                  createdDate={content.created_date}
+                  content={content.content}
+                />
               ))
             )}
           </div>

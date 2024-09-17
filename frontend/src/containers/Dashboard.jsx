@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 import { getBlogPosts, getComments } from "../features/containerHelpers";
+import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -46,18 +47,13 @@ function Dashboard() {
             <p role="progressbar">There's nothing here. Go make some posts!</p>
           ) : (
             posts.map((content, index) => (
-              <li key={index} className="blog-post">
-                <h2>{content.title}</h2>
-                <div className="info">
-                  <p>{"By " + content.user.username}</p>
-                  <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
-                </div>
-                <p className="hint" data-testid="post-content">
-                  {content["content"].length > 100
-                    ? content["content"].slice(0, 101) + "..."
-                    : content.content}
-                </p>
-              </li>
+              <BlogPostThumbnail
+                key={index}
+                title={content.title}
+                username={content.user.username}
+                createdDate={content.created_date}
+                content={content.content}
+              />
             ))
           )}
         </ul>
