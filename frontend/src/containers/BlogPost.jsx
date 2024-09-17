@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getBlogPost } from "../features/containerHelpers";
+import { getBlogPost } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";

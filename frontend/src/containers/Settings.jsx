@@ -10,7 +10,7 @@ import {
   deleteLink,
   createLink,
   changeSettings,
-} from "../features/containerHelpers";
+} from "../features/helpers";
 
 function Settings() {
   const userData = useRouteLoaderData("root");

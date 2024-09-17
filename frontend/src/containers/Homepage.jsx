@@ -3,10 +3,10 @@ import { useParams } from "react-router-dom";
 import "../styles/Homepage.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
-  getUserInfo,
+  getUserInfoByUsername,
   getBlogPosts,
   getLinks,
-} from "../features/containerHelpers";
+} from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Homepage() {
@@ -17,7 +17,7 @@ function Homepage() {
   const [doesUserExist, setDoesUserExist] = useState(false);
 
   useEffect(() => {
-    getUserInfo(username).then((res) => {
+    getUserInfoByUsername(username).then((res) => {
       setUserInfo(res);
       if (res != null) {
         setDoesUserExist(true);

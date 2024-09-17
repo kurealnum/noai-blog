@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import { getBlogPosts, getComments } from "../features/containerHelpers";
+import { getBlogPosts, getComments } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Dashboard() {
