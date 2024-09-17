@@ -39,7 +39,7 @@ function BlogPost() {
       </div>
     );
   }
-  return <p>Loading</p>;
+  return <p data-testid="loader">Loading</p>;
 }
 
 export default BlogPost;

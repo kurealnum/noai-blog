@@ -40,6 +40,17 @@ const userInfo = {
 };
 const loginSuccess = true;
 const logoutSuccess = true;
+const blogPost = {
+  user: {
+    username: "oscar",
+    profile_picture: "/media/profile_pictures/pfp.png",
+  },
+  title: "Why Django is so amazing!",
+  content: "Hello world! This is my blog post.",
+  created_date: "2024-09-09T18:35:07.417021Z",
+  updated_date: "2024-09-17T16:52:43.289900Z",
+  likes: 0,
+};
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -48,6 +59,9 @@ const logoutSuccess = true;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
+    return HttpResponse.json(blogPost);
+  }),
   http.get("/api/blog-posts/get-posts/oscar/", () => {
     return HttpResponse.json(posts);
   }),
