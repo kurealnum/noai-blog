@@ -5,7 +5,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import Dashboard from "../../../src/containers/Dashboard";
+import Dashboard from "../../src/containers/Dashboard";
 
 describe("Dashboard", () => {
   it("renders correctly", () => {

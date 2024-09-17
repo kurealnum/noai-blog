@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import ErrorMessage from "../../../src/components/ErrorMessage";
+import ErrorMessage from "../../src/components/ErrorMessage";
 import { describe, expect, it } from "vitest";
 
 describe("ErrorMessage", () => {

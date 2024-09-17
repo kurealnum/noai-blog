@@ -1,8 +1,8 @@
 import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import Settings from "../../../src/containers/Settings";
-import { getUserInfo } from "../../../src/features/helpers";
+import Settings from "../../src/containers/Settings";
+import { getUserInfo } from "../../src/features/helpers";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 
 describe("Settings", () => {

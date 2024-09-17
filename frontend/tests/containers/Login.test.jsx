@@ -1,7 +1,7 @@
 import { render, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it, vi } from "vitest";
-import Login from "../../../src/containers/Login";
+import Login from "../../src/containers/Login";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Dashboard } from "@mui/icons-material";

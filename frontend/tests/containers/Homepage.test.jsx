@@ -5,7 +5,7 @@ import {
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import Homepage from "../../../src/containers/Homepage";
+import Homepage from "../../src/containers/Homepage";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 
 describe("Homepage", () => {

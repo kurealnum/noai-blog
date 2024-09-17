@@ -1,7 +1,7 @@
 import { render } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
-import Feed from "../../../src/containers/Feed";
+import Feed from "../../src/containers/Feed";
 
 describe("Feed", () => {
   it("renders correctly", () => {
