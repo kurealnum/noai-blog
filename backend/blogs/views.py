@@ -5,11 +5,12 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from blogs.models import BlogPost, Comment, ReplyTo
+from blogs.models import BlogPost, Comment, PostReaction, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
     FeedBlogPostSerializer,
+    SingleBlogPostSerializer,
 )
 
 
@@ -22,20 +23,24 @@ class CommentListView(generics.ListAPIView):
         return Comment.objects.filter(user=user)
 
 
+# this is the view for a *single* blog post
 class BlogPostView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, username, slug):
         try:
-            res = BlogPost.objects.select_related("user").get(
-                user__username=username, slug_field=slug
+            res = (
+                BlogPost.objects.select_related("user")
+                .annotate(likes=Count("postreaction"))
+                .get(user__username=username, slug_field=slug)
             )
-            serializer = BlogPostSerializer(res)
+            serializer = SingleBlogPostSerializer(res)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except BlogPost.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+# this is the view for *multiple* blog posts
 class BlogPostListView(APIView):
     permission_classes = (AllowAny,)
 

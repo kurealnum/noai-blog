@@ -16,6 +16,12 @@ class FeedCustomUserSerializer(serializers.ModelSerializer):
         fields = ("username",)
 
 
+class SingleBlogPostUserSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = CustomUser
+        fields = ("username", "profile_picture")
+
+
 class FeedBlogPostSerializer(serializers.Serializer):
     user = FeedCustomUserSerializer()
     score = serializers.IntegerField()
@@ -23,6 +29,17 @@ class FeedBlogPostSerializer(serializers.Serializer):
     content = serializers.CharField(max_length=101)  # see blog post serializer
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+
+
+class SingleBlogPostSerializer(serializers.Serializer):
+    user = SingleBlogPostUserSerializer()
+    title = serializers.CharField(max_length=100)
+    content = serializers.CharField(
+        max_length=101
+    )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
+    likes = serializers.IntegerField()
 
 
 class BlogPostSerializer(serializers.Serializer):
