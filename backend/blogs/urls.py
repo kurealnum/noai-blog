@@ -3,6 +3,7 @@ from django.views.decorators.cache import cache_page
 
 from blogs.views import (
     BlogPostList,
+    BlogPostView,
     CommentReplyList,
     FeedList,
     PostReplyList,
@@ -21,4 +22,5 @@ urlpatterns = [
     # ),
     path("get-posts/", BlogPostList.as_view(), name="get_posts"),
     path("get-posts/<username>/", BlogPostList.as_view(), name="get_posts"),
+    path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
 ]

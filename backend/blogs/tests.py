@@ -46,6 +46,11 @@ class BlogTestCase(CustomTestCase):
         expected_result = 1
         self.assertEqual(expected_result, comment_count)
 
+    def test_get_absolute_url(self):
+        expected_result = "/api/blog-posts/get-post/bobby/my-awesome-blog-post/"
+        result = self.blog_post.get_absolute_url()
+        self.assertEqual(expected_result, result)
+
 
 class CommentTestCase(CustomTestCase):
     def setUp(self) -> None:
@@ -108,6 +113,18 @@ class CommentListTestCase(CustomTestCase):
         self.assertEqual(expected_result, result[1].get("content"))
 
 
+class BlogPostViewTestCase(CustomTestCase):
+    def test_does_work_with_correct_title(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_post", kwargs={"username": "bobby", "slug": "my-awesome-blog-post"}
+            )
+        )
+        request = json.loads(request.content)
+        expected_result = "Here's something about my blog post"
+        self.assertEqual(expected_result, request["content"])
+
+
 class BlogPostListTestCase(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
@@ -121,7 +138,7 @@ class BlogPostListTestCase(CustomTestCase):
         )
         self.alternative_blog_post = BlogPost.objects.create(
             user=self.alternative_user,
-            title="My awesome blog post",
+            title="My very awesome blog post",
             content="Here's something about my blog post",
         )
 

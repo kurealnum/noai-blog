@@ -13,6 +13,7 @@ import { getUserInfo } from "../features/helpers";
 import NavBar from "../containers/NavBar";
 import Settings from "../containers/Settings";
 import Homepage from "../containers/Homepage";
+import BlogPost from "../containers/BlogPost";
 
 const router = createBrowserRouter([
   {
@@ -70,6 +71,10 @@ const router = createBrowserRouter([
             <Logout />
           </AuthenticatedRoute>
         ),
+      },
+      {
+        path: "post/:name",
+        element: <BlogPost />,
       },
     ],
   },

@@ -22,6 +22,18 @@ class CommentList(generics.ListAPIView):
         return Comment.objects.filter(user=user)
 
 
+class BlogPostView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, username, slug):
+        try:
+            res = BlogPost.objects.get(user__username=username, slug_field=slug)
+            serializer = BlogPostSerializer(res)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except BlogPost.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+
 class BlogPostList(APIView):
     permission_classes = (AllowAny,)
 
