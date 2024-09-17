@@ -1,9 +1,15 @@
-import { render, waitFor } from "@testing-library/react";
+import {
+  render,
+  waitFor,
+  screen,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import Settings from "../../src/containers/Settings";
 import { getUserInfo } from "../../src/features/helpers";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import userEvent from "@testing-library/user-event";
 
 describe("Settings", () => {
   it("renders correctly", async () => {
@@ -20,9 +26,29 @@ describe("Settings", () => {
       initialEntries: ["/"],
       initialIndex: 0,
     });
-    const rendered = render(<RouterProvider router={router} />);
+    render(<RouterProvider router={router} />);
 
-    await waitFor(() => rendered.baseElement.childNodes[0].hasChildNodes());
-    expect(rendered.getByRole("form")).toBeVisible();
+    const form = await screen.findByRole("form");
+    expect(form).toBeVisible();
+  });
+  it("dialog/modal opens on click", async () => {
+    const routes = [
+      {
+        path: "/",
+        id: "root",
+        element: <Settings />,
+        loader: () => getUserInfo(),
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ["/"],
+      initialIndex: 0,
+    });
+    render(<RouterProvider router={router} />);
+
+    const button = await screen.findByText("Add link");
+    await userEvent.click(button);
+    const dialogLabel = screen.getByLabelText("Name");
+    expect(dialogLabel).toBeVisible();
   });
 });
