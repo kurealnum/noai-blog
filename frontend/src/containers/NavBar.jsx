@@ -67,7 +67,7 @@ function MobileNavBar({ userData }) {
       <span>
         {userData != null ? userData.username : <a href="/login">Log in</a>}
       </span>
-      <button onClick={() => handleOpen()}>
+      <button onClick={() => handleOpen()} data-testid="menu-open">
         <img id="pfp" src={userData["profile_picture"]}></img>
       </button>
     </nav>

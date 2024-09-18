@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import { getBlogPosts, getComments } from "../features/helpers";
+import { getBlogPosts, getComments, limitLength } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Dashboard() {
@@ -29,9 +29,7 @@ function Dashboard() {
             comments.map((content, index) => (
               <li className="comment" key={index}>
                 <p data-testid="comment-content">
-                  {content["content"].length > 100
-                    ? content["content"].slice(0, 101) + "..."
-                    : content.content}
+                  {limitLength(content["content"])}
                 </p>
               </li>
             ))

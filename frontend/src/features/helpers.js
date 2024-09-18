@@ -238,6 +238,10 @@ async function register(formData) {
   return response.ok;
 }
 
+function limitLength(string, len) {
+  return string.length > len ? string.slice(0, len + 1) : string;
+}
+
 export {
   getLinks,
   getUserInfoByUsername,
@@ -250,6 +254,7 @@ export {
   getUserInfo,
   register,
   slugify,
+  limitLength,
 };
 
 export default getCookie;

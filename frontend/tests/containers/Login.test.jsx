@@ -1,4 +1,4 @@
-import { render, waitFor } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it, vi } from "vitest";
 import Login from "../../src/containers/Login";
@@ -14,7 +14,7 @@ vi.mock("react-router-dom", async () => {
 
 describe("Login", () => {
   it("renders correctly", () => {
-    const rendered = render(
+    render(
       <Router initialEntries={["/login"]}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -22,11 +22,11 @@ describe("Login", () => {
       </Router>,
     );
 
-    expect(rendered.getByRole("form")).toBeTruthy();
+    expect(screen.getByRole("form")).toBeTruthy();
   });
   it("logins in and navigates correctly", async () => {
     const user = userEvent.setup();
-    const rendered = render(
+    render(
       <Router initialEntries={["/login"]}>
         <Routes>
           <Route path="/login" element={<Login />} />
@@ -35,9 +35,9 @@ describe("Login", () => {
       </Router>,
     );
 
-    const button = rendered.getByRole("button");
-    const username = rendered.getByLabelText("Username");
-    const password = rendered.getByLabelText("Password");
+    const button = screen.getByRole("button");
+    const username = screen.getByLabelText("Username");
+    const password = screen.getByLabelText("Password");
 
     await user.type(username, "MyUsername");
     await user.type(password, "SecurePassword123");

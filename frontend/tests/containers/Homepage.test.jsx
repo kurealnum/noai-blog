@@ -10,7 +10,7 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 
 describe("Homepage", () => {
   it("renders correctly", async () => {
-    const rendered = render(
+    render(
       <Router initialEntries={["/homepage/oscar"]}>
         <Routes>
           <Route path="/homepage/:username" element={<Homepage />} />
@@ -22,7 +22,7 @@ describe("Homepage", () => {
       screen.getByText("The user oscar does not exist!"),
     );
 
-    // checking the username field
-    expect(rendered.getByText("oscar")).toBeDefined();
+    expect(screen.getByText("oscar")).toBeDefined();
+    expect(screen.getAllByRole("heading")).toHaveLength(4);
   });
 });

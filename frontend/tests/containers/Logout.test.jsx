@@ -12,7 +12,7 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 describe("Logout", () => {
   it("renders correctly", async () => {
     // logout is a tricky one, as it should really just redirect almost instantly
-    const rendered = render(
+    render(
       <Router initialEntries={["/logout"]}>
         <Routes>
           <Route path="/logout" element={<Logout />} />
@@ -22,6 +22,6 @@ describe("Logout", () => {
     );
 
     await waitForElementToBeRemoved(screen.getByRole("paragraph"));
-    expect(rendered.getByRole("form")).toBeVisible();
+    expect(screen.getByRole("form")).toBeVisible();
   });
 });

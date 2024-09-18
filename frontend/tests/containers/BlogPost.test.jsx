@@ -1,4 +1,8 @@
-import { render, waitForElementToBeRemoved } from "@testing-library/react";
+import {
+  render,
+  waitForElementToBeRemoved,
+  screen,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import BlogPost from "../../src/containers/BlogPost";
@@ -6,7 +10,7 @@ import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 
 describe("Blog Post", () => {
   it("renders correctly", async () => {
-    const rendered = render(
+    render(
       <Router initialEntries={["/post/oscar/why-django-is-so-amazing"]}>
         <Routes>
           <Route path="/post/:username/:slug" element={<BlogPost />} />
@@ -14,9 +18,10 @@ describe("Blog Post", () => {
       </Router>,
     );
 
-    await waitForElementToBeRemoved(() => rendered.getByTestId("loader"));
+    await waitForElementToBeRemoved(() => screen.getByTestId("loader"));
 
-    expect(rendered.getByRole("heading")).toBeVisible();
-    expect(rendered.getByRole("img")).toBeVisible();
+    expect(screen.getByRole("heading")).toBeVisible();
+    expect(screen.getByRole("img")).toBeVisible();
+    expect(screen.getByText("By oscar")).toBeVisible();
   });
 });

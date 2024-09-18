@@ -13,6 +13,7 @@ const posts = [
     content: "Here's some writing.",
     created_date: "2024-09-09T18:35:01.757930Z",
     updated_date: "2024-09-09T18:35:01.757938Z",
+    likes: 0,
   },
 ];
 

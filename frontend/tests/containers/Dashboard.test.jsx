@@ -9,19 +9,21 @@ import Dashboard from "../../src/containers/Dashboard";
 
 describe("Dashboard", () => {
   it("renders correctly", () => {
-    const rendered = render(<Dashboard />);
-    expect(rendered.getByText("Your comments")).toBeTruthy();
-    expect(rendered.getByText("Your posts")).toBeTruthy();
+    render(<Dashboard />);
+    expect(screen.getByText("Your comments")).toBeTruthy();
+    expect(screen.getByText("Your posts")).toBeTruthy();
   });
   it("comments and posts render correctly", async () => {
-    const rendered = render(<Dashboard />);
-
+    render(<Dashboard />);
     await waitForElementToBeRemoved(() => screen.getAllByRole("progressbar"));
 
-    const lists = rendered.getAllByRole("list");
-    const listItems = rendered.getAllByRole("listitem");
-
+    const lists = screen.getAllByRole("list");
+    const listItems = screen.getAllByRole("listitem");
+    const headers = screen.getAllByRole("heading");
     expect(lists).toHaveLength(2);
     expect(listItems).toHaveLength(2);
+
+    //length 3 because of the one blog post that is rendered
+    expect(headers).toHaveLength(3);
   });
 });
