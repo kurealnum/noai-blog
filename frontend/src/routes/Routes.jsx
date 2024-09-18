@@ -15,6 +15,7 @@ import Settings from "../containers/Settings";
 import Homepage from "../containers/Homepage";
 import BlogPost from "../containers/BlogPost";
 import PublicRoute from "./PublicRoutes";
+import Page from "./Page";
 
 const router = createBrowserRouter([
   {
@@ -25,68 +26,109 @@ const router = createBrowserRouter([
     children: [
       {
         path: "homepage/:username",
-        element: <Homepage />,
+        element: (
+          <Page title="Homepage">
+            <Homepage />
+          </Page>
+        ),
       },
       {
         path: "feed",
-        element: <Feed />,
+        element: (
+          <Page title="Feed">
+            <Feed />
+          </Page>
+        ),
       },
       {
         path: "register",
         element: (
-          <PublicRoute>
-            <Register />
-          </PublicRoute>
+          <Page title="Register">
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          </Page>
         ),
       },
-      { path: "", element: <Home /> },
+      {
+        path: "",
+        element: (
+          <Page title="Home">
+            <Home />
+          </Page>
+        ),
+      },
       {
         path: "about-us",
-        element: <AboutUs />,
+        element: (
+          <Page title="About Us">
+            <AboutUs />
+          </Page>
+        ),
       },
       {
         path: "settings",
         element: (
-          <AuthenticatedRoute>
-            <Settings />
-          </AuthenticatedRoute>
+          <Page title="Settings">
+            <AuthenticatedRoute>
+              <Settings />
+            </AuthenticatedRoute>
+          </Page>
         ),
       },
       {
         path: "guidelines",
-        element: <Guidelines />,
+        element: (
+          <Page title="Guidelines">
+            <Guidelines />
+          </Page>
+        ),
       },
       {
         path: "feed",
-        element: <Feed />,
+        element: (
+          <Page title="Feed">
+            <Feed />
+          </Page>
+        ),
       },
       {
         path: "login",
         element: (
-          <PublicRoute>
-            <Login />
-          </PublicRoute>
+          <Page title="Login">
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          </Page>
         ),
       },
       {
         path: "dashboard",
         element: (
-          <AuthenticatedRoute>
-            <Dashboard />
-          </AuthenticatedRoute>
+          <Page title="Dashboard">
+            <AuthenticatedRoute>
+              <Dashboard />
+            </AuthenticatedRoute>
+          </Page>
         ),
       },
       {
         path: "logout",
         element: (
-          <AuthenticatedRoute>
-            <Logout />
-          </AuthenticatedRoute>
+          <Page title="Logout">
+            <AuthenticatedRoute>
+              <Logout />
+            </AuthenticatedRoute>
+          </Page>
         ),
       },
       {
         path: "post/:username/:slug",
-        element: <BlogPost />,
+        element: (
+          <Page>
+            <BlogPost />
+          </Page>
+        ),
       },
     ],
   },

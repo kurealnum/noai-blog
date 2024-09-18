@@ -28,6 +28,7 @@ function Homepage() {
     });
     getLinks(username).then((res) => {
       setLinks(res);
+      document.title = "NoAI Blog" + " - " + username;
     });
   }, [username]);
 

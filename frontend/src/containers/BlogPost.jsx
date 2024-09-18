@@ -12,6 +12,7 @@ function BlogPost() {
   useEffect(() => {
     getBlogPost({ username, slug }).then((res) => {
       setBlogPost(res);
+      document.title = "NoAI Blog" + " - " + res["title"];
     });
   }, [username, slug]);
 
