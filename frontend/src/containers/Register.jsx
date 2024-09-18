@@ -31,6 +31,7 @@ function Register() {
 
   return (
     <>
+      <h1 data-testid="register">Register</h1>
       <form onSubmit={(e) => onFormSubmit(e)} aria-label="Register">
         <div className="item">
           <label htmlFor="username">Username</label>

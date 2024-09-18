@@ -40,6 +40,7 @@ const userInfo = {
 };
 const loginSuccess = true;
 const logoutSuccess = true;
+const registerSuccess = true;
 const blogPost = {
   user: {
     username: "oscar",
@@ -61,6 +62,9 @@ const blogPost = {
 export const restHandlers = [
   http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
     return HttpResponse.json(blogPost);
+  }),
+  http.post("/api/accounts/register/", () => {
+    return HttpResponse.json(registerSuccess);
   }),
   http.get("/api/blog-posts/get-posts/oscar/", () => {
     return HttpResponse.json(posts);
