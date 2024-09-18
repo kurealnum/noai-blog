@@ -28,3 +28,7 @@ Technologies that I would like to/need to use:
 
 - QuillJS
 - EditorJS
+
+## Important Notes
+
+`#language-field` (CSS) is a honeypot field for the register page.

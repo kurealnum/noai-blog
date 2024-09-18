@@ -19,6 +19,10 @@
   font-family: "Raleway", "Times New Roman", Times, serif;
 }
 
+#language-field {
+  display: none;
+}
+
 .info-bar {
   display: flex;
   flex-direction: row;

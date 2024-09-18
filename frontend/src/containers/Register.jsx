@@ -20,6 +20,9 @@ function Register() {
 
   function onFormSubmit(e) {
     e.preventDefault();
+    if (register["language"] != undefined) {
+      throw Error;
+    }
     register(formData).then((isAuth) => {
       if (isAuth) {
         navigate("/login");
@@ -96,6 +99,15 @@ function Register() {
             onChange={(e) => setNewUserDataHelper(e)}
             maxLength={150}
           ></textarea>
+        </div>
+        <div className="item" id="language-field">
+          <label htmlFor="language">Language</label>
+          <input
+            id="language"
+            name="language"
+            onChange={(e) => setNewUserDataHelper(e)}
+            maxLength={150}
+          ></input>
         </div>
         <button id="save" type="submit">
           Register
