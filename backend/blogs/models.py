@@ -51,7 +51,7 @@ class Comment(models.Model):
     post = models.ForeignKey(
         to=BlogPost, on_delete=models.SET_NULL, null=True, blank=True
     )
-    content = models.TextField(max_length=10000)
+    content = models.TextField(max_length=2000)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

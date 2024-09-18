@@ -14,5 +14,5 @@ class CustomUser(AbstractUser):
 
 class Link(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    link = models.CharField(unique=False)
-    name = models.CharField(unique=False)
+    link = models.CharField(unique=False, max_length=100)
+    name = models.CharField(unique=False, max_length=50)
