@@ -14,6 +14,7 @@ import NavBar from "../containers/NavBar";
 import Settings from "../containers/Settings";
 import Homepage from "../containers/Homepage";
 import BlogPost from "../containers/BlogPost";
+import PublicRoute from "./PublicRoutes";
 
 const router = createBrowserRouter([
   {
@@ -30,7 +31,14 @@ const router = createBrowserRouter([
         path: "feed",
         element: <Feed />,
       },
-      { path: "register", element: <Register /> },
+      {
+        path: "register",
+        element: (
+          <PublicRoute>
+            <Register />
+          </PublicRoute>
+        ),
+      },
       { path: "", element: <Home /> },
       {
         path: "about-us",
@@ -54,7 +62,11 @@ const router = createBrowserRouter([
       },
       {
         path: "login",
-        element: <Login />,
+        element: (
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        ),
       },
       {
         path: "dashboard",
