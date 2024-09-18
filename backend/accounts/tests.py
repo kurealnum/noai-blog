@@ -377,3 +377,37 @@ class LinksTestCase(CustomTestCase):
         request = temp_client.get(reverse_lazy("links"))
         expected_result = 200
         self.assertEqual(expected_result, request.status_code)
+
+
+class RegisterTestCase(CustomTestCase):
+    def test_register_with_valid_data(self):
+        img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        img.name = "myimage.gif"
+        data = {
+            "email": "toby@gmail.com",
+            "username": "toby1",
+            "first_name": "toby",
+            "last_name": "maguire",
+            "about_me": "i dont actually know who this person is",
+            "technical_info": "hacker",
+            "profile_picture": img,
+        }
+        request = self.client.post(reverse_lazy("register"), data)
+        expected_response = 201
+        self.assertEqual(request.status_code, expected_response)
+
+    # same thing as `test_register_with_valid_data` except we dont send `profile_picture` and `technical_info`
+    def test_register_with_invalid_data(self):
+        data = {
+            "email": "toby@gmail.com",
+            "username": "toby1",
+            "first_name": "toby",
+            "last_name": "maguire",
+            "about_me": "i dont actually know who this person is",
+        }
+        request = self.client.post(reverse_lazy("register"), data)
+        expected_response = 400
+        self.assertEqual(request.status_code, expected_response)

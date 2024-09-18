@@ -17,6 +17,9 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "profile_picture",
         )
 
+    def create(self, validated_data):
+        return CustomUser.objects.create(**validated_data)
+
 
 class LinkSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
