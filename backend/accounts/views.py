@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -11,6 +10,7 @@ from accounts.models import CustomUser, Link
 from accounts.serializers import (
     CustomUserSerializer,
     LinkSerializer,
+    NewCustomUserSerializer,
 )
 
 
@@ -183,9 +183,10 @@ class RegisterView(APIView):
 
     def post(self, request):
         data = request.data
-        serializer = CustomUserSerializer(data=data)
-        if serializer.is_valid():
+        serializer = NewCustomUserSerializer(data=data)
+        serializer.is_valid()
+        if serializer.is_valid(raise_exception=True):
             serializer.save()
             return Response(status=status.HTTP_201_CREATED)
-        else:
-            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(status=status.HTTP_400_BAD_REQUEST)

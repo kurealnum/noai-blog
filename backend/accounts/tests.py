@@ -392,6 +392,7 @@ class RegisterTestCase(CustomTestCase):
             "first_name": "toby",
             "last_name": "maguire",
             "about_me": "i dont actually know who this person is",
+            "password": "myawfulpassword123!!",
             "technical_info": "hacker",
             "profile_picture": img,
         }
@@ -407,6 +408,7 @@ class RegisterTestCase(CustomTestCase):
             "first_name": "toby",
             "last_name": "maguire",
             "about_me": "i dont actually know who this person is",
+            "password": "myawfulpassword123!!",
         }
         request = self.client.post(reverse_lazy("register"), data)
         expected_response = 400
