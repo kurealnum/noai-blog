@@ -59,6 +59,7 @@ const registerSuccess = true;
 const updateUserInfo = true;
 const saveProfilePicture = true;
 const manageLinksPut = true;
+const createLink = true;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -69,6 +70,9 @@ const manageLinksPut = true;
 export const restHandlers = [
   http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
     return HttpResponse.json(blogPost);
+  }),
+  http.post("/api/accounts/manage-links/", () => {
+    return HttpResponse.json(createLink);
   }),
   http.put("/api/accounts/update-user-info/1/", () => {
     return HttpResponse.json(updateUserInfo);

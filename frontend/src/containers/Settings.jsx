@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useNavigate, useRouteLoaderData } from "react-router-dom";
+import { Outlet, useRouteLoaderData } from "react-router-dom";
 import { Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
@@ -29,8 +29,6 @@ function Settings() {
   const [error, setError] = useState(false);
   // snackbar error
   const [isError, setIsError] = useState(false);
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     getLinks().then((res) => {
@@ -82,6 +80,7 @@ function Settings() {
         if (ok) {
           getLinks().then((res) => {
             setNewLinks(res);
+            setIsSaved(true);
           });
         }
       });
@@ -222,7 +221,12 @@ function Settings() {
               </button>
             </div>
           ))}
-          <button id="save" type="button" onClick={handleOpen}>
+          <button
+            id="save"
+            type="button"
+            onClick={handleOpen}
+            data-testid="modal-open"
+          >
             Add link
           </button>
           <Modal open={isModalOpen} onClose={handleClose}>
@@ -241,7 +245,11 @@ function Settings() {
                 defaultValue="Link"
                 onChange={(e) => setSingleNewLinkHelper(e)}
               ></input>
-              <button id="save" onClick={() => addNewLinksHelper()}>
+              <button
+                id="save"
+                onClick={() => addNewLinksHelper()}
+                data-testid="link-save"
+              >
                 Save
               </button>
               <ErrorMessage message="Maximum of 5 links" isError={error} />
