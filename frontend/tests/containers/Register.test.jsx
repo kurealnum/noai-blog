@@ -54,4 +54,22 @@ describe("Register", () => {
 
     expect(header).not.toBeInTheDocument();
   });
+  it("honeypot field throws error if filled", async () => {
+    render(
+      <Router initialEntries={["/register"]}>
+        <Routes>
+          <Route path="/register" element=<Register /> />
+          <Route path="/login" element=<Login /> />
+        </Routes>
+      </Router>,
+    );
+
+    const honeyPot = screen.getByLabelText("Language");
+    const button = screen.getByRole("button");
+
+    await userEvent.type(honeyPot, "Something!");
+    await userEvent.click(button);
+
+    expect(screen).toThrow(Error);
+  });
 });

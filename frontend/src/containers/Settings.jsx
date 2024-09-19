@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useRouteLoaderData } from "react-router-dom";
+import { Outlet, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { Alert, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
@@ -29,6 +29,8 @@ function Settings() {
   const [error, setError] = useState(false);
   // snackbar error
   const [isError, setIsError] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getLinks().then((res) => {
@@ -102,6 +104,23 @@ function Settings() {
     setIsSaved(false);
   };
 
+  function formSubmitHelper(e) {
+    e.preventDefault();
+    changeSettings(
+      newUserData,
+      setIsError,
+      setIsSaved,
+      newLinks,
+      profilePicture,
+    ).then((res) => {
+      if (res) {
+        setIsSaved(true);
+      } else {
+        setIsError(true);
+      }
+    });
+  }
+
   if (newUserData != null && newLinks != null) {
     return (
       <>
@@ -110,7 +129,7 @@ function Settings() {
           id="settings"
           encType="multipart/form-data"
           method="POST"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={(e) => formSubmitHelper(e)}
         >
           <div className="item">
             <label htmlFor="username">Username</label>
@@ -208,14 +227,14 @@ function Settings() {
           </button>
           <Modal open={isModalOpen} onClose={handleClose}>
             <div id="modal">
-              <label for="name">Name</label>
+              <label htmlFor="name">Name</label>
               <input
                 id="name"
                 name="name"
                 defaultValue="Name"
                 onChange={(e) => setSingleNewLinkHelper(e)}
               ></input>
-              <label for="link">Link</label>
+              <label htmlFor="link">Link</label>
               <input
                 id="link"
                 name="link"
@@ -228,19 +247,7 @@ function Settings() {
               <ErrorMessage message="Maximum of 5 links" isError={error} />
             </div>
           </Modal>
-          <button
-            id="save"
-            onClick={() =>
-              changeSettings(
-                newUserData,
-                setIsError,
-                setIsSaved,
-                newLinks,
-                profilePicture,
-              )
-            }
-            type="submit"
-          >
+          <button data-testid="form-save" id="save" type="submit">
             Save
           </button>
           <Snackbar
@@ -258,6 +265,7 @@ function Settings() {
             onClose={handleCloseSuccess}
           >
             <Alert
+              data-testid="saved-alert"
               onClose={handleCloseSuccess}
               severity="success"
               variant="filled"

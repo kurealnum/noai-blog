@@ -39,9 +39,7 @@ const userInfo = {
   technical_info: "Techy info",
   profile_picture: "/media/profile_pictures/2024-08-26_13-44.png",
 };
-const loginSuccess = true;
-const logoutSuccess = true;
-const registerSuccess = true;
+
 const blogPost = {
   user: {
     username: "oscar",
@@ -54,6 +52,14 @@ const blogPost = {
   likes: 0,
 };
 
+// successful fetch returns that dont need a body
+const loginSuccess = true;
+const logoutSuccess = true;
+const registerSuccess = true;
+const updateUserInfo = true;
+const saveProfilePicture = true;
+const manageLinksPut = true;
+
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
 // /api/accounts/manage-links/oscar/
@@ -63,6 +69,12 @@ const blogPost = {
 export const restHandlers = [
   http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
     return HttpResponse.json(blogPost);
+  }),
+  http.put("/api/accounts/update-user-info/1/", () => {
+    return HttpResponse.json(updateUserInfo);
+  }),
+  http.patch("/api/accounts/save-profile-picture/", () => {
+    return HttpResponse.json(saveProfilePicture);
   }),
   http.post("/api/accounts/register/", () => {
     return HttpResponse.json(registerSuccess);
@@ -81,6 +93,9 @@ export const restHandlers = [
   }),
   http.get("/api/accounts/manage-links/", () => {
     return HttpResponse.json(manageLinks);
+  }),
+  http.put("/api/accounts/manage-links/", () => {
+    return HttpResponse.json(manageLinksPut);
   }),
   http.get("/api/accounts/user-info/oscar/", () => {
     return HttpResponse.json(userInfo);

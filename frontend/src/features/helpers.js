@@ -165,9 +165,10 @@ async function changeSettings(
 
   if (userInfoResponse.ok && linksResponse.ok && isImageUploadOk) {
     setIsSaved(true);
-  } else {
-    setIsError(true);
+    return true;
   }
+  setIsError(true);
+  return false;
 }
 
 async function deleteLink(link) {
