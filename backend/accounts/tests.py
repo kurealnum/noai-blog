@@ -225,13 +225,13 @@ class LinksTestCase(CustomTestCase):
         data = json.dumps(
             [
                 {
-                    "link": "yahoo.com",
+                    "link": "https://yahoo.com",
                     "name": "newName1",
                     "user": self.user.id,  # type: ignore
                     "id": self.linkone.id,  # type: ignore
                 },
                 {
-                    "link": "yahoo.com",
+                    "link": "https://yahoo.com",
                     "name": "newName2",
                     "user": self.user.id,  # type: ignore
                     "id": self.linktwo.id,  # type: ignore
@@ -308,7 +308,7 @@ class LinksTestCase(CustomTestCase):
         data = json.dumps(
             [
                 {
-                    "link": "google.com",
+                    "link": "https://google.com",
                     "name": "newName1",
                     "user": self.user.id,  # type: ignore
                 },
@@ -350,13 +350,28 @@ class LinksTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
-            "link": "google.com",
+            "link": "https://google.com",
             "name": "MyNewLink",
         }
 
         result = temp_client.post(reverse_lazy("links"), data)
         expected_result = 201
         self.assertEqual(expected_result, result.status_code)
+
+    def test_post_request_with_non_https_link(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "link": "http://google.com",
+            "name": "MyNewLink",
+        }
+
+        result = temp_client.post(reverse_lazy("links"), data)
+        expected_result = "Your link needs to be HTTPS"
+        self.assertEqual(
+            expected_result, json.loads(result.content)["non_field_errors"][0]
+        )
 
     def test_get_request_with_correct_username(self):
         request = self.client.get(reverse_lazy("links") + "bobby/")

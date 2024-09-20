@@ -4,6 +4,7 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
+from rest_framework.serializers import ErrorDetail
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser, Link
@@ -146,13 +147,15 @@ class LinksView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
-        data = request.data
+        data = request.data.dict()
         user_id = self.request.user.id  # type:ignore
-        user = CustomUser.objects.get(id=user_id)
-        new_link = Link(**data)
-        new_link.user = user
-        new_link.save()
-        return Response(status=status.HTTP_201_CREATED)
+        data["user"] = user_id
+        new_link = LinkSerializer(data=data)
+        if new_link.is_valid():
+            new_link.save()
+            return Response(status=status.HTTP_201_CREATED)
+
+        return Response(data=new_link.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, username=None):
         if username:

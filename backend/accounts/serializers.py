@@ -42,3 +42,9 @@ class LinkSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = Link
         fields = "__all__"
+
+    def validate(self, attrs):
+        # checking for https
+        if attrs["link"][:8] != "https://":
+            raise serializers.ValidationError("Your link needs to be HTTPS")
+        return super().validate(attrs)
