@@ -203,6 +203,7 @@ function Settings() {
             ></input>
           </div>
           <h2>Links</h2>
+          <p>All links must be HTTPS</p>
           {newLinks.map((content, index) => (
             <div className="item link-item" key={content["name"] + index}>
               <input
