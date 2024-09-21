@@ -128,6 +128,14 @@ h2 {
   border-bottom: 3px var(--tertiary) solid;
 }
 
+#error-page {
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  align-items: center;
+  gap: 20px;
+}
+
 @media (min-width: 800px) {
   textarea {
     width: 320px;

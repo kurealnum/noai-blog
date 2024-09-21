@@ -16,6 +16,7 @@ import Homepage from "../containers/Homepage";
 import BlogPost from "../containers/BlogPost";
 import PublicRoute from "./PublicRoutes";
 import Page from "./Page";
+import RootBoundary from "../containers/RootBoundary";
 
 const router = createBrowserRouter([
   {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
     id: "root",
     element: <NavBar />,
     loader: getUserInfo,
+    errorElement: <RootBoundary />,
     children: [
       {
         path: "homepage/:username",
