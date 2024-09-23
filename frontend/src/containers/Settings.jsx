@@ -204,24 +204,37 @@ function Settings() {
           </div>
           <h2>Links</h2>
           <p>All links must be HTTPS</p>
-          {newLinks.map((content, index) => (
-            <div className="item link-item" key={content["name"] + index}>
-              <input
-                defaultValue={content["name"]}
-                name="name"
-                onChange={(e) => setNewLinksHelper(e, index)}
-              ></input>
-              <p> - </p>
-              <input
-                name="link"
-                defaultValue={content["link"]}
-                onChange={(e) => setNewLinksHelper(e, index)}
-              ></input>
-              <button onClick={() => removeNewLinksHelper(index)}>
-                <DeleteIcon />
-              </button>
-            </div>
-          ))}
+          <ul>
+            {newLinks.map((content, index) => (
+              <li className="item link-item" key={content["name"] + index}>
+                <label htmlFor="name" hidden>
+                  Name
+                </label>
+                <input
+                  id="name"
+                  defaultValue={content["name"]}
+                  name="name"
+                  onChange={(e) => setNewLinksHelper(e, index)}
+                ></input>
+                <p> - </p>
+                <label htmlFor="link" hidden>
+                  Link
+                </label>
+                <input
+                  id="link"
+                  name="link"
+                  defaultValue={content["link"]}
+                  onChange={(e) => setNewLinksHelper(e, index)}
+                ></input>
+                <button
+                  type="button"
+                  onClick={() => removeNewLinksHelper(index)}
+                >
+                  <DeleteIcon />
+                </button>
+              </li>
+            ))}
+          </ul>
           <button
             id="save"
             type="button"
