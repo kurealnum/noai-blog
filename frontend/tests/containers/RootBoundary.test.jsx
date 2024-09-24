@@ -45,10 +45,8 @@ describe("Root Boundary", () => {
     });
     render(<RouterProvider router={router} />);
 
-    await waitFor(() => screen.getByRole("paragraph"));
+    await waitFor(() => screen.getByRole("form"));
 
-    expect(screen.getByRole("paragraph")).toHaveTextContent(
-      "This is your feed!",
-    );
+    expect(screen.getByRole("form")).toBeVisible();
   });
 });

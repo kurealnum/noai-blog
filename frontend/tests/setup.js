@@ -51,6 +51,30 @@ const blogPost = {
   updated_date: "2024-09-17T16:52:43.289900Z",
   likes: 0,
 };
+const multipleBlogPosts = [
+  {
+    user: {
+      username: "oscar",
+      profile_picture: "/media/profile_pictures/pfp.png",
+    },
+    title: "Why Django is so amazing!",
+    content: "Hello world! This is my blog post.",
+    created_date: "2024-09-09T18:35:07.417021Z",
+    updated_date: "2024-09-17T16:52:43.289900Z",
+    likes: 0,
+  },
+  {
+    user: {
+      username: "oscar",
+      profile_picture: "/media/profile_pictures/pfp.png",
+    },
+    title: "Why Django is so amazing!",
+    content: "Hello world! This is my blog post.",
+    created_date: "2024-09-09T18:35:07.417021Z",
+    updated_date: "2024-09-17T16:52:43.289900Z",
+    likes: 0,
+  },
+];
 
 // successful fetch returns that dont need a body
 const loginSuccess = true;
@@ -60,6 +84,7 @@ const updateUserInfo = true;
 const saveProfilePicture = true;
 const manageLinksPut = true;
 const createLink = true;
+const multipleBlogPostsNone = null;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -70,6 +95,12 @@ const createLink = true;
 export const restHandlers = [
   http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
     return HttpResponse.json(blogPost);
+  }),
+  http.get("/api/blog-posts/feed/1/", () => {
+    return HttpResponse.json(multipleBlogPosts);
+  }),
+  http.get("/api/blog-posts/feed/2/", () => {
+    return HttpResponse.json(multipleBlogPostsNone);
   }),
   http.post("/api/accounts/manage-links/", () => {
     return HttpResponse.json(createLink);

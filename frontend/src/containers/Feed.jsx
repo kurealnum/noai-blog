@@ -54,8 +54,14 @@ function Feed() {
 
 function Paginator({ formSubmitHelper, page, setPage }) {
   return (
-    <form className="paginator" onSubmit={(e) => formSubmitHelper(e)}>
-      <label htmlFor="page">Page Number</label>
+    <form
+      aria-label="Select a page"
+      className="paginator"
+      onSubmit={(e) => formSubmitHelper(e)}
+    >
+      <label htmlFor="page" hidden>
+        Page Number
+      </label>
       <input
         defaultValue={page}
         type="number"
