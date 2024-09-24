@@ -86,6 +86,8 @@ class PostReplyListView(generics.ListAPIView):
 # This view returns a feed of the top posts mixed in with new posts and posts sorted by number of comments
 # 60% of returned posts will be sorted by # of reactions, 30% will be sorted by newest, and 10% will be sorted by # of comments
 class FeedListView(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request, index):
         index = int(index)
         posts_per_page = 50

@@ -239,6 +239,16 @@ async function register(formData) {
   return response.ok;
 }
 
+async function getFeed(index) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/feed/" + index + "/", config);
+  return await response.json();
+}
+
 function limitLength(string, len) {
   return string.length > len ? string.slice(0, len + 1) : string;
 }
@@ -256,6 +266,7 @@ export {
   register,
   slugify,
   limitLength,
+  getFeed,
 };
 
 export default getCookie;
