@@ -54,10 +54,8 @@ function Feed() {
 
 function Paginator({ formSubmitHelper, page, setPage }) {
   return (
-    <form onSubmit={(e) => formSubmitHelper(e)}>
-      <label hidden htmlFor="page">
-        Page Number
-      </label>
+    <form className="paginator" onSubmit={(e) => formSubmitHelper(e)}>
+      <label htmlFor="page">Page Number</label>
       <input
         defaultValue={page}
         type="number"

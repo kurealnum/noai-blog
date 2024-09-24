@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap");
 
-:root {
+:root,
+button,
+input {
   --dark-text: #000000;
   --background: rgba(246, 247, 235, 0.65);
   --primary: #393e41;
@@ -136,6 +138,60 @@ h2 {
   gap: 20px;
 }
 
+#feed {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 30px auto;
+  gap: 20px;
+}
+
+.hint {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.blog-post a {
+  text-decoration: none;
+  color: var(--dark-text);
+}
+
+.paginator {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+}
+
+.paginator input {
+  border-radius: 10px;
+  border: 1px solid var(--primary);
+  padding: 2px 5px;
+  width: 5ch;
+}
+
+.paginator button {
+  width: 5ch;
+  color: var(--light-text);
+  padding: 6px 20px;
+  background: var(--tertiary);
+  border: 0px;
+  border-radius: 10px;
+  font-size: var(--subtext-font-size);
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+  appearance: textfield;
+}
+
 @media (min-width: 800px) {
   textarea {
     width: 320px;
@@ -151,10 +207,10 @@ h2 {
   #root {
     display: flex;
     flex-direction: row;
-    align-items: center;
   }
   /*not sure why I have to be this specific, but its kinda scuffed*/
   #root nav {
+    align-self: center;
     display: flex;
     flex-direction: column;
     height: 88vh;
