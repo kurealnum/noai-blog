@@ -18,7 +18,7 @@ urlpatterns = [
         name="get_comment_replies",
     ),
     path("get-post-replies/", PostReplyListView.as_view(), name="get_post_replies"),
-    path("feed/", cache_page(60 * 20)(FeedListView.as_view()), name="feed"),
+    path("feed/<index>/", cache_page(60 * 6)(FeedListView.as_view()), name="feed"),
     # re_path(
     #     r"^get-posts/(?P<username>\w+/|)$", BlogPostList.as_view(), name="get_posts"
     # ),

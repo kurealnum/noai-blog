@@ -236,11 +236,22 @@ class FeedListTestCase(CustomTestCase):
             user=self.user, content="a comment", post=self.blog_post_3
         )
 
-    def test_feedlist_returns_correctly(self):
+    def test_feedlist_returns_correctly_on_first_page(self):
         # temp client for logging in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        response = temp_client.get(reverse_lazy("feed"))
+        response = temp_client.get(reverse_lazy("feed", kwargs={"index": 1}))
         # the title of the 3rd blog post is 3
         expected_result = "3"
         self.assertEqual(expected_result, response.data[0].get("title"))
+
+    # should return an empty array
+    def test_feedlist_returns_correctly_on_second_page(self):
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("feed", kwargs={"index": 2}))
+
+        # there should be nothing on this page
+        expected_length = 0
+        self.assertEqual(expected_length, len(response.data))

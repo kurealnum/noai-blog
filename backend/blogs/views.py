@@ -85,11 +85,10 @@ class PostReplyListView(generics.ListAPIView):
 
 # This view returns a feed of the top posts mixed in with new posts and posts sorted by number of comments
 # 60% of returned posts will be sorted by # of reactions, 30% will be sorted by newest, and 10% will be sorted by # of comments
-class FeedListView(generics.ListAPIView):
-    permission_classes = (AllowAny,)
-    serializer_class = FeedBlogPostSerializer
-
-    def get_queryset(self):
+class FeedListView(APIView):
+    def get(self, request, index):
+        index = int(index)
+        posts_per_page = 50
         comment_score = 5
         reaction_score = 3
 
@@ -105,4 +104,6 @@ class FeedListView(generics.ListAPIView):
             .order_by("-score")
         )
 
-        return all_posts
+        res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
+        serializer = FeedBlogPostSerializer(res, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
