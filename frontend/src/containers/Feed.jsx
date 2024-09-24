@@ -2,22 +2,35 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { getFeed } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
+import { CircularProgress } from "@mui/material";
 
 function Feed() {
   const [posts, setPosts] = useState();
   const [page, setPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getFeed(1).then((res) => {
       setPosts(res);
+      setIsLoading(false);
     });
   }, []);
 
   function formSubmitHelper(e) {
     e.preventDefault();
+    setIsLoading(true);
     getFeed(page).then((res) => {
       setPosts(res);
+      setIsLoading(false);
     });
+  }
+
+  if (isLoading) {
+    return (
+      <div id="feed">
+        <CircularProgress />
+      </div>
+    );
   }
 
   if (!posts || posts.length === 0) {
