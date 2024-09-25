@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
@@ -27,6 +28,7 @@ describe("Root Boundary", () => {
     expect(screen.getByRole("heading")).toHaveTextContent("HTTP 404");
   });
   it("does not redirect to error page when URL is correct", async () => {
+    const queryClient = new QueryClient();
     const routes = [
       {
         path: "/",
@@ -35,7 +37,11 @@ describe("Root Boundary", () => {
         children: [
           {
             path: "/feed",
-            element: <Feed />,
+            element: (
+              <QueryClientProvider client={queryClient}>
+                <Feed />
+              </QueryClientProvider>
+            ),
           },
         ],
       },
