@@ -17,6 +17,7 @@
     "@mui/icons-material": "^6.0.1",
     "@mui/material": "^6.0.1",
     "@reduxjs/toolkit": "^2.2.5",
+    "@tanstack/react-query": "^5.56.2",
     "jsdom": "^25.0.0",
     "package.json": "^0.0.0",
     "react": "^18.2.0",
@@ -27,6 +28,7 @@
   "devDependencies": {
     "@babel/preset-env": "^7.25.4",
     "@babel/preset-react": "^7.24.7",
+    "@tanstack/eslint-plugin-query": "^5.57.2",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",

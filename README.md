@@ -28,6 +28,7 @@ Technologies that I would like to/need to use:
 
 - QuillJS
 - EditorJS
+- TanStack Query
 
 ## Important Notes
 

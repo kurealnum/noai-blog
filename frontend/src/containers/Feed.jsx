@@ -1,28 +1,19 @@
-import { useEffect } from "react";
 import { useState } from "react";
 import { getFeed } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { CircularProgress } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 function Feed() {
-  const [posts, setPosts] = useState();
   const [page, setPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    getFeed(1).then((res) => {
-      setPosts(res);
-      setIsLoading(false);
-    });
-  }, []);
+  const { data, isLoading } = useQuery({
+    queryKey: ["getFeed", page],
+    queryFn: () => getFeed(page),
+  });
 
   function formSubmitHelper(e) {
     e.preventDefault();
-    setIsLoading(true);
-    getFeed(page).then((res) => {
-      setPosts(res);
-      setIsLoading(false);
-    });
+    setPage(e.target[0].value);
   }
 
   if (isLoading) {
@@ -33,7 +24,7 @@ function Feed() {
     );
   }
 
-  if (!posts || posts.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div id="feed">
         <h1>There were no posts to be shown!</h1>
@@ -47,7 +38,7 @@ function Feed() {
   }
   return (
     <div id="feed">
-      {posts.map((content, index) => (
+      {data.map((content, index) => (
         <BlogPostThumbnail
           key={index}
           title={content.title}
@@ -56,16 +47,12 @@ function Feed() {
           content={content.content}
         />
       ))}
-      <Paginator
-        formSubmitHelper={formSubmitHelper}
-        page={page}
-        setPage={setPage}
-      />
+      <Paginator formSubmitHelper={formSubmitHelper} page={page} />
     </div>
   );
 }
 
-function Paginator({ formSubmitHelper, page, setPage }) {
+function Paginator({ formSubmitHelper, page }) {
   return (
     <form
       aria-label="Select a page"
@@ -75,12 +62,7 @@ function Paginator({ formSubmitHelper, page, setPage }) {
       <label htmlFor="page" hidden>
         Page Number
       </label>
-      <input
-        defaultValue={page}
-        type="number"
-        id="page"
-        onChange={(e) => setPage(e.target.value)}
-      ></input>
+      <input defaultValue={page} type="number" id="page"></input>
       <button type="submit">Go</button>
     </form>
   );
