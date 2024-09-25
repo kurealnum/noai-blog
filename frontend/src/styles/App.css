@@ -192,6 +192,13 @@ input[type="number"] {
   appearance: textfield;
 }
 
+.centered-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (min-width: 800px) {
   textarea {
     width: 320px;

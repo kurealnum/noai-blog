@@ -1,46 +1,52 @@
-import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getBlogPost } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
+import { useQuery } from "@tanstack/react-query";
+import { CircularProgress } from "@mui/material";
 
 function BlogPost() {
   const { username, slug } = useParams();
-  const [blogPost, setBlogPost] = useState();
+  const { data, isLoading, isSuccess } = useQuery({
+    queryKey: ["getBlogPost", username, slug],
+    queryFn: () => getBlogPost({ username, slug }),
+  });
 
-  useEffect(() => {
-    getBlogPost({ username, slug }).then((res) => {
-      setBlogPost(res);
-      document.title = "NoAI Blog" + " - " + res["title"];
-    });
-  }, [username, slug]);
-
-  if (blogPost) {
+  if (isLoading) {
     return (
-      <div id="blog-post">
-        <h1>{blogPost.title}</h1>
-        <div className="info-bar">
-          <div className="info-bar-box">
-            <div className="username-box username-box-no-change">
-              <img id="pfp" src={blogPost["user"]["profile_picture"]}></img>
-              <span>By {blogPost["user"]["username"]}</span>
-            </div>
-            <div className="likes">
-              <span>{blogPost["likes"]}</span>
-              <FavoriteBorderIcon />
-            </div>
-          </div>
-          <div id="member-since">
-            <CalendarMonthIcon />
-            <span>{blogPost["created_date"].replace(/(T.*)/g, "")}</span>
-          </div>
-        </div>
-        <p>{blogPost["content"]}</p>
+      <div id="blog-post" className="centered-page">
+        <CircularProgress />
       </div>
     );
   }
-  return <p data-testid="loader">Loading</p>;
+
+  if (isSuccess) {
+    document.title = "NoAI Blog" + " - " + data["title"];
+  }
+
+  return (
+    <div id="blog-post">
+      <h1>{data.title}</h1>
+      <div className="info-bar">
+        <div className="info-bar-box">
+          <div className="username-box username-box-no-change">
+            <img id="pfp" src={data["user"]["profile_picture"]}></img>
+            <span>By {data["user"]["username"]}</span>
+          </div>
+          <div className="likes">
+            <span>{data["likes"]}</span>
+            <FavoriteBorderIcon />
+          </div>
+        </div>
+        <div id="member-since">
+          <CalendarMonthIcon />
+          <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
+        </div>
+      </div>
+      <p>{data["content"]}</p>
+    </div>
+  );
 }
 
 export default BlogPost;

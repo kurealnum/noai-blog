@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Outlet, useRouteLoaderData } from "react-router-dom";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
 import "../styles/Settings.css";
@@ -300,7 +300,13 @@ function Settings() {
       </>
     );
   }
-  return <p data-testid="loader">Loading</p>;
+  // this doesn't make sense to use tanstack here
+  // id is for styling purposes
+  return (
+    <div id="settings">
+      <CircularProgress />
+    </div>
+  );
 }
 
 export default Settings;

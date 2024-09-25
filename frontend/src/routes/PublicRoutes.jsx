@@ -28,7 +28,6 @@ function PublicRoute({ children }) {
 
   if (!isBusy) {
     const isAuth = store.getState().auth.isAuthenticated;
-    console.log(isAuth);
 
     if (isAuth) {
       return <Navigate to="/dashboard" replace={true} />;
