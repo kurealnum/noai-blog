@@ -13,7 +13,7 @@ function Feed() {
 
   function formSubmitHelper(e) {
     e.preventDefault();
-    setPage(e.target[0].value);
+    setPage(e.target.elements.page.value);
   }
 
   if (isLoading) {
@@ -62,7 +62,7 @@ function Paginator({ formSubmitHelper, page }) {
       <label htmlFor="page" hidden>
         Page Number
       </label>
-      <input defaultValue={page} type="number" id="page"></input>
+      <input defaultValue={page} type="number" id="page" name="page"></input>
       <button type="submit">Go</button>
     </form>
   );

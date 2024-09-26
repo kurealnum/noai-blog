@@ -26,7 +26,7 @@ describe("Feed", () => {
   it("paginates correctly", async () => {
     const input = screen.getByLabelText("Page Number");
     await userEvent.clear(input);
-    await userEvent.type(input, "2");
+    await userEvent.type(input, "1");
     const button = screen.getByRole("button");
     await userEvent.click(button);
 
@@ -34,5 +34,16 @@ describe("Feed", () => {
     const headers = screen.getAllByRole("heading");
     expect(headers[0]).toHaveTextContent("Why Django is so amazing!");
     expect(headers[1]).toHaveTextContent("Why Django is so amazing!");
+  });
+  it("paginates correctly with page that has nothing on it", async () => {
+    const input = screen.getByLabelText("Page Number");
+    await userEvent.clear(input);
+    await userEvent.type(input, "2");
+    const button = screen.getByRole("button");
+    await userEvent.click(button);
+
+    await waitFor(() => screen.getAllByRole("heading"));
+    const header = screen.getByRole("heading");
+    expect(header).toHaveTextContent("There were no posts to be shown!");
   });
 });
