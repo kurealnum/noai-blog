@@ -17,6 +17,7 @@ import BlogPost from "../containers/BlogPost";
 import PublicRoute from "./PublicRoutes";
 import Page from "./Page";
 import RootBoundary from "../containers/RootBoundary";
+import CreatePost from "../containers/CreatePost";
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,14 @@ const router = createBrowserRouter([
         element: (
           <Page title="Homepage">
             <Homepage />
+          </Page>
+        ),
+      },
+      {
+        path: "create-post/",
+        element: (
+          <Page title="Create post">
+            <CreatePost />
           </Page>
         ),
       },
