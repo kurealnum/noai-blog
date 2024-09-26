@@ -25,4 +25,5 @@ urlpatterns = [
     path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
     path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),
     path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
+    path("create-post/", BlogPostView.as_view(), name="create_post"),
 ]

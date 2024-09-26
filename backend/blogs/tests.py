@@ -124,6 +124,23 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_result = "Here's something about my blog post"
         self.assertEqual(expected_result, request["content"])
 
+    def test_does_create_properly(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+        }
+        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = {
+            "user": 1,
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+        }
+        self.assertEqual(expected_result, request.data)
+
 
 class BlogPostListTestCase(CustomTestCase):
     def setUp(self) -> None:

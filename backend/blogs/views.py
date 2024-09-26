@@ -10,6 +10,7 @@ from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
     FeedBlogPostSerializer,
+    PostSingleBlogPostSerializer,
     SingleBlogPostSerializer,
 )
 
@@ -38,6 +39,26 @@ class BlogPostView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except BlogPost.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request):
+        data = request.data
+
+        # blog post specific data
+        user = self.request.user.id  # type: ignore
+        title = data["title"]
+        content = data["content"]
+        serializer_data = {
+            "user": user,
+            "title": title,
+            "content": content,
+        }
+
+        serializer = PostSingleBlogPostSerializer(data=serializer_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer_data, status=status.HTTP_201_CREATED)
+
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # this is the view for *multiple* blog posts

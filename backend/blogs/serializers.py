@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser
-from .models import Comment
+from .models import BlogPost, Comment
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -31,6 +31,7 @@ class FeedBlogPostSerializer(serializers.Serializer):
     updated_date = serializers.DateTimeField()
 
 
+# for get requests
 class SingleBlogPostSerializer(serializers.Serializer):
     user = SingleBlogPostUserSerializer()
     title = serializers.CharField(max_length=100)
@@ -39,7 +40,13 @@ class SingleBlogPostSerializer(serializers.Serializer):
     )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
-    likes = serializers.IntegerField()
+
+
+# for post, patch, etc.
+class PostSingleBlogPostSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = BlogPost
+        fields = ("user", "title", "content")
 
 
 class BlogPostSerializer(serializers.Serializer):
