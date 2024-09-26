@@ -23,12 +23,12 @@ The "middleware" (Nginx and Docker) is not tested.
 Technologies that are currently in use:
 
 - Everything in the `react-django-implementation` repository
+- TanStack Query
+- EasyMDE
 
 Technologies that I would like to/need to use:
 
-- QuillJS
-- EditorJS
-- TanStack Query
+- None at the moment
 
 ## Important Notes
 
