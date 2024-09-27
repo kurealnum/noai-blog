@@ -249,6 +249,27 @@ async function getFeed(index) {
   return await response.json();
 }
 
+async function createPost(newPost) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify(newPost),
+  };
+  const response = await fetch("/api/blog-posts/create-post/", config);
+
+  if (!response.ok) {
+    // only give the user one error message at a time
+    const errorMessages = await response.json();
+    const thrownErrorMessageKey = Object.keys(errorMessages)[0];
+    const thrownErrorMessage = errorMessages[thrownErrorMessageKey];
+    throw new Error(thrownErrorMessage);
+  }
+}
+
 function limitLength(string, len) {
   return string.length > len ? string.slice(0, len + 1) : string;
 }
@@ -267,6 +288,7 @@ export {
   slugify,
   limitLength,
   getFeed,
+  createPost,
 };
 
 export default getCookie;
