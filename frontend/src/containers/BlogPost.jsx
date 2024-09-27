@@ -5,6 +5,8 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
+import { marked } from "marked";
+import DOMPurify from "dompurify";
 
 function BlogPost() {
   const { username, slug } = useParams();
@@ -44,7 +46,11 @@ function BlogPost() {
           <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
         </div>
       </div>
-      <p>{data["content"]}</p>
+      <div
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(marked.parse(data["content"])),
+        }}
+      ></div>
     </div>
   );
 }

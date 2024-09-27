@@ -1,10 +1,12 @@
 import SimpleMdeReact from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createPost, slugify } from "../features/helpers";
 import { CircularProgress } from "@mui/material";
-import { Navigate, useNavigate, useRouteLoaderData } from "react-router-dom";
+import { Navigate, useRouteLoaderData } from "react-router-dom";
+import DOMPurify from "dompurify";
+import { marked } from "marked";
 
 function CreatePost() {
   // title and content
@@ -14,6 +16,14 @@ function CreatePost() {
   });
   const userData = useRouteLoaderData("root");
   const createPostMutation = useMutation({ mutationFn: createPost });
+
+  const customRendererOptions = useMemo(() => {
+    return {
+      previewRender(text) {
+        return DOMPurify.sanitize(marked.parse(text));
+      },
+    };
+  }, []);
 
   function handleSave() {
     createPostMutation.mutate(newBlogPost);
@@ -47,6 +57,7 @@ function CreatePost() {
         <input id="title" name="title" onChange={(e) => setTitleHelper(e)} />
       </form>
       <SimpleMdeReact
+        options={customRendererOptions}
         onChange={setContentHelper}
         value={newBlogPost["content"]}
       />
