@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser
-from .models import BlogPost, Comment
+from .models import BlogPost, Comment, Follower
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -57,3 +57,9 @@ class BlogPostSerializer(serializers.Serializer):
     )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+
+
+class FollowerSerializer(serializers.Serializer):
+    class Meta:
+        model = Follower
+        fields = "__all__"

@@ -5,11 +5,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from blogs.models import BlogPost, Comment, PostReaction, ReplyTo
+from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
     FeedBlogPostSerializer,
+    FollowerSerializer,
+    GetFollowerSerializer,
     PostSingleBlogPostSerializer,
     SingleBlogPostSerializer,
 )
@@ -130,3 +132,48 @@ class FeedListView(APIView):
         res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
         serializer = FeedBlogPostSerializer(res, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class FollowerView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        user = self.request.user.id  # type: ignore
+        data = Follower.objects.get(user=user)
+        serializer = FollowerSerializer(data=data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        user = self.request.user
+        # "user" field
+        username = request.data["username"]
+        data = {"user": user, "username": username}
+        serializer = FollowerSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        user = request.data["username"]
+        follower = self.request.user
+        to_delete = Follower.objects.filter(user=user, follower=follower)
+        to_delete.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+# Literally a copy and paste of the above `FollowerView`, but with a slightly different get method
+class FollowingView(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request):
+        user = self.request.user.id  # type: ignore
+        data = Follower.objects.get(follower=user)
+        serializer = GetFollowerSerializer(data=data)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
