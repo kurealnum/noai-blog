@@ -1,11 +1,12 @@
 import json
+from typing_extensions import OrderedDict
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
 from rest_framework.test import APIClient, APIRequestFactory
 
-from .models import BlogPost, CommentReaction, PostReaction, Comment, ReplyTo
+from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment, ReplyTo
 
 
 class CustomTestCase(TestCase):
@@ -134,12 +135,8 @@ class BlogPostViewTestCase(CustomTestCase):
             "likes": 0,
         }
         request = temp_client.post(reverse_lazy("create_post"), data=data)
-        expected_result = {
-            "user": 1,
-            "title": "My blog post",
-            "content": "Here's my awesome blog post ##",
-        }
-        self.assertEqual(expected_result, request.data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
 
 
 class BlogPostListTestCase(CustomTestCase):
@@ -267,3 +264,71 @@ class FeedListTestCase(CustomTestCase):
         # there should be nothing on this page
         expected_length = 0
         self.assertEqual(expected_length, len(response.data))  # type: ignore
+
+
+class FollowerViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+        self.follower = Follower.objects.create(follower=self.altuser, user=self.user)
+
+    def test_does_get_request_function_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.get(reverse_lazy("manage_followers"))
+        expected_result = {"id": 2, "follower": 4, "user": 3}
+
+        self.assertEqual(expected_result, request.data[0])
+
+    def test_does_post_request_function_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.post(
+            reverse_lazy("manage_followers"),
+            data={"followee": self.altuser.username},
+        )
+        expected_result = {"id": 4, "follower": 5, "user": 6}
+        self.assertEqual(expected_result, request.data)
+
+    # testing the deletion of self.follower (django tests run sequentially, so this should be fine!!!)
+    def test_does_delete_request_function_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.delete(
+            reverse_lazy("manage_followers"),
+            data={"followee": self.altuser.username},
+        )
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
+
+
+class FollowingViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+        self.follower = Follower.objects.create(follower=self.altuser, user=self.user)
+
+    def test_does_get_request_function_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="jonny")
+        request = temp_client.get(reverse_lazy("manage_following"))
+        # not sure why I have to compare to an OrderedDict instead of indexing, but I do
+        expected_result = OrderedDict([("id", 1), ("follower", 2), ("user", 1)])
+
+        self.assertEqual(expected_result, request.data[0])

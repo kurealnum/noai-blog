@@ -1,17 +1,17 @@
 from django.db.models import F, Count, Subquery
 from django.http.response import Http404
 from rest_framework import generics, status
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.models import CustomUser
 from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
     FeedBlogPostSerializer,
     FollowerSerializer,
-    GetFollowerSerializer,
     PostSingleBlogPostSerializer,
     SingleBlogPostSerializer,
 )
@@ -135,45 +135,45 @@ class FeedListView(APIView):
 
 
 class FollowerView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
+    # this is the equivalent of viewing all the people that are following you
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        data = Follower.objects.get(user=user)
-        serializer = FollowerSerializer(data=data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
+        data = Follower.objects.filter(user=user)
+        serializer = FollowerSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    # this is the equivalent of following someone
     def post(self, request):
-        user = self.request.user
-        # "user" field
-        username = request.data["username"]
-        data = {"user": user, "username": username}
+        # this is the user that is doing the following
+        follower = self.request.user.id  # type: ignore
+        # this is the user to be followed
+        username = request.data["followee"]
+        followee = CustomUser.objects.get(username=username).id  # type: ignore
+        data = {"user": followee, "follower": follower}
         serializer = FollowerSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    # this is the equivalent of unfollowing someone
     def delete(self, request):
-        user = request.data["username"]
+        username = request.data["followee"]
+        followee = CustomUser.objects.get(username=username).id  # type: ignore
         follower = self.request.user
-        to_delete = Follower.objects.filter(user=user, follower=follower)
+        to_delete = Follower.objects.filter(user=followee, follower=follower)
         to_delete.delete()
         return Response(status=status.HTTP_200_OK)
 
 
-# Literally a copy and paste of the above `FollowerView`, but with a slightly different get method
+# Literally a copy and paste of the above `FollowerView`, but for getting the people that you're following instead
 class FollowingView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        data = Follower.objects.get(follower=user)
-        serializer = GetFollowerSerializer(data=data)
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        data = Follower.objects.filter(follower=user)
+        serializer = FollowerSerializer(data, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

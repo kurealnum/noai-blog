@@ -24,13 +24,12 @@ class BlogPost(models.Model):
 
 class Follower(models.Model):
     follower = models.ForeignKey(
-        to=CustomUser, on_delete=models.CASCADE, related_name="follower_id", unique=True
+        to=CustomUser, on_delete=models.CASCADE, related_name="follower_id"
     )
     user = models.ForeignKey(
         to=CustomUser,
         on_delete=models.CASCADE,
         related_name="follower_user_id",
-        unique=True,
     )
 
 

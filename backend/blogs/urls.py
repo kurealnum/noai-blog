@@ -6,6 +6,8 @@ from blogs.views import (
     BlogPostView,
     CommentReplyListView,
     FeedListView,
+    FollowerView,
+    FollowingView,
     PostReplyListView,
     CommentListView,
 )
@@ -26,4 +28,6 @@ urlpatterns = [
     path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),
     path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
     path("create-post/", BlogPostView.as_view(), name="create_post"),
+    path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
+    path("manage-following/", FollowingView.as_view(), name="manage_following"),
 ]

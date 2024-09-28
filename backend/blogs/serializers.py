@@ -59,7 +59,7 @@ class BlogPostSerializer(serializers.Serializer):
     updated_date = serializers.DateTimeField()
 
 
-class FollowerSerializer(serializers.Serializer):
-    class Meta:
+class FollowerSerializer(serializers.ModelSerializer):
+    class Meta:  # type: ignore
         model = Follower
         fields = "__all__"
