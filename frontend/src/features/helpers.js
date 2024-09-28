@@ -270,6 +270,17 @@ async function createPost(newPost) {
   }
 }
 
+async function doesPathExist(path) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+
+  const response = await fetch(path, config);
+  return response.ok;
+}
+
 function limitLength(string, len) {
   return string.length > len ? string.slice(0, len + 1) : string;
 }
@@ -289,6 +300,7 @@ export {
   limitLength,
   getFeed,
   createPost,
+  doesPathExist,
 };
 
 export default getCookie;

@@ -33,3 +33,33 @@ Technologies that I would like to/need to use:
 ## Important Notes
 
 `#language-field` (CSS) is a honeypot field for the register page.
+
+For the love of all that is holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
+
+### Testing Markdown
+
+Use this bit of markdown to test any Markdown renders:
+
+```
+**This is bold text**
+
+*This is italic text*
+
+# This is a level 1 heading
+
+## This is a level 2 heading
+
+> This is a quote
+>
+> This is a multiline quote
+
+* This is a generic list
+* And another list item
+
+1. This is a numbered list
+2. And another numbered list item
+
+[This is a link to Google](https://www.google.com/)
+
+![This is a link to an image!](https://i.imgur.com/zi2TYNJ.jpeg)
+```

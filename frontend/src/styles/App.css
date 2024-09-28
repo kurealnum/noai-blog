@@ -25,6 +25,25 @@ input {
   display: none;
 }
 
+#title {
+  border-radius: 10px;
+  border: 1px var(--primary) solid;
+  padding: 4px;
+  font-size: var(--subheader-font-size);
+  width: 95%;
+  margin: 0 auto;
+  display: block;
+}
+
+.save-button {
+  color: var(--light-text);
+  padding: 6px 50px;
+  background: var(--tertiary);
+  border: 0px;
+  border-radius: 10px;
+  font-size: var(--subtext-font-size);
+}
+
 .info-bar {
   display: flex;
   flex-direction: row;
@@ -140,10 +159,6 @@ h2 {
   gap: 20px;
 }
 
-.EasyMDEContainer {
-  width: 800px;
-}
-
 .hint {
   margin: 10px 0;
   width: 100%;
@@ -197,7 +212,25 @@ input[type="number"] {
   justify-content: center;
 }
 
+@media (min-width: 600px) {
+  #create-post,
+  #create-post form {
+    width: 95%;
+  }
+  #simplemde-editor-2-wrapper {
+    width: 100%;
+  }
+}
+
 @media (min-width: 800px) {
+  #create-post {
+    margin-right: 40px;
+  }
+
+  #simplemde-editor-2-wrapper,
+  #create-post form {
+    max-width: 800px;
+  }
   textarea {
     width: 320px;
   }

@@ -2,9 +2,11 @@ h1 {
   font-weight: 400;
 }
 
-img {
-  width: 52px;
-}
+/*commented these out because they kept messing with markdown stuff */
+
+/*img {*/
+/*  width: 52px;*/
+/*}*/
 
 .likes {
   display: flex;
@@ -12,10 +14,10 @@ img {
   align-items: center;
 }
 
-p {
-  width: 91vw;
-  margin: 0 auto;
-}
+/*p {*/
+/*  width: 91vw;*/
+/*  margin: 0 auto;*/
+/*}*/
 
 #member-since {
   margin: 0;

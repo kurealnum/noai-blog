@@ -7,7 +7,7 @@ from accounts.models import CustomUser
 class BlogPost(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=100, unique=True)
-    content = models.TextField(max_length=10000)
+    content = models.TextField(max_length=20000)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     slug_field = models.SlugField(null=True, unique=True)

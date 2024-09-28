@@ -1,9 +1,11 @@
 import { Dialog, IconButton } from "@mui/material";
 import "../styles/NavBar.css";
 import { Outlet, useLoaderData } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useQuery } from "@tanstack/react-query";
+import { doesPathExist } from "../features/helpers";
 
 function NavBar() {
   const desktopWidth = 800;
@@ -26,13 +28,22 @@ function NavBar() {
 }
 
 function FullScreenNavBar({ userData }) {
+  const [exists, setExists] = useState(false);
+
+  useEffect(() => {
+    if (userData != null) {
+      doesPathExist(userData["profile_picture"]).then((res) => {
+        if (res) {
+          setExists(true);
+        }
+      });
+    }
+  }, [userData]);
+
   return (
     <nav>
       <div className="username-box">
-        <img
-          id="pfp"
-          src={userData == null ? null : userData["profile_picture"]}
-        ></img>
+        {exists ? <img id="pfp" src={userData["profile_picture"]}></img> : null}
         <span>
           {userData != null ? userData.username : <a href="/login">Log in</a>}
         </span>

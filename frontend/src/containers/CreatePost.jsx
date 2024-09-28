@@ -1,5 +1,4 @@
 import SimpleMdeReact from "react-simplemde-editor";
-import "easymde/dist/easymde.min.css";
 import { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createPost, slugify } from "../features/helpers";
@@ -7,6 +6,7 @@ import { CircularProgress } from "@mui/material";
 import { Navigate, useRouteLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { marked } from "marked";
+import "../styles/EasyMDE.css";
 
 function CreatePost() {
   // title and content
@@ -61,7 +61,9 @@ function CreatePost() {
         onChange={setContentHelper}
         value={newBlogPost["content"]}
       />
-      <button onClick={() => handleSave()}>Publish</button>
+      <button className="save-button" onClick={() => handleSave()}>
+        Publish
+      </button>
       {createPostMutation.isError ? (
         <div id="error-page">
           <h1>There was an error!</h1>
