@@ -4,7 +4,6 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useQuery } from "@tanstack/react-query";
 import { doesPathExist } from "../features/helpers";
 
 function NavBar() {
@@ -48,7 +47,7 @@ function FullScreenNavBar({ userData }) {
           {userData != null ? userData.username : <a href="/login">Log in</a>}
         </span>
       </div>
-      <NavBarContent />
+      <NavBarContent userData={userData} />
     </nav>
   );
 }
@@ -73,7 +72,7 @@ function MobileNavBar({ userData }) {
             <CloseIcon fontSize="large" />
           </IconButton>
         </div>
-        <NavBarContent />
+        <NavBarContent userData={userData} />
       </Dialog>
       <span>
         {userData != null ? userData.username : <a href="/login">Log in</a>}
@@ -86,23 +85,39 @@ function MobileNavBar({ userData }) {
 }
 
 // This is just the content for the nav bar. It's the same across both the mobile and full screen nav bar
-function NavBarContent() {
+function NavBarContent({ userData }) {
+  if (userData != null) {
+    return (
+      <div className="link-list">
+        <li>
+          <a href="/guidelines">Policies on AI</a>
+        </li>
+        <li>
+          <a href="/feed">Feed</a>
+        </li>
+        <li>
+          <a href="/dashboard">Dashboard</a>
+        </li>
+        <li>
+          <a href={"/homepage/" + userData.username}>Your homepage</a>
+        </li>
+        <li>
+          <a href="/about-us">About Us</a>
+        </li>
+        <li>
+          <a href="/logout">Logout</a>
+        </li>
+      </div>
+    );
+  }
   return (
+    // don't need a log in link because thats taken care of by the base nav bar
     <div className="link-list">
-      <li>
-        <a href="/guidelines">Policies on AI</a>
-      </li>
       <li>
         <a href="/feed">Feed</a>
       </li>
       <li>
-        <a href="/dashboard">Dashboard</a>
-      </li>
-      <li>
-        <a href="/about-us">About Us</a>
-      </li>
-      <li>
-        <a href="/">About Us</a>
+        <a href="/register">Register</a>
       </li>
     </div>
   );
