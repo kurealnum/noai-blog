@@ -46,9 +46,9 @@ describe("NavBar", () => {
 
     window.innerWidth = 1200;
 
-    await waitFor(() => screen.getByRole("img"));
-    const img = screen.getByRole("img");
-    expect(img).toBeVisible();
+    await waitFor(() => screen.getByText("oscar"));
+    const usernameBox = screen.getByText("oscar");
+    expect(usernameBox).toBeVisible();
   });
   it("dialog opens and closes correctly for mobile navbar", async () => {
     // using createMemoryRouter because <MemoryRouter> doesnt support loaders
