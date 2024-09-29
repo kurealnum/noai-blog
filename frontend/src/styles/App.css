@@ -21,6 +21,61 @@ input {
   font-family: "Raleway", "Times New Roman", Times, serif;
 }
 
+#register {
+  margin: 50px auto;
+}
+
+.custom-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: var(--background);
+  border: 2px var(--primary) solid;
+  border-radius: 10px;
+  margin-top: 30px;
+  padding: 10px;
+}
+
+.custom-form form {
+  gap: 10px;
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+}
+
+.custom-form label {
+  margin-right: 10px;
+  font-size: var(--text-size);
+  text-wrap: nowrap;
+}
+
+.custom-form input {
+  border-radius: 10px;
+  border: 1px var(--primary) solid;
+  padding: 4px;
+}
+
+.custom-form button {
+  color: var(--light-text);
+  padding: 6px 50px;
+  background: var(--tertiary);
+  border: 0px;
+  border-radius: 10px;
+  font-size: var(--subtext-font-size);
+}
+
+.custom-form #save {
+  width: 200px;
+  margin: 20px auto;
+}
+
+.custom-form .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
 #language-field {
   display: none;
 }
@@ -226,6 +281,9 @@ input[type="number"] {
   #create-post {
     margin-right: 40px;
   }
+  #register {
+    width: 500px;
+  }
 
   #simplemde-editor-2-wrapper,
   #create-post form {
@@ -316,5 +374,11 @@ input[type="number"] {
 
   .info-bar-box {
     align-items: center;
+  }
+}
+
+@media (min-width: 1000px) {
+  #register {
+    width: 600px;
   }
 }

@@ -8,7 +8,7 @@ import { doesPathExist } from "../features/helpers";
 
 function NavBar() {
   const desktopWidth = 800;
-  const isDesktop = window.innerWidth > desktopWidth;
+  const isDesktop = window.innerWidth >= desktopWidth;
   let userData = useLoaderData();
   if (isDesktop) {
     return (
@@ -60,6 +60,17 @@ function MobileNavBar({ userData }) {
   function handleClose() {
     setOpen(false);
   }
+  const [exists, setExists] = useState(false);
+
+  useEffect(() => {
+    if (userData != null) {
+      doesPathExist(userData["profile_picture"]).then((res) => {
+        if (res) {
+          setExists(true);
+        }
+      });
+    }
+  }, [userData]);
   // clicking (or should i say tapping) on your profile picture currently just opens the hamburger menu
   return (
     <nav>
@@ -74,11 +85,12 @@ function MobileNavBar({ userData }) {
         </div>
         <NavBarContent userData={userData} />
       </Dialog>
+      {exists ? <img id="pfp" src={userData["profile_picture"]}></img> : null}
       <span>
         {userData != null ? userData.username : <a href="/login">Log in</a>}
       </span>
       <button onClick={() => handleOpen()} data-testid="menu-open">
-        <img id="pfp" src={userData["profile_picture"]}></img>
+        {exists ? <img id="pfp" src={userData["profile_picture"]}></img> : null}
       </button>
     </nav>
   );
