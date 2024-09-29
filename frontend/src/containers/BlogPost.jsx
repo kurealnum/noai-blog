@@ -37,7 +37,7 @@ function BlogPost() {
             <span>By {data["user"]["username"]}</span>
           </div>
           <div className="likes">
-            <span>{data["likes"]}</span>
+            <span>{data["likes"] == null ? 0 : data["likes"]}</span>
             <FavoriteBorderIcon />
           </div>
         </div>

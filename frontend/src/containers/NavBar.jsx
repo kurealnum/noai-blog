@@ -85,7 +85,6 @@ function MobileNavBar({ userData }) {
         </div>
         <NavBarContent userData={userData} />
       </Dialog>
-      {exists ? <img id="pfp" src={userData["profile_picture"]}></img> : null}
       <span>
         {userData != null ? userData.username : <a href="/login">Log in</a>}
       </span>
