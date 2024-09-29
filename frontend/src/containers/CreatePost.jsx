@@ -50,7 +50,7 @@ function CreatePost() {
   }
   return (
     <div id="create-post">
-      <form>
+      <form aria-label="Title input">
         <label htmlFor="title" hidden>
           Title
         </label>
@@ -61,7 +61,11 @@ function CreatePost() {
         onChange={setContentHelper}
         value={newBlogPost["content"]}
       />
-      <button className="save-button" onClick={() => handleSave()}>
+      <button
+        data-testid="submit-button"
+        className="save-button"
+        onClick={() => handleSave()}
+      >
         Publish
       </button>
       {createPostMutation.isError ? (

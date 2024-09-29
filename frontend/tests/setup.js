@@ -85,6 +85,8 @@ const saveProfilePicture = true;
 const manageLinksPut = true;
 const createLink = true;
 const multipleBlogPostsNone = null;
+const createPostSuccess = true;
+const profilePictureSuccess = true;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -93,8 +95,14 @@ const multipleBlogPostsNone = null;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.get("/media/profile_pictures/2024-08-26_13-44.png", () => {
+    return HttpResponse.json(profilePictureSuccess);
+  }),
   http.get("/api/blog-posts/get-post/oscar/why-django-is-so-amazing/", () => {
     return HttpResponse.json(blogPost);
+  }),
+  http.post("/api/blog-posts/create-post/", () => {
+    return HttpResponse.json(createPostSuccess);
   }),
   http.get("/api/blog-posts/feed/1/", () => {
     return HttpResponse.json(multipleBlogPosts);
