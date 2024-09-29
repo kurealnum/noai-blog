@@ -256,8 +256,8 @@ input[type="number"] {
     margin-left: 40px;
     min-width: 200px;
     justify-content: start;
-    border: 2px var(--tertiary) solid;
-    border-radius: 0%;
+    border: 1px var(--primary) solid;
+    border-radius: 10px;
   }
 
   #dashboard {
@@ -270,16 +270,18 @@ input[type="number"] {
   }
 
   nav li {
-    background: var(--primary);
-    width: 90%;
+    background: var(--page-background);
+    width: 80%;
     border-radius: 10px;
-    padding: 3px 5px;
+    border: 1px solid var(--primary);
+    padding: 4px 5px;
     text-align: center;
+    margin: 0 auto;
   }
 
   #root nav a {
     font-size: var(--link-font-size);
-    color: var(--light-text);
+    color: var(--dark-text);
   }
 
   .list-section {
@@ -299,13 +301,17 @@ input[type="number"] {
     justify-content: space-around;
     margin-top: 8px;
     margin-bottom: 25px;
-    background: var(--primary);
+    background: var(--page-background);
     padding: 5px 3px;
     border-radius: 10px;
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+    border-top: 2px solid var(--tertiary);
+    border-bottom: 2px solid var(--tertiary);
   }
 
   .username-box span {
-    color: var(--tertiary);
+    color: var(--dark-text);
   }
 
   .info-bar-box {

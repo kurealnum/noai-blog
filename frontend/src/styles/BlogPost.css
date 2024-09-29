@@ -19,14 +19,12 @@ h1 {
 /*  margin: 0 auto;*/
 /*}*/
 
-#member-since {
-  margin: 0;
-  margin-left: 40px;
-}
-
 @media (min-width: 800px) {
   p {
     width: 100%;
+  }
+  #member-since {
+    margin: 0;
   }
   #blog-post {
     max-width: 65%;
