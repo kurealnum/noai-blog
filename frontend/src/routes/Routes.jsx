@@ -96,14 +96,6 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "feed",
-        element: (
-          <Page title="Feed">
-            <Feed />
-          </Page>
-        ),
-      },
-      {
         path: "login",
         element: (
           <Page title="Login">

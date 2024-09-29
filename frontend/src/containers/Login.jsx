@@ -22,28 +22,32 @@ function Login() {
   }
 
   return (
-    <>
+    <div className="custom-form" id="login">
+      <form onSubmit={(e) => onFormSubmit(e)} aria-label="Log in">
+        <div className="item">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            name="username"
+            onChange={(e) => onFormChange(e)}
+          ></input>
+        </div>
+        <div className="item">
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            name="password"
+            onChange={(e) => onFormChange(e)}
+            type="password"
+          ></input>
+        </div>
+        <button type="submit">Login</button>
+      </form>
       <ErrorMessage
         isError={isError}
         message={"Username or password is incorrect"}
       />
-      <form onSubmit={(e) => onFormSubmit(e)} aria-label="Log in">
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          name="username"
-          onChange={(e) => onFormChange(e)}
-        ></input>
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          name="password"
-          onChange={(e) => onFormChange(e)}
-          type="password"
-        ></input>
-        <button type="submit">Login</button>
-      </form>
-    </>
+    </div>
   );
 }
 

@@ -267,6 +267,18 @@ input[type="number"] {
   justify-content: center;
 }
 
+#login form {
+  display: flex;
+  align-items: center;
+  flex-direction: center;
+}
+
+#login {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  align-self: center;
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
@@ -283,6 +295,11 @@ input[type="number"] {
   }
   #register {
     width: 500px;
+  }
+  #login {
+    margin: 50px auto;
+    width: 400px;
+    height: min-content;
   }
 
   #simplemde-editor-2-wrapper,
@@ -378,7 +395,8 @@ input[type="number"] {
 }
 
 @media (min-width: 1000px) {
-  #register {
+  #register,
+  #login {
     width: 600px;
   }
 }
