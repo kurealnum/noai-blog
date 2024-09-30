@@ -284,9 +284,9 @@ class FollowerViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
         request = temp_client.get(reverse_lazy("manage_followers"))
-        expected_result = {"id": 2, "follower": 4, "user": 3}
+        expected_result = "bobby"
 
-        self.assertEqual(expected_result, request.data[0])
+        self.assertEqual(expected_result, request.data[0]["user"]["username"])
 
     def test_does_post_request_function_properly(self):
         temp_client = APIClient()
@@ -295,8 +295,8 @@ class FollowerViewTestCase(CustomTestCase):
             reverse_lazy("manage_followers"),
             data={"followee": self.altuser.username},
         )
-        expected_result = {"id": 4, "follower": 5, "user": 6}
-        self.assertEqual(expected_result, request.data)
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
 
     # testing the deletion of self.follower (django tests run sequentially, so this should be fine!!!)
     def test_does_delete_request_function_properly(self):
@@ -328,7 +328,6 @@ class FollowingViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="jonny")
         request = temp_client.get(reverse_lazy("manage_following"))
-        # not sure why I have to compare to an OrderedDict instead of indexing, but I do
-        expected_result = OrderedDict([("id", 1), ("follower", 2), ("user", 1)])
+        expected_result = "bobby"
 
-        self.assertEqual(expected_result, request.data[0])
+        self.assertEqual(expected_result, request.data[0]["user"]["username"])

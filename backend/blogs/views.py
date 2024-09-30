@@ -12,6 +12,7 @@ from blogs.serializers import (
     CommentSerializer,
     FeedBlogPostSerializer,
     FollowerSerializer,
+    GetFollowerSerializer,
     PostSingleBlogPostSerializer,
     SingleBlogPostSerializer,
 )
@@ -144,8 +145,8 @@ class FollowerView(APIView):
     # this is the equivalent of viewing all the people that are following you
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        data = Follower.objects.filter(user=user)
-        serializer = FollowerSerializer(data, many=True)
+        data = Follower.objects.filter(user=user).select_related("user", "follower")
+        serializer = GetFollowerSerializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     # this is the equivalent of following someone
@@ -178,6 +179,6 @@ class FollowingView(APIView):
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        data = Follower.objects.filter(follower=user)
-        serializer = FollowerSerializer(data, many=True)
+        data = Follower.objects.filter(follower=user).select_related("user", "follower")
+        serializer = GetFollowerSerializer(data, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

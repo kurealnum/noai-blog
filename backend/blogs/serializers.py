@@ -59,6 +59,15 @@ class BlogPostSerializer(serializers.Serializer):
     updated_date = serializers.DateTimeField()
 
 
+class GetFollowerSerializer(serializers.ModelSerializer):
+    user = SingleBlogPostUserSerializer()
+    follower = SingleBlogPostUserSerializer()
+
+    class Meta:  # type: ignore
+        model = Follower
+        fields = "__all__"
+
+
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:  # type: ignore
         model = Follower
