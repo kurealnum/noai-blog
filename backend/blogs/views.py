@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser
-from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
+from blogs.models import BlogPost, Comment, Follower, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
@@ -28,7 +28,11 @@ class CommentListView(generics.ListAPIView):
 
 # this is the view for a *single* blog post
 class BlogPostView(APIView):
-    permission_classes = (AllowAny,)
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        if self.request.method.lower() != "get":  # type: ignore
+            permissions.append(IsAuthenticated())  # type: ignore
+        return permissions
 
     def get(self, request, username, slug):
         try:
@@ -170,7 +174,7 @@ class FollowerView(APIView):
 
 # Literally a copy and paste of the above `FollowerView`, but for getting the people that you're following instead
 class FollowingView(APIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         user = self.request.user.id  # type: ignore

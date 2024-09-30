@@ -4,7 +4,6 @@ from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
-from rest_framework.serializers import ErrorDetail
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser, Link
@@ -41,6 +40,8 @@ class LoginUserView(APIView):
 
 
 class CheckAuthenticatedView(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request):
         user = request.user
 
@@ -61,6 +62,8 @@ class CheckAuthenticatedView(APIView):
 
 
 class LogoutUserView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request):
         try:
             logout(request)
@@ -70,6 +73,8 @@ class LogoutUserView(APIView):
 
 
 class UserInfoView(APIView):
+    permission_classes = (AllowAny,)
+
     def get(self, request, username=None):
         if username:
             try:
