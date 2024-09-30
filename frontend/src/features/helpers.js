@@ -225,7 +225,7 @@ async function getBlogPost({ username, slug }) {
   if (response.ok) {
     return await response.json();
   }
-  return null;
+  throw new Error("Blog post not found!");
 }
 
 async function register(formData) {
