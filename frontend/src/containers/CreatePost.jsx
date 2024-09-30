@@ -27,11 +27,21 @@ function CreatePost() {
     content: "Write your blog post here!",
     title: "Default Title",
   });
+
   const userData = useRouteLoaderData("root");
   const createPostMutation = useMutation({ mutationFn: createPost });
 
+  // autosave feature
+  const autosavedValue =
+    localStorage.getItem(`smde_autosavepost`) || "Write your blog post here!";
+  const delay = 1000;
   const customRendererOptions = useMemo(() => {
     return {
+      autosave: {
+        enabled: true,
+        uniqueId: "autosavepost",
+        delay,
+      },
       previewRender(text) {
         return DOMPurify.sanitize(marked.parse(text));
       },
@@ -72,7 +82,7 @@ function CreatePost() {
       <SimpleMdeReact
         options={customRendererOptions}
         onChange={setContentHelper}
-        value={newBlogPost["content"]}
+        value={autosavedValue}
       />
       <button
         data-testid="submit-button"
