@@ -5,8 +5,21 @@ import { createPost, slugify } from "../features/helpers";
 import { CircularProgress } from "@mui/material";
 import { Navigate, useRouteLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { marked } from "marked";
 import "../styles/EasyMDE.css";
+import hljs from "highlight.js";
+import { Marked } from "marked";
+import { markedHighlight } from "marked-highlight";
+import "highlight.js/styles/base16/classic-light.css";
+
+const marked = new Marked(
+  markedHighlight({
+    langPrefix: "hljs language-",
+    highlight(code, lang, info) {
+      const language = hljs.getLanguage(lang) ? lang : "plaintext";
+      return hljs.highlight(code, { language }).value;
+    },
+  }),
+);
 
 function CreatePost() {
   // title and content
@@ -68,6 +81,7 @@ function CreatePost() {
       >
         Publish
       </button>
+      <button onClick={() => hljs.highlightAll()}>Click</button>
       {createPostMutation.isError ? (
         <div id="error-page">
           <h1>There was an error!</h1>
