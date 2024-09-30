@@ -28,7 +28,9 @@ const comments = [
   },
 ];
 
-const manageLinks = [{ id: 7, link: "google.com", name: "Google!", user: 1 }];
+const manageLinks = [
+  { id: 7, link: "https://google.com", name: "MyLink", user: 1 },
+];
 const userInfo = {
   username: "oscar",
   email: "admin@gmail.com",
@@ -87,6 +89,7 @@ const createLink = true;
 const multipleBlogPostsNone = null;
 const createPostSuccess = true;
 const profilePictureSuccess = true;
+const linkDeleteSuccess = true;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -95,6 +98,9 @@ const profilePictureSuccess = true;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.delete("/api/accounts/manage-links/", () => {
+    return HttpResponse.json(linkDeleteSuccess);
+  }),
   http.get("/media/profile_pictures/2024-08-26_13-44.png", () => {
     return HttpResponse.json(profilePictureSuccess);
   }),

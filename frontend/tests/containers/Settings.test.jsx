@@ -1,4 +1,9 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import Settings from "../../src/containers/Settings";
@@ -122,5 +127,47 @@ describe("Settings", () => {
     await userEvent.click(button);
 
     await waitFor(() => screen.getByTestId("saved-alert"));
+  });
+  it("deletes link", async () => {
+    const routes = [
+      {
+        path: "/",
+        id: "root",
+        element: <Settings />,
+        loader: () => getUserInfo(),
+      },
+    ];
+    const router = createMemoryRouter(routes, {
+      initialEntries: ["/"],
+      initialIndex: 0,
+    });
+    render(<RouterProvider router={router} />);
+
+    await screen.findByRole("form");
+
+    // open modal
+    const modalButton = screen.getByTestId("modal-open");
+    await userEvent.click(modalButton);
+
+    const name = screen.getByLabelText("Name");
+    const link = screen.getByLabelText("Link");
+    const button = screen.getByTestId("link-save");
+
+    await userEvent.type(name, "MyLink");
+    await userEvent.type(link, "https://google.com");
+    await userEvent.click(button);
+
+    await waitFor(() => screen.getByLabelText("Name"));
+    expect(screen.getByLabelText("Name")).toHaveValue("MyLink");
+
+    // once we're here, we can try and delete the link
+    const deleteButton = screen.getByTestId("delete-button");
+    await userEvent.click(deleteButton);
+    await waitFor(() =>
+      screen.getByText("Your changes were successfully saved!"),
+    );
+    expect(
+      screen.getByText("Your changes were successfully saved!"),
+    ).toBeVisible();
   });
 });

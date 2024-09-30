@@ -81,7 +81,6 @@ function CreatePost() {
       >
         Publish
       </button>
-      <button onClick={() => hljs.highlightAll()}>Click</button>
       {createPostMutation.isError ? (
         <div id="error-page">
           <h1>There was an error!</h1>

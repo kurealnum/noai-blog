@@ -69,7 +69,9 @@ function Settings() {
     const updatedLinks = newLinks.filter((value, i) => i !== index);
 
     setNewLinks(updatedLinks);
-    deleteLink(newLinks[index]);
+    deleteLink(newLinks[index]).then((res) => {
+      if (res.ok) setIsSaved(true);
+    });
   }
 
   function addNewLinksHelper() {
@@ -229,6 +231,7 @@ function Settings() {
                 <button
                   type="button"
                   onClick={() => removeNewLinksHelper(index)}
+                  data-testid="delete-button"
                 >
                   <DeleteIcon />
                 </button>
@@ -245,7 +248,7 @@ function Settings() {
           </button>
           <Modal open={isModalOpen} onClose={handleClose}>
             <div id="modal">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name">New Name</label>
               <input
                 id="name"
                 name="name"

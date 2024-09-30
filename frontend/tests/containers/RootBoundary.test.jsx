@@ -24,7 +24,7 @@ describe("Root Boundary", () => {
 
     await waitFor(() => screen.getByRole("heading"));
 
-    expect(screen.getByRole("paragraph")).toBeVisible();
+    expect(screen.getAllByRole("paragraph")).toHaveLength(2);
     expect(screen.getByRole("heading")).toHaveTextContent("HTTP 404");
   });
   it("does not redirect to error page when URL is correct", async () => {
