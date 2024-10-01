@@ -18,8 +18,7 @@
 #about-me,
 .technical-info p {
   text-align: center;
-  margin-left: auto;
-  margin-right: auto;
+  margin-top: 20px;
   width: 88%;
   min-height: 2lh;
 }
@@ -39,6 +38,7 @@
   align-items: center;
   justify-content: right;
   min-height: 100%;
+  margin: 0 auto;
 }
 
 #member-since svg {
@@ -82,19 +82,29 @@ h2 {
   margin-bottom: 15px;
 }
 
+.about-me-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.about-me-wrapper p {
+  margin: 0 auto;
+}
+
 @media (min-width: 600px) {
   .general-info {
     width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: center;
-    gap: 40px;
+    gap: 60px;
   }
 }
 
 @media (min-width: 800px) {
   #homepage {
-    margin-top: 150px;
+    margin-top: 50px;
   }
 
   #homepage .username-box {
