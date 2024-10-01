@@ -2,11 +2,13 @@ import { Alert, Snackbar } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "../features/helpers";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Register() {
   const [formData, setFormData] = useState();
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const setNewUserDataHelper = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -33,7 +35,7 @@ function Register() {
   }
 
   return (
-    <div id="register" class="custom-form">
+    <div id="register" className="custom-form">
       <h1 data-testid="register">Register</h1>
       <form onSubmit={(e) => onFormSubmit(e)} aria-label="Register">
         <div className="item">
@@ -59,10 +61,17 @@ function Register() {
           <input
             id="password"
             name="password"
-            type="password"
+            type={isVisible ? "text" : "password"}
             onChange={(e) => setNewUserDataHelper(e)}
             maxLength={128}
           ></input>
+          <button
+            id="toggle-visibility"
+            type="button"
+            onClick={() => setIsVisible(!isVisible)}
+          >
+            {isVisible ? <Visibility /> : <VisibilityOff />}
+          </button>
         </div>
         <div className="item">
           <label htmlFor="first_name">First name</label>

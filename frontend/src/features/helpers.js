@@ -277,6 +277,10 @@ async function doesPathExist(path) {
     credentials: "include",
   };
 
+  if (path == null) {
+    return false;
+  }
+
   const response = await fetch(path, config);
   return response.ok;
 }

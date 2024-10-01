@@ -279,6 +279,28 @@ input[type="number"] {
   align-self: center;
 }
 
+#toggle-visibility {
+  padding: 3px;
+  background: none;
+  border: none;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#toggle-visibility path {
+  width: 20px;
+  height: 20px;
+  font-size: 20px;
+}
+
+#toggle-visibility svg {
+  color: var(--primary);
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
