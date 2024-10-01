@@ -2,11 +2,13 @@ import { useState } from "react";
 import { login } from "../features/auth";
 import { useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const onFormChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -37,9 +39,17 @@ function Login() {
           <input
             id="password"
             name="password"
+            type={isVisible ? "text" : "password"}
             onChange={(e) => onFormChange(e)}
-            type="password"
+            maxLength={128}
           ></input>
+          <button
+            id="toggle-visibility"
+            type="button"
+            onClick={() => setIsVisible(!isVisible)}
+          >
+            {isVisible ? <Visibility /> : <VisibilityOff />}
+          </button>
         </div>
         <button type="submit">Login</button>
       </form>
