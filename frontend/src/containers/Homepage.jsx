@@ -6,6 +6,7 @@ import {
   getUserInfoByUsername,
   getBlogPosts,
   getLinks,
+  doesPathExist,
 } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
@@ -15,12 +16,20 @@ function Homepage() {
   const [blogPosts, setBlogPosts] = useState([]);
   const [links, setLinks] = useState([]);
   const [doesUserExist, setDoesUserExist] = useState(false);
+  const [doesExist, setDoesExist] = useState();
 
   useEffect(() => {
     getUserInfoByUsername(username).then((res) => {
       setUserInfo(res);
       if (res != null) {
         setDoesUserExist(true);
+        doesPathExist(res["profile_picture"]).then((res) => {
+          if (res.ok) {
+            setDoesExist(true);
+          } else {
+            setDoesExist(false);
+          }
+        });
       }
     });
     getBlogPosts(username).then((res) => {
@@ -37,7 +46,9 @@ function Homepage() {
       <div id="homepage">
         <div className="user-box">
           <div className="username-box">
-            <img id="pfp" src={userInfo["profile_picture"]}></img>
+            {doesExist ? (
+              <img id="pfp" src={userInfo["profile_picture"]}></img>
+            ) : null}
             <span>{userInfo["username"]}</span>
           </div>
           <button id="follow">Follow</button>

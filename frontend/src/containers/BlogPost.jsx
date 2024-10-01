@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { getBlogPost } from "../features/helpers";
+import { doesPathExist, getBlogPost } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
@@ -10,6 +10,7 @@ import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
+import { useEffect, useState } from "react";
 
 const marked = new Marked(
   markedHighlight({
