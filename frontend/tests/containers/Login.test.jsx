@@ -5,6 +5,7 @@ import Login from "../../src/containers/Login";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import userEvent from "@testing-library/user-event";
 import { Dashboard } from "@mui/icons-material";
+import LoginRedirect from "../../src/containers/LoginRedirect";
 
 const mockUseNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
@@ -30,12 +31,13 @@ describe("Login", () => {
       <Router initialEntries={["/login"]}>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/login-redirect" element={<LoginRedirect />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>,
     );
 
-    const button = screen.getByRole("button");
+    const button = screen.getByTestId("login");
     const username = screen.getByLabelText("Username");
     const password = screen.getByLabelText("Password");
 

@@ -18,6 +18,7 @@ import PublicRoute from "./PublicRoutes";
 import Page from "./Page";
 import RootBoundary from "../containers/RootBoundary";
 import CreatePost from "../containers/CreatePost";
+import LoginRedirect from "../containers/LoginRedirect";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     loader: getUserInfo,
     errorElement: <RootBoundary />,
     children: [
+      {
+        path: "login-redirect",
+        element: <LoginRedirect />,
+      },
       {
         path: "homepage/:username",
         element: (

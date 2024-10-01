@@ -1,8 +1,4 @@
-import {
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import Register from "../../src/containers/Register";
@@ -48,7 +44,7 @@ describe("Register", () => {
     await userEvent.type(aboutMe, "All about me");
     await userEvent.type(technicalInfo, "Javascript");
 
-    const button = screen.getByRole("button");
+    const button = screen.getByTestId("save");
     const header = screen.getByTestId("register");
     await userEvent.click(button);
 
@@ -65,7 +61,7 @@ describe("Register", () => {
     );
 
     const honeyPot = screen.getByLabelText("Language");
-    const button = screen.getByRole("button");
+    const button = screen.getByTestId("save");
 
     await userEvent.type(honeyPot, "Something!");
     await userEvent.click(button);

@@ -16,7 +16,7 @@ function Login() {
     e.preventDefault();
     login(formData).then((isAuth) => {
       if (isAuth) {
-        navigate("/dashboard");
+        navigate("/login-redirect");
       } else {
         setIsError(true);
       }
@@ -51,7 +51,9 @@ function Login() {
             {isVisible ? <Visibility /> : <VisibilityOff />}
           </button>
         </div>
-        <button type="submit">Login</button>
+        <button type="submit" data-testid="login">
+          Login
+        </button>
       </form>
       <ErrorMessage
         isError={isError}

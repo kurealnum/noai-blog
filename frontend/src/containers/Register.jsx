@@ -118,7 +118,7 @@ function Register() {
             maxLength={150}
           ></input>
         </div>
-        <button id="save" type="submit">
+        <button data-testid="save" id="save" type="submit">
           Register
         </button>
       </form>
