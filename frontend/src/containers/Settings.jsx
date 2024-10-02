@@ -126,6 +126,7 @@ function Settings() {
     return (
       <>
         <form
+          className="custom-form"
           aria-label="Settings"
           id="settings"
           encType="multipart/form-data"
