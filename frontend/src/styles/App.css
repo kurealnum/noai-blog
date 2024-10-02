@@ -391,6 +391,7 @@ input[type="number"] {
   }
 
   .username-box {
+    text-decoration: none;
     width: 90%;
     display: flex;
     flex-direction: row;

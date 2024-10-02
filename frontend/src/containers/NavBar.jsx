@@ -41,12 +41,12 @@ function FullScreenNavBar({ userData }) {
 
   return (
     <nav>
-      <div className="username-box">
+      <a href={"/settings"} className="username-box">
         {exists ? <img id="pfp" src={userData["profile_picture"]}></img> : null}
         <span>
           {userData != null ? userData.username : <a href="/login">Log in</a>}
         </span>
-      </div>
+      </a>
       <NavBarContent userData={userData} />
     </nav>
   );
@@ -111,6 +111,9 @@ function NavBarContent({ userData }) {
         </li>
         <li>
           <a href={"/homepage/" + userData.username}>Your homepage</a>
+        </li>
+        <li>
+          <a href="/settings">Settings</a>
         </li>
         <li>
           <a href="/about-us">About Us</a>
