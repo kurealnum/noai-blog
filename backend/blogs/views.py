@@ -177,8 +177,21 @@ class FollowerView(APIView):
 class FollowingView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request):
-        user = self.request.user.id  # type: ignore
-        data = Follower.objects.filter(follower=user).select_related("user", "follower")
-        serializer = GetFollowerSerializer(data, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+    def get(self, request, username=None):
+        if username:
+            user = self.request.user.id  # type: ignore
+            # data = Follower.objects.filter(
+            #     follower=user, user__username=username
+            # ).select_related("user", "follower")
+            data = Follower.objects.select_related("user", "follower").get(
+                follower=user, user__username=username
+            )
+            serializer = GetFollowerSerializer(data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            user = self.request.user.id  # type: ignore
+            data = Follower.objects.filter(follower=user).select_related(
+                "user", "follower"
+            )
+            serializer = GetFollowerSerializer(data, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)

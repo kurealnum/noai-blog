@@ -331,3 +331,11 @@ class FollowingViewTestCase(CustomTestCase):
         expected_result = "bobby"
 
         self.assertEqual(expected_result, request.data[0]["user"]["username"])
+
+    def test_does_get_request_with_parameter_function_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="jonny")
+        request = temp_client.get(reverse_lazy("manage_following", args=["bobby"]))
+        expected_result = "bobby"
+
+        self.assertEqual(expected_result, request.data["user"]["username"])

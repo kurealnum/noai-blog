@@ -23,8 +23,8 @@ function Homepage() {
       setUserInfo(res);
       if (res != null) {
         setDoesUserExist(true);
-        doesPathExist(res["profile_picture"]).then((res) => {
-          if (res.ok) {
+        doesPathExist(res["profile_picture"]).then((result) => {
+          if (result) {
             setDoesExist(true);
           } else {
             setDoesExist(false);

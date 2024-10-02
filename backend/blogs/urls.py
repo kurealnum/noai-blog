@@ -30,4 +30,7 @@ urlpatterns = [
     path("create-post/", BlogPostView.as_view(), name="create_post"),
     path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
     path("manage-following/", FollowingView.as_view(), name="manage_following"),
+    path(
+        "manage-following/<username>/", FollowingView.as_view(), name="manage_following"
+    ),
 ]
