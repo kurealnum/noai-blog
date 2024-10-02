@@ -7,12 +7,12 @@ import {
   getBlogPosts,
   getLinks,
   doesPathExist,
-  getUserInfo,
   isFollowingUser,
   followUser,
   unfollowUser,
 } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
+import { Alert, Snackbar } from "@mui/material";
 
 function Homepage() {
   const { username } = useParams();
@@ -23,6 +23,26 @@ function Homepage() {
   const [doesUserExist, setDoesUserExist] = useState(false);
   const [doesExist, setDoesExist] = useState();
   const [isFollowing, setIsFollowing] = useState(false);
+
+  // for rendering snackbar
+  const [followError, setFollowError] = useState(false);
+  const [followSuccess, setFollowSuccess] = useState(false);
+
+  const handleCloseError = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setFollowError(false);
+  };
+
+  const handleCloseSuccess = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setFollowSuccess(false);
+  };
 
   useEffect(() => {
     getUserInfoByUsername(username).then((res) => {
@@ -64,8 +84,10 @@ function Homepage() {
       followUser(username).then((res) => {
         if (res) {
           setIsFollowing(true);
+          setFollowSuccess(true);
         } else {
           setIsFollowing(false);
+          setFollowError(true);
         }
       });
     }
@@ -75,8 +97,10 @@ function Homepage() {
     unfollowUser(username).then((res) => {
       if (res) {
         setIsFollowing(false);
+        setFollowSuccess(true);
       } else {
         setIsFollowing(true);
+        setFollowError(true);
       }
     });
   }
@@ -145,6 +169,29 @@ function Homepage() {
             )}
           </div>
         </div>
+        <Snackbar
+          open={followError}
+          autoHideDuration={5000}
+          onClose={handleCloseError}
+        >
+          <Alert onClose={handleCloseError} severity="error" variant="filled">
+            Something went wrong!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={followSuccess}
+          autoHideDuration={5000}
+          onClose={handleCloseSuccess}
+        >
+          <Alert
+            data-testid="saved-alert"
+            onClose={handleCloseSuccess}
+            severity="success"
+            variant="filled"
+          >
+            Operation successfull!
+          </Alert>
+        </Snackbar>
       </div>
     );
   } else {
