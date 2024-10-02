@@ -28,6 +28,7 @@ function BlogPost() {
     queryKey: ["getBlogPost", username, slug],
     queryFn: () => getBlogPost({ username, slug }),
   });
+  const [doesExist, setDoesExist] = useState(false);
 
   if (isLoading) {
     return (
@@ -48,13 +49,23 @@ function BlogPost() {
   if (isSuccess) {
     document.title = "NoAI Blog" + " - " + data["title"];
 
+    doesPathExist(data["user"]["profile_picture"]).then((res) => {
+      if (res) {
+        setDoesExist(true);
+      } else {
+        setDoesExist(false);
+      }
+    });
+
     return (
       <div id="blog-post">
         <h1>{data.title}</h1>
         <div className="info-bar">
           <div className="info-bar-box">
             <div className="username-box username-box-no-change">
-              <img id="pfp" src={data["user"]["profile_picture"]}></img>
+              {doesExist ? (
+                <img id="pfp" src={data["user"]["profile_picture"]}></img>
+              ) : null}
               <span>By {data["user"]["username"]}</span>
             </div>
             <div className="likes">

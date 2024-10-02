@@ -180,9 +180,12 @@ class FollowingView(APIView):
     def get(self, request, username=None):
         if username:
             user = self.request.user.id  # type: ignore
-            data = Follower.objects.select_related("user", "follower").get(
-                follower=user, user__username=username
-            )
+            try:
+                data = Follower.objects.select_related("user", "follower").get(
+                    follower=user, user__username=username
+                )
+            except Follower.DoesNotExist:
+                return Http404
             serializer = GetFollowerSerializer(data)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
