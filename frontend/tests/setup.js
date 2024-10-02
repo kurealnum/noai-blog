@@ -90,6 +90,9 @@ const multipleBlogPostsNone = null;
 const createPostSuccess = true;
 const profilePictureSuccess = true;
 const linkDeleteSuccess = true;
+const followSuccess = true;
+const unfollowSuccess = true;
+const isFollowingSelf = false;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -158,6 +161,15 @@ export const restHandlers = [
   http.post("/api/accounts/logout/", () => {
     return HttpResponse.json(logoutSuccess);
   }),
+  http.post("/api/blog-posts/manage-followers/", () => {
+    return HttpResponse.json(followSuccess);
+  }),
+  http.delete("/api/blog-posts/manage-followers/", () => {
+    return HttpResponse.json(unfollowSuccess);
+  }),
+  http.get("/api/blog-posts/manage-following/oscar/", () => {
+    return HttpResponse(isFollowingSelf, { status: 404 });
+  }),
 ];
 
 const server = setupServer(...restHandlers);
@@ -170,3 +182,5 @@ afterEach(() => {
   cleanup();
   server.resetHandlers();
 });
+
+export default server;

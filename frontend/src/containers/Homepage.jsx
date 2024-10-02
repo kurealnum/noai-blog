@@ -116,6 +116,7 @@ function Homepage() {
             <span>{userInfo["username"]}</span>
           </div>
           <button
+            type="button"
             onClick={
               isFollowing ? () => unfollowHelper() : () => followHelper()
             }
@@ -174,7 +175,12 @@ function Homepage() {
           autoHideDuration={5000}
           onClose={handleCloseError}
         >
-          <Alert onClose={handleCloseError} severity="error" variant="filled">
+          <Alert
+            onClose={handleCloseError}
+            severity="error"
+            variant="filled"
+            data-testid="failure-alert"
+          >
             Something went wrong!
           </Alert>
         </Snackbar>
@@ -184,7 +190,7 @@ function Homepage() {
           onClose={handleCloseSuccess}
         >
           <Alert
-            data-testid="saved-alert"
+            data-testid="success-alert"
             onClose={handleCloseSuccess}
             severity="success"
             variant="filled"
