@@ -289,7 +289,55 @@ function limitLength(string, len) {
   return string.length > len ? string.slice(0, len + 1) : string;
 }
 
+async function followUser(username) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify({ followee: username }),
+  };
+
+  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  return response.ok;
+}
+
+async function unfollowUser(username) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "DELETE",
+    credentials: "include",
+    body: JSON.stringify({ followee: username }),
+  };
+
+  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  return response.ok;
+}
+
+// should 404 if user is not following
+async function isFollowingUser(username) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/manage-following/" + username + "/",
+    config,
+  );
+  return response.ok;
+}
+
 export {
+  isFollowingUser,
+  followUser,
+  unfollowUser,
   getLinks,
   getUserInfoByUsername,
   getBlogPosts,

@@ -180,9 +180,6 @@ class FollowingView(APIView):
     def get(self, request, username=None):
         if username:
             user = self.request.user.id  # type: ignore
-            # data = Follower.objects.filter(
-            #     follower=user, user__username=username
-            # ).select_related("user", "follower")
             data = Follower.objects.select_related("user", "follower").get(
                 follower=user, user__username=username
             )

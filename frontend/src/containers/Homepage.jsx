@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useRouteLoaderData } from "react-router-dom";
 import "../styles/Homepage.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
@@ -7,16 +7,22 @@ import {
   getBlogPosts,
   getLinks,
   doesPathExist,
+  getUserInfo,
+  isFollowingUser,
+  followUser,
+  unfollowUser,
 } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Homepage() {
   const { username } = useParams();
+  const currentUserInfo = useRouteLoaderData("root");
   const [userInfo, setUserInfo] = useState({});
   const [blogPosts, setBlogPosts] = useState([]);
   const [links, setLinks] = useState([]);
   const [doesUserExist, setDoesUserExist] = useState(false);
   const [doesExist, setDoesExist] = useState();
+  const [isFollowing, setIsFollowing] = useState(false);
 
   useEffect(() => {
     getUserInfoByUsername(username).then((res) => {
@@ -39,7 +45,41 @@ function Homepage() {
       setLinks(res);
       document.title = "NoAI Blog" + " - " + username;
     });
+    // see comments in helpers.js for this function
+    isFollowingUser(username).then((res) => {
+      if (!res) {
+        setIsFollowing(false);
+      } else {
+        setIsFollowing(true);
+      }
+    });
   }, [username]);
+
+  function followHelper() {
+    // prevents user from following themselves
+    if (
+      currentUserInfo["username"] != null &&
+      currentUserInfo["username"] !== userInfo["username"]
+    ) {
+      followUser(username).then((res) => {
+        if (res) {
+          setIsFollowing(true);
+        } else {
+          setIsFollowing(false);
+        }
+      });
+    }
+  }
+
+  function unfollowHelper() {
+    unfollowUser(username).then((res) => {
+      if (res) {
+        setIsFollowing(false);
+      } else {
+        setIsFollowing(true);
+      }
+    });
+  }
 
   if (doesUserExist) {
     return (
@@ -51,7 +91,14 @@ function Homepage() {
             ) : null}
             <span>{userInfo["username"]}</span>
           </div>
-          <button id="follow">Follow</button>
+          <button
+            onClick={
+              isFollowing ? () => unfollowHelper() : () => followHelper()
+            }
+            id="follow"
+          >
+            {isFollowing ? "Unfollow" : "Follow"}
+          </button>
         </div>
         <div className="general-info">
           <div className="about-me-wrapper">
