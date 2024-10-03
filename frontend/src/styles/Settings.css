@@ -55,7 +55,7 @@
 }
 
 .link-item svg {
-  color: var(--primary);
+  color: var(--light-text);
 }
 
 .link-item p {

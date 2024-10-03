@@ -152,7 +152,7 @@ class LinksView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def post(self, request):
-        data = request.data.dict()
+        data = request.data
         user_id = self.request.user.id  # type:ignore
         data["user"] = user_id
         new_link = LinkSerializer(data=data)

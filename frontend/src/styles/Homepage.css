@@ -41,8 +41,23 @@
   margin: 0 auto;
 }
 
+#create-post input {
+  border: var(--light-border-color) 1px solid;
+  background-color: var(--primary);
+}
+
+.CodeMirror {
+  border: var(--light-border-color) 1px solid !important;
+  background-color: var(--primary) !important;
+  color: var(--light-text) !important;
+}
+
+.editor-toolbar {
+  border: var(--light-border-color) 1px solid !important;
+}
+
 #member-since svg {
-  color: var(--primary);
+  color: var(--light-text);
 }
 
 h2 {

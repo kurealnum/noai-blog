@@ -3,14 +3,14 @@
 :root,
 button,
 input {
-  --dark-text: #000000;
-  --background: rgba(246, 247, 235, 0.65);
+  --dark-text: #ffffff;
+  --background: rgba(57, 62, 65, 0.8);
   --primary: #393e41;
   --secondary: #b6ccfe;
   --accent: #e94f37;
   --tertiary: #879e14;
   --light-text: #ffffff;
-  --page-background: #ffffff;
+  --page-background: #222527;
   --header-font-size: 32px;
   --subheader-font-size: 32px;
   --navbar-font-size: 20px;
@@ -18,7 +18,10 @@ input {
   --link-font-size: 17px;
   --text-size: 20px;
   --small-text-size: 14px;
+  --light-border-color: rgba(255, 255, 255, 0.4);
   font-family: "Raleway", "Times New Roman", Times, serif;
+  background: var(--page-background);
+  color: var(--light-text);
 }
 
 #register {
@@ -56,6 +59,7 @@ input {
   border-radius: 10px;
   border: 1px var(--primary) solid;
   padding: 4px;
+  color: var(--light-text);
 }
 
 .custom-form button {
@@ -76,6 +80,7 @@ input {
   display: flex;
   flex-direction: row;
   align-items: center;
+  color: var(--light-text);
 }
 
 #language-field {
@@ -156,6 +161,8 @@ textarea {
   border-radius: 10px;
   border: 1px var(--primary) solid;
   padding: 4px;
+  background: var(--page-background);
+  color: var(--light-text);
 }
 
 .blog-post,
@@ -164,7 +171,7 @@ textarea {
   width: 85vw;
   background: var(--background);
   padding: 5px 10px;
-  border: black 1px solid;
+  border: var(--light-border-color) 1px solid;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -176,9 +183,11 @@ h1 {
   font-weight: 300;
   font-size: var(--header-font-size);
   text-align: center;
+  color: var(--light-text);
 }
 
 h2 {
+  color: var(--light-text);
   font-weight: 300;
 }
 
@@ -193,6 +202,9 @@ h2 {
 
 .info p {
   margin: 5px;
+}
+p {
+  color: var(--light-text);
 }
 
 .list {
@@ -314,6 +326,9 @@ input[type="number"] {
 }
 
 @media (min-width: 800px) {
+  .info-bar {
+    width: 400px;
+  }
   #create-post {
     margin-right: 40px;
   }
@@ -357,6 +372,11 @@ input[type="number"] {
     justify-content: start;
     border: 1px var(--primary) solid;
     border-radius: 10px;
+    background: linear-gradient(
+      180deg,
+      rgba(34, 37, 39, 1) 0%,
+      rgba(57, 62, 65, 0.8) 100%
+    );
   }
 
   #dashboard {
@@ -372,7 +392,7 @@ input[type="number"] {
     background: var(--page-background);
     width: 80%;
     border-radius: 10px;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--light-border-color);
     padding: 4px 5px;
     text-align: center;
     margin: 0 auto;
@@ -404,10 +424,7 @@ input[type="number"] {
     background: var(--page-background);
     padding: 5px 3px;
     border-radius: 10px;
-    border-left: 2px solid var(--accent);
-    border-right: 2px solid var(--accent);
-    border-top: 2px solid var(--tertiary);
-    border-bottom: 2px solid var(--tertiary);
+    border: 2px solid var(--accent);
   }
 
   .username-box span {

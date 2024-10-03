@@ -170,7 +170,6 @@ class FeedListView(APIView):
                     default=ExpressionWrapper(F("score"), output_field=FloatField()),
                 ),
             )
-            print(all_posts.values())
 
         res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
 

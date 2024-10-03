@@ -9,7 +9,7 @@ import "../styles/EasyMDE.css";
 import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
-import "highlight.js/styles/base16/classic-light.css";
+import "highlight.js/styles/atom-one-dark.css";
 
 const marked = new Marked(
   markedHighlight({
