@@ -1,5 +1,16 @@
 from django.db import models
-from django.db.models import F, Case, Count, QuerySet, Subquery, Sum, When
+from django.db.models import (
+    F,
+    Case,
+    Count,
+    ExpressionWrapper,
+    FloatField,
+    IntegerField,
+    QuerySet,
+    Subquery,
+    Sum,
+    When,
+)
 from django.http.response import Http404
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -131,8 +142,10 @@ class FeedListView(APIView):
             .annotate(
                 reactions=Count("postreaction"),
                 comments=Count("comment"),
-                score=(F("reactions") * reaction_score)
-                + (F("comments") * comment_score),
+                score=ExpressionWrapper(
+                    (F("reactions") * reaction_score) + (F("comments") * comment_score),
+                    output_field=FloatField(),
+                ),
             )
             .select_related("user")
             .order_by("-score")
@@ -150,11 +163,14 @@ class FeedListView(APIView):
                 score=Case(
                     When(
                         user__username__in=following,
-                        then=F("score") + follower_addition,
+                        then=ExpressionWrapper(
+                            F("score") + follower_addition, output_field=FloatField()
+                        ),
                     ),
-                    default=F("score"),
+                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
                 ),
             )
+            print(all_posts.values())
 
         res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
 
