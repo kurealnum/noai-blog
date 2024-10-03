@@ -1,5 +1,4 @@
 from django.urls import path
-from django.views.decorators.cache import cache_page
 
 from blogs.views import (
     BlogPostListView,
@@ -20,7 +19,7 @@ urlpatterns = [
         name="get_comment_replies",
     ),
     path("get-post-replies/", PostReplyListView.as_view(), name="get_post_replies"),
-    path("feed/<index>/", cache_page(60 * 5)(FeedListView.as_view()), name="feed"),
+    path("feed/<index>/", (FeedListView.as_view()), name="feed"),
     # re_path(
     #     r"^get-posts/(?P<username>\w+/|)$", BlogPostList.as_view(), name="get_posts"
     # ),

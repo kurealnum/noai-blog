@@ -229,13 +229,23 @@ class PostReplyListTestCase(CustomTestCase):
 class FeedListTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
         self.blog_post_1 = BlogPost.objects.create(
             user=self.user,
             title="1",
             content="Here's something about my blog post",
         )
+        # this post should be worth 50 "score"
         self.blog_post_2 = BlogPost.objects.create(
-            user=self.user,
+            user=self.altuser,
             title="2",
             content="Here's something about my blog post",
         )
@@ -249,6 +259,8 @@ class FeedListTestCase(CustomTestCase):
         Comment.objects.create(
             user=self.user, content="a comment", post=self.blog_post_3
         )
+
+        Follower.objects.create(user=self.altuser, follower=self.user)
 
     def test_feedlist_returns_correctly_on_first_page(self):
         # temp client for logging in
@@ -264,6 +276,14 @@ class FeedListTestCase(CustomTestCase):
         # there should be nothing on this page
         expected_length = 0
         self.assertEqual(expected_length, len(response.data))  # type: ignore
+
+    def test_feedlist_returns_correctly_for_authenticated_user(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        response = temp_client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        expected_response = 50
+
+        self.assertEqual(expected_response, response.data[0]["score"])
 
 
 class FollowerViewTestCase(CustomTestCase):

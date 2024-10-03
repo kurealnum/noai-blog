@@ -1,4 +1,5 @@
-from django.db.models import F, Count, Subquery
+from django.db import models
+from django.db.models import F, Case, Count, QuerySet, Subquery, Sum, When
 from django.http.response import Http404
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -119,6 +120,9 @@ class FeedListView(APIView):
     def get(self, request, index):
         index = int(index)
         posts_per_page = 50
+
+        # id like to change this to a multiplier at some point
+        follower_addition = 50
         comment_score = 5
         reaction_score = 3
 
@@ -134,7 +138,26 @@ class FeedListView(APIView):
             .order_by("-score")
         )
 
+        # adding follower "boosts"
+        if request.user.id:
+            following = (
+                Follower.objects.filter(follower=request.user.id)
+                .select_related("user")
+                .values("user__username")
+            )
+
+            all_posts = all_posts.annotate(
+                score=Case(
+                    When(
+                        user__username__in=following,
+                        then=F("score") + follower_addition,
+                    ),
+                    default=F("score"),
+                ),
+            )
+
         res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
+
         serializer = FeedBlogPostSerializer(res, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
