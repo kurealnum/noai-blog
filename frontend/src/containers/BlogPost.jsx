@@ -68,10 +68,10 @@ function BlogPost() {
               ) : null}
               <span>By {data["user"]["username"]}</span>
             </div>
-            <div className="likes">
-              <span>{data["likes"] == null ? 0 : data["likes"]}</span>
-              <FavoriteBorderIcon />
-            </div>
+          </div>
+          <div className="likes">
+            <span>{data["likes"] == null ? 0 : data["likes"]}</span>
+            <FavoriteBorderIcon />
           </div>
           <div id="member-since">
             <CalendarMonthIcon />

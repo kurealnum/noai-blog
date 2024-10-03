@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { doesPathExist } from "../features/helpers";
+import Logo from "../../public/logo.svg";
 
 function NavBar() {
   const desktopWidth = 800;
@@ -99,29 +100,34 @@ function MobileNavBar({ userData }) {
 function NavBarContent({ userData }) {
   if (userData != null) {
     return (
-      <div className="link-list">
-        <li>
-          <a href="/guidelines">Policies on AI</a>
-        </li>
-        <li>
-          <a href="/feed">Feed</a>
-        </li>
-        <li>
-          <a href="/dashboard">Dashboard</a>
-        </li>
-        <li>
-          <a href={"/homepage/" + userData.username}>Your homepage</a>
-        </li>
-        <li>
-          <a href="/settings">Settings</a>
-        </li>
-        <li>
-          <a href="/about-us">About Us</a>
-        </li>
-        <li>
-          <a href="/logout">Logout</a>
-        </li>
-      </div>
+      <>
+        <div className="link-list">
+          <li>
+            <a href="/guidelines">Policies on AI</a>
+          </li>
+          <li>
+            <a href="/feed">Feed</a>
+          </li>
+          <li>
+            <a href="/dashboard">Dashboard</a>
+          </li>
+          <li>
+            <a href={"/homepage/" + userData.username}>Your homepage</a>
+          </li>
+          <li>
+            <a href="/settings">Settings</a>
+          </li>
+          <li>
+            <a href="/about-us">About Us</a>
+          </li>
+          <li>
+            <a href="/logout">Logout</a>
+          </li>
+        </div>
+        <a id="logo" href="/">
+          <img src={Logo} alt="Logo"></img>
+        </a>
+      </>
     );
   }
   return (

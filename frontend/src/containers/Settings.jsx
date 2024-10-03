@@ -15,9 +15,6 @@ import {
 function Settings() {
   const userData = useRouteLoaderData("root");
 
-  // removing the image path from data
-  delete userData["profile_picture"];
-
   const [newUserData, setNewUserData] = useState(userData);
   const [newLinks, setNewLinks] = useState([]);
   const [singleNewLink, setSingleNewLink] = useState({});
