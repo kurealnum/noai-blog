@@ -13,6 +13,9 @@
   flex-direction: row;
   align-items: center;
   gap: 15px;
+  padding: 5px 3px;
+  border-radius: 10px;
+  border: 2px solid var(--accent);
 }
 
 #about-me,
@@ -81,11 +84,6 @@ h2 {
 .links li a {
   text-decoration: none;
   color: var(--dark-text);
-}
-
-.list {
-  overflow: visible;
-  border: none;
 }
 
 .user-box {

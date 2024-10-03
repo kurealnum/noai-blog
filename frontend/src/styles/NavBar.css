@@ -9,7 +9,6 @@ nav {
   border-radius: 10px;
   align-items: center;
   height: min-content;
-  overflow: auto;
 }
 
 nav span {

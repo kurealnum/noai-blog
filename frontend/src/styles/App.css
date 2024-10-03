@@ -208,12 +208,11 @@ p {
 }
 
 .list {
+  padding: 0;
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 15px;
-  overflow: hidden;
-  overflow-y: scroll;
-  max-height: 40vh;
   padding-bottom: 4px;
   border-bottom: 3px var(--tertiary) solid;
 }
@@ -312,7 +311,7 @@ input[type="number"] {
 }
 
 #toggle-visibility svg {
-  color: var(--primary);
+  color: var(--light-text);
 }
 
 @media (min-width: 600px) {
@@ -381,6 +380,7 @@ input[type="number"] {
 
   #dashboard {
     margin: 0 auto;
+    margin-bottom: 30px;
     width: 800px;
   }
 
@@ -434,6 +434,10 @@ input[type="number"] {
   .info-bar-box {
     align-items: center;
   }
+}
+
+.MuiPaper-root {
+  background: var(--page-background) !important;
 }
 
 @media (min-width: 1000px) {
