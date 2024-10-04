@@ -1,8 +1,10 @@
 import { useParams } from "react-router-dom";
 import {
   createReaction,
+  deleteReaction,
   doesPathExist,
   getBlogPost,
+  getReaction,
 } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -15,6 +17,7 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
+import { Favorite } from "@mui/icons-material";
 
 const marked = new Marked(
   markedHighlight({
@@ -29,15 +32,43 @@ const marked = new Marked(
 function BlogPost() {
   const { username, slug } = useParams();
   const [doesReactionExist, setDoesReactionExist] = useState(false);
-  const { data, isLoading, isSuccess, isError, error } = useQuery({
+  const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
     queryKey: ["getBlogPost", username, slug],
     queryFn: () => getBlogPost({ username, slug }),
   });
   const [doesExist, setDoesExist] = useState(false);
 
-  function createReactionHelper() {}
+  useEffect(() => {
+    getReaction(slug).then((res) => {
+      if (res) {
+        setDoesReactionExist(true);
+      } else {
+        setDoesReactionExist(false);
+      }
+    });
+  });
 
-  function deleteReactionHelper() {}
+  function createReactionHelper() {
+    createReaction(slug).then((res) => {
+      if (res) {
+        setDoesReactionExist(true);
+        refetch();
+      } else {
+        setDoesReactionExist(false);
+      }
+    });
+  }
+
+  function deleteReactionHelper() {
+    deleteReaction(slug).then((res) => {
+      if (res) {
+        setDoesReactionExist(false);
+        refetch();
+      } else {
+        setDoesReactionExist(true);
+      }
+    });
+  }
 
   if (isLoading) {
     return (
@@ -78,11 +109,16 @@ function BlogPost() {
               <span>By {data["user"]["username"]}</span>
             </div>
           </div>
-          <button>
-            {" "}
+          <button
+            onClick={
+              doesReactionExist
+                ? () => deleteReactionHelper()
+                : () => createReactionHelper()
+            }
+          >
             <div className="likes">
               <span>{data["likes"] == null ? 0 : data["likes"]}</span>
-              <FavoriteBorderIcon />
+              {doesReactionExist ? <Favorite /> : <FavoriteBorderIcon />}
             </div>
           </button>
 

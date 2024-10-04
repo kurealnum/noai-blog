@@ -368,9 +368,26 @@ async function deleteReaction(slug) {
   return response.ok;
 }
 
+async function getReaction(slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "GET",
+  };
+  const response = await fetch(
+    "/api/blog-posts/manage-post-reactions/" + slug + "/",
+    config,
+  );
+  return response.ok;
+}
+
 export {
   createReaction,
   deleteReaction,
+  getReaction,
   isFollowingUser,
   followUser,
   unfollowUser,

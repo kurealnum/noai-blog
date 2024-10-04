@@ -40,6 +40,7 @@ class SingleBlogPostSerializer(serializers.Serializer):
     )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+    likes = serializers.IntegerField()
 
 
 # for post, patch, etc.
