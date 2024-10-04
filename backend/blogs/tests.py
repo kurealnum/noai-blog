@@ -366,6 +366,15 @@ class ReactionViewTestCase(CustomTestCase):
         super().setUp()
         self.reaction = PostReaction.objects.create(user=self.user, post=self.blog_post)
 
+    def test_does_get_succesfully(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.get(
+            reverse_lazy("manage_post_reactions", args=[self.blog_post.slug_field])
+        )
+        expected_response = 200
+        self.assertEqual(expected_response, request.status_code)
+
     def test_does_succesfully_create(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
