@@ -46,7 +46,7 @@ function BlogPost() {
         setDoesReactionExist(false);
       }
     });
-  });
+  }, [slug]);
 
   function createReactionHelper() {
     createReaction(slug).then((res) => {
@@ -110,6 +110,7 @@ function BlogPost() {
             </div>
           </div>
           <button
+            data-testid="reaction-button"
             onClick={
               doesReactionExist
                 ? () => deleteReactionHelper()
@@ -117,7 +118,9 @@ function BlogPost() {
             }
           >
             <div className="likes">
-              <span>{data["likes"] == null ? 0 : data["likes"]}</span>
+              <span data-testid="reaction-count">
+                {data["likes"] == null ? 0 : data["likes"]}
+              </span>
               {doesReactionExist ? <Favorite /> : <FavoriteBorderIcon />}
             </div>
           </button>

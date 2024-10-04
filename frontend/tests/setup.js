@@ -93,6 +93,7 @@ const linkDeleteSuccess = true;
 const followSuccess = true;
 const unfollowSuccess = true;
 const isFollowingSelf = false;
+const createReactionSuccess = true;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -168,7 +169,13 @@ export const restHandlers = [
     return HttpResponse.json(unfollowSuccess);
   }),
   http.get("/api/blog-posts/manage-following/oscar/", () => {
-    return HttpResponse(isFollowingSelf, { status: 404 });
+    return HttpResponse.json(isFollowingSelf, { status: 404 });
+  }),
+  http.post("/api/blog-posts/manage-post-reactions/", () => {
+    return HttpResponse.json(createReactionSuccess);
+  }),
+  http.get("/media/profile_pictures/pfp.png", () => {
+    return HttpResponse.json({});
   }),
 ];
 
