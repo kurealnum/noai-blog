@@ -1,9 +1,13 @@
 import { useParams } from "react-router-dom";
-import { doesPathExist, getBlogPost } from "../features/helpers";
+import {
+  createReaction,
+  doesPathExist,
+  getBlogPost,
+} from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
 import DOMPurify from "dompurify";
 import hljs from "highlight.js";
@@ -24,11 +28,16 @@ const marked = new Marked(
 
 function BlogPost() {
   const { username, slug } = useParams();
+  const [doesReactionExist, setDoesReactionExist] = useState(false);
   const { data, isLoading, isSuccess, isError, error } = useQuery({
     queryKey: ["getBlogPost", username, slug],
     queryFn: () => getBlogPost({ username, slug }),
   });
   const [doesExist, setDoesExist] = useState(false);
+
+  function createReactionHelper() {}
+
+  function deleteReactionHelper() {}
 
   if (isLoading) {
     return (
@@ -69,10 +78,14 @@ function BlogPost() {
               <span>By {data["user"]["username"]}</span>
             </div>
           </div>
-          <div className="likes">
-            <span>{data["likes"] == null ? 0 : data["likes"]}</span>
-            <FavoriteBorderIcon />
-          </div>
+          <button>
+            {" "}
+            <div className="likes">
+              <span>{data["likes"] == null ? 0 : data["likes"]}</span>
+              <FavoriteBorderIcon />
+            </div>
+          </button>
+
           <div id="member-since">
             <CalendarMonthIcon />
             <span>{data["created_date"].replace(/(T.*)/g, "")}</span>

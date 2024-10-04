@@ -334,7 +334,43 @@ async function isFollowingUser(username) {
   return response.ok;
 }
 
+async function createReaction(slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "POST",
+    body: JSON.stringify({ slug: slug }),
+  };
+  const response = await fetch(
+    "/api/blog-posts/manage-post-reactions/",
+    config,
+  );
+  return response.ok;
+}
+
+async function deleteReaction(slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "DELETE",
+    body: JSON.stringify({ slug: slug }),
+  };
+  const response = await fetch(
+    "/api/blog-posts/manage-post-reactions/",
+    config,
+  );
+  return response.ok;
+}
+
 export {
+  createReaction,
+  deleteReaction,
   isFollowingUser,
   followUser,
   unfollowUser,
