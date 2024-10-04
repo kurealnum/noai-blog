@@ -9,6 +9,7 @@ from blogs.views import (
     FollowingView,
     PostReplyListView,
     CommentListView,
+    ReactionView,
 )
 
 urlpatterns = [
@@ -31,5 +32,8 @@ urlpatterns = [
     path("manage-following/", FollowingView.as_view(), name="manage_following"),
     path(
         "manage-following/<username>/", FollowingView.as_view(), name="manage_following"
+    ),
+    path(
+        "manage-post-reactions/", ReactionView.as_view(), name="manage_post_reactions"
     ),
 ]

@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser
-from blogs.models import BlogPost, Comment, Follower, ReplyTo
+from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
@@ -22,6 +22,7 @@ from blogs.serializers import (
     FollowerSerializer,
     GetFollowerSerializer,
     PostSingleBlogPostSerializer,
+    ReactionSerializer,
     SingleBlogPostSerializer,
 )
 
@@ -229,3 +230,28 @@ class FollowingView(APIView):
             )
             serializer = GetFollowerSerializer(data, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# both methods takes in user (self.request.user) and the post slug (its unique)
+class ReactionView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        user = self.request.user
+        slug = request.data["slug"]
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
+        data = {"user": user, "post": blog_post}
+        serializer = ReactionSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        user = self.request.user
+        slug = request.data["slug"]
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
+        reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
+        reaction.delete()
+        return Response(status=status.HTTP_200_OK)

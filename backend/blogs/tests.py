@@ -359,3 +359,26 @@ class FollowingViewTestCase(CustomTestCase):
         expected_result = "bobby"
 
         self.assertEqual(expected_result, request.data["user"]["username"])
+
+
+class ReactionViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.reaction = PostReaction.objects.create(user=self.user, post=self.blog_post)
+
+    def test_does_succesfully_create(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        data = {"slug": self.blog_post.slug_field}
+        request = temp_client.post(reverse_lazy("manage_post_reactions"), data=data)
+        expected_result = 200
+
+        self.assertEqual(expected_result, request.status_code)
+
+    def test_does_succesfully_delete(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        data = {"slug": self.blog_post.slug_field}
+        request = temp_client.delete(reverse_lazy("manage_post_reactions"), data=data)
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)

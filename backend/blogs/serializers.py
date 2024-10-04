@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser
-from .models import BlogPost, Comment, Follower
+from .models import BlogPost, Comment, Follower, PostReaction
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -71,4 +71,10 @@ class GetFollowerSerializer(serializers.ModelSerializer):
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:  # type: ignore
         model = Follower
+        fields = "__all__"
+
+
+class ReactionSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = PostReaction
         fields = "__all__"

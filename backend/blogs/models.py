@@ -37,6 +37,9 @@ class PostReaction(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
 
+    class Meta:  # type: ignore
+        unique_together = "user", "post"
+
 
 class Comment(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
