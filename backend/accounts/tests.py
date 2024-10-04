@@ -354,7 +354,7 @@ class LinksTestCase(CustomTestCase):
             "name": "MyNewLink",
         }
 
-        result = temp_client.post(reverse_lazy("links"), data)
+        result = temp_client.post(reverse_lazy("links"), data, format="json")
         expected_result = 201
         self.assertEqual(expected_result, result.status_code)
 
@@ -367,7 +367,7 @@ class LinksTestCase(CustomTestCase):
             "name": "MyNewLink",
         }
 
-        result = temp_client.post(reverse_lazy("links"), data)
+        result = temp_client.post(reverse_lazy("links"), data, format="json")
         expected_result = "Your link needs to be HTTPS"
         self.assertEqual(
             expected_result, json.loads(result.content)["non_field_errors"][0]

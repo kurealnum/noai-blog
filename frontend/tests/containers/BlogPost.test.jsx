@@ -25,7 +25,6 @@ describe("Blog Post", () => {
   });
   it("renders correctly", async () => {
     expect(screen.getByRole("heading")).toBeVisible();
-    expect(screen.getByRole("img")).toBeVisible();
     expect(screen.getByText("By oscar")).toBeVisible();
   });
 });

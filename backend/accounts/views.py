@@ -187,13 +187,6 @@ class UpdateUserInfoView(generics.UpdateAPIView):
     serializer_class = PutCustomUserSerializer
     queryset = CustomUser.objects.all()
 
-    # def put(self, request):
-    #     user = self.request.user
-    #     data = request.data
-    #     del data["profile_picture"]
-    #     instance = generics.get_object_or_404(CustomUser, id=user)
-    #     serializer = ()
-
 
 class RegisterView(APIView):
     permission_classes = (AllowAny,)
