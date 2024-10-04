@@ -1,14 +1,10 @@
-from django.db import models
 from django.db.models import (
     F,
     Case,
     Count,
     ExpressionWrapper,
     FloatField,
-    IntegerField,
-    QuerySet,
     Subquery,
-    Sum,
     When,
 )
 from django.http.response import Http404

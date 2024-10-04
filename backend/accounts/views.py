@@ -11,6 +11,7 @@ from accounts.serializers import (
     CustomUserSerializer,
     LinkSerializer,
     NewCustomUserSerializer,
+    PutCustomUserSerializer,
 )
 
 
@@ -180,10 +181,18 @@ class LinksView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+# updates all info except profile picture
 class UpdateUserInfoView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
-    serializer_class = CustomUserSerializer
+    serializer_class = PutCustomUserSerializer
     queryset = CustomUser.objects.all()
+
+    # def put(self, request):
+    #     user = self.request.user
+    #     data = request.data
+    #     del data["profile_picture"]
+    #     instance = generics.get_object_or_404(CustomUser, id=user)
+    #     serializer = ()
 
 
 class RegisterView(APIView):

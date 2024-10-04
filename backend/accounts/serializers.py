@@ -19,6 +19,21 @@ class CustomUserSerializer(serializers.ModelSerializer):
         )
 
 
+# for saving without profile picture because saving profile picture happens in a different route
+class PutCustomUserSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = CustomUser
+        fields = (
+            "username",
+            "email",
+            "first_name",
+            "last_name",
+            "about_me",
+            "date_joined",
+            "technical_info",
+        )
+
+
 class NewCustomUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
