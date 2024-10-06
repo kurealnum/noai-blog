@@ -203,6 +203,14 @@ h2 {
   font-weight: 300;
 }
 
+h3 {
+  color: var(--light-text);
+  font-weight: 300;
+  margin: 0 auto;
+  margin-top: 20px;
+  font-style: italic;
+}
+
 .info {
   display: flex;
   flex-direction: row;
@@ -250,13 +258,11 @@ p {
 }
 
 .text-based-page {
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   width: 90%;
-}
-
-.text-based-page {
-  margin: 0 auto;
+  max-width: 900px;
 }
 
 .paginator {
@@ -351,11 +357,11 @@ input[type="number"] {
 }
 
 @media (min-width: 800px) {
-  .info-bar {
-    width: 400px;
-  }
   .text-based-page {
     margin-right: 40px;
+  }
+  .info-bar {
+    width: 400px;
   }
   #create-post {
     margin-right: 40px;
@@ -473,5 +479,12 @@ input[type="number"] {
   #register,
   #login {
     width: 600px;
+  }
+}
+
+/*this is for centering purposes*/
+@media (min-width: 1230px) {
+  .text-based-page {
+    margin: 0 auto;
   }
 }

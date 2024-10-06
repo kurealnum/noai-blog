@@ -23,7 +23,7 @@ function AboutUs() {
         at a time. I sincerely hope you enjoy this project. If you’d like to
         give any feedback, please feel free to reach out. You can find contact
         information on the{" "}
-        <a href="/guidelines" class="tertiary-accent">
+        <a href="/guidelines" className="tertiary-accent">
           guidelines
         </a>{" "}
         page.
