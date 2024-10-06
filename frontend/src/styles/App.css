@@ -10,7 +10,7 @@ input {
   --accent: #e94f37;
   --tertiary: #879e14;
   --light-text: #ffffff;
-  --page-background: #222527;
+  --page-background: #151718;
   --header-font-size: 32px;
   --subheader-font-size: 32px;
   --navbar-font-size: 20px;
@@ -26,6 +26,10 @@ input {
 
 #register {
   margin: 50px auto;
+}
+
+.accent-highlight {
+  color: var(--accent);
 }
 
 .custom-form {
@@ -245,6 +249,16 @@ p {
   color: var(--dark-text);
 }
 
+.text-based-page {
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+}
+
+.text-based-page {
+  margin: 0 auto;
+}
+
 .paginator {
   display: flex;
   flex-direction: row;
@@ -322,6 +336,10 @@ input[type="number"] {
   color: var(--light-text);
 }
 
+.tertiary-accent {
+  color: var(--tertiary);
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
@@ -335,6 +353,9 @@ input[type="number"] {
 @media (min-width: 800px) {
   .info-bar {
     width: 400px;
+  }
+  .text-based-page {
+    margin-right: 40px;
   }
   #create-post {
     margin-right: 40px;
