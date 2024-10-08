@@ -2,6 +2,10 @@
 
 Source code for the NoAI blogging site
 
+## Running the project
+
+`docker compose up -w` or `docker compose up -w --build`
+
 ## Testing
 
 All tests (as of 9/15/2024) should NOT be run in production. At the moment, they are suitable for development only.
