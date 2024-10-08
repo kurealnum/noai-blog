@@ -23,9 +23,15 @@ function Notifications() {
   }
 
   if (isSuccess) {
-    return data.map((content, index) => (
-      <CommentThumbnail key={index} content={content} />
-    ));
+    return (
+      <div class="default-page">
+        <ul>
+          {data.map((content, index) => (
+            <CommentThumbnail key={index} content={content} />
+          ))}
+        </ul>
+      </div>
+    );
   }
 }
 

@@ -178,7 +178,8 @@ textarea {
 }
 
 .blog-post,
-.comment {
+.comment,
+.comment-thumbnail {
   margin: 0 auto;
   width: 85vw;
   background: var(--background);
@@ -188,6 +189,11 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.comment-thumbnail p {
+  width: 90%;
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -299,6 +305,18 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield; /* Firefox */
   appearance: textfield;
+}
+
+.default-page {
+  margin: 0 auto;
+  margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
 }
 
 .centered-page {
@@ -443,8 +461,9 @@ input[type="number"] {
   }
 
   .blog-post,
-  .comment {
-    width: 85%;
+  .comment,
+  .comment-thumbnail {
+    width: 400px;
   }
 
   .username-box {
