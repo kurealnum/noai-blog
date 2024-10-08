@@ -63,3 +63,36 @@ Use this bit of markdown to test any Markdown renders:
 
 ![This is a link to an image!](https://i.imgur.com/zi2TYNJ.jpeg)
 ```
+
+## Env file setup
+
+```
+DATABASE_NAME="noai-main"
+DATABASE_USER="postgres"
+DATABASE_PASSWORD="averysecurepassword!!!0a00"
+DATABASE_PORT=5432
+
+DJANGO_SECRET_KEY="my-secret-key"
+DEBUG=True
+ALLOWED_HOSTS='["*"]'
+
+CORS_ALLOWED_ORIGINS='["http://localhost:1337","http://127.0.0.1:1337"]'
+CSRF_TRUSTED_ORIGINS='["http://localhost:1337","http://127.0.0.1:1337"]'
+
+CSRF_COOKIE_SAMESITE="Strict"
+SESSION_COOKIE_SAMESITE="Strict"
+CSRF_COOKIE_HTTPONLY=False
+SESSION_COOKIE_HTTPONLY=True
+CSRF_COOKIE_SECURE=False
+SESSION_COOKIE_SECURE=False
+CORS_EXPOSE_HEADERS='["Content-Type","X-CSRFToken]'
+CORS_ALLOW_CREDENTIALS=True
+
+EMAIL_HOST="localhost"
+EMAIL_PORT=587
+EMAIL_HOST_PASSWORD="password"
+EMAIL_HOST_USER="myemail@gmail.com"
+EMAIL_USE_TLS=False
+```
+
+The email stuff is not currently in use.
