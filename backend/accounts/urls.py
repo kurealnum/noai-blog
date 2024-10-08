@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    NotificationView,
     RegisterView,
     UserInfoView,
     LoginUserView,
@@ -36,4 +37,5 @@ urlpatterns = [
         name="change_profile_picture",
     ),
     path("register/", RegisterView.as_view(), name="register"),
+    path("notifications/", NotificationView.as_view(), name="notifications"),
 ]

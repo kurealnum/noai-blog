@@ -13,6 +13,8 @@ from accounts.serializers import (
     NewCustomUserSerializer,
     PutCustomUserSerializer,
 )
+from blogs.models import Comment
+from blogs.serializers import CommentSerializer
 
 
 class LoginUserView(APIView):
@@ -200,3 +202,22 @@ class RegisterView(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class NotificationView(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        user = self.request.user.id  # type: ignore
+        unread_comments = Comment.objects.filter(user=user, is_read=False)
+
+        serializer = CommentSerializer(instance=unread_comments, many=True)
+
+        # not sure why I have to update comments after I declare response, but I do
+        response = Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        unread_comments.update(is_read=True)
+        for comment in unread_comments:
+            comment.save()
+
+        return response

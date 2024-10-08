@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from accounts.views import LinksView
 from .models import CustomUser, Link
-from blogs.models import BlogPost
+from blogs.models import BlogPost, Comment
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
 
@@ -428,3 +428,37 @@ class RegisterTestCase(CustomTestCase):
         request = self.client.post(reverse_lazy("register"), data)
         expected_response = 400
         self.assertEqual(request.status_code, expected_response)
+
+
+class NotificationViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.post = BlogPost.objects.create(
+            user=self.user, title="My blog post", content="My weird blog post"
+        )
+
+        # unread comments
+        Comment.objects.create(
+            user=self.user, post=self.post, content="Hello world", is_read=False
+        )
+        Comment.objects.create(
+            user=self.user,
+            post=self.post,
+            content="I am the other unread comment",
+            is_read=False,
+        )
+
+        # read comments
+        Comment.objects.create(
+            user=self.user, post=self.post, content="Hello world", is_read=True
+        )
+
+    def test_does_get_return_correctly(self):
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.get(reverse_lazy("notifications"))
+        expected_result = "I am the other unread comment"
+        expected_length = 2
+
+        self.assertEqual(expected_result, request.data[1]["content"])
+        self.assertEqual(expected_length, len(request.data))
