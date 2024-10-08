@@ -23,6 +23,14 @@ import Notifications from "../containers/Notifications";
 
 const router = createBrowserRouter([
   {
+    path: "",
+    element: (
+      <Page title="Home">
+        <Home />
+      </Page>
+    ),
+  },
+  {
     path: "/",
     id: "root",
     element: <NavBar />,
@@ -65,14 +73,6 @@ const router = createBrowserRouter([
             <PublicRoute>
               <Register />
             </PublicRoute>
-          </Page>
-        ),
-      },
-      {
-        path: "",
-        element: (
-          <Page title="Home">
-            <Home />
           </Page>
         ),
       },
