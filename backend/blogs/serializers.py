@@ -1,7 +1,13 @@
 from rest_framework import serializers
 
 from accounts.models import CustomUser
+from accounts.serializers import CustomUserSerializer
 from .models import BlogPost, Comment, Follower, PostReaction
+
+
+class NotificationCommentSerializer(serializers.Serializer):
+    user = CustomUserSerializer()
+    content = serializers.CharField()
 
 
 class CommentSerializer(serializers.ModelSerializer):

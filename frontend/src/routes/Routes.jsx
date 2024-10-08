@@ -19,6 +19,7 @@ import Page from "./Page";
 import RootBoundary from "../containers/RootBoundary";
 import CreatePost from "../containers/CreatePost";
 import LoginRedirect from "../containers/LoginRedirect";
+import Notifications from "../containers/Notifications";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,7 @@ const router = createBrowserRouter([
         path: "login-redirect",
         element: <LoginRedirect />,
       },
+      { path: "notifications", element: <Notifications /> },
       {
         path: "homepage/:username",
         element: (

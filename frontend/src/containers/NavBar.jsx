@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { doesPathExist } from "../features/helpers";
-import Logo from "../../public/logo.svg";
+import Logo from "/logo.svg";
 
 function NavBar() {
   const desktopWidth = 800;

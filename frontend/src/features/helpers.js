@@ -372,7 +372,6 @@ async function getReaction(slug) {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": getCookie("csrftoken"),
     },
     credentials: "include",
     method: "GET",
@@ -384,7 +383,21 @@ async function getReaction(slug) {
   return response.ok;
 }
 
+async function getNotifications() {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    method: "GET",
+  };
+
+  const response = await fetch("/api/accounts/notifications/", config);
+  return await response.json();
+}
+
 export {
+  getNotifications,
   createReaction,
   deleteReaction,
   getReaction,
