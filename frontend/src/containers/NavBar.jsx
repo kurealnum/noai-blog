@@ -121,6 +121,9 @@ function NavBarContent({ userData }) {
             <a href="/about-us">About Us</a>
           </li>
           <li>
+            <a href="/notifications">Notifications</a>
+          </li>
+          <li>
             <a href="/logout">Logout</a>
           </li>
         </div>

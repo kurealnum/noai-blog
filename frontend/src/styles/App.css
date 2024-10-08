@@ -191,6 +191,10 @@ textarea {
   align-items: center;
 }
 
+.unread {
+  border: var(--accent) 2px solid;
+}
+
 .comment-thumbnail p {
   width: 90%;
   overflow-wrap: break-word;

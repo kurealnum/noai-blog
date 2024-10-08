@@ -24,7 +24,7 @@ function Notifications() {
 
   if (isSuccess) {
     return (
-      <div class="default-page">
+      <div className="default-page">
         <ul>
           {data.map((content, index) => (
             <CommentThumbnail key={index} content={content} />
