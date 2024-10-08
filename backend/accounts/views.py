@@ -204,14 +204,13 @@ class RegisterView(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# this view gets all notifications and changes the new ones to is_read=True
 class NotificationView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        unread_comments = Comment.objects.filter(
-            user=user, is_read=False
-        ).select_related("user")
+        unread_comments = Comment.objects.filter(user=user).select_related("user")
 
         serializer = NotificationCommentSerializer(instance=unread_comments, many=True)
 
@@ -223,3 +222,11 @@ class NotificationView(APIView):
             comment.save()
 
         return response
+
+
+class NotificationCountView(APIView):
+    def get(self, request):
+        user = self.request.user.id  # type: ignore
+        unread_comments = Comment.objects.filter(user=user, is_read=False).count()
+
+        return Response(data={"count": unread_comments}, status=status.HTTP_200_OK)

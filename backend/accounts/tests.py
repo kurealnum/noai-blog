@@ -458,7 +458,42 @@ class NotificationViewTestCase(CustomTestCase):
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.get(reverse_lazy("notifications"))
         expected_result = "I am the other unread comment"
-        expected_length = 2
+        expected_read = False
+        expected_length = 3
 
         self.assertEqual(expected_result, request.data[1]["content"])
+        self.assertEqual(expected_read, request.data[1]["is_read"])
         self.assertEqual(expected_length, len(request.data))
+
+
+class NotificationCountViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.post = BlogPost.objects.create(
+            user=self.user, title="My blog post", content="My weird blog post"
+        )
+
+        # unread comments
+        Comment.objects.create(
+            user=self.user, post=self.post, content="Hello world", is_read=False
+        )
+        Comment.objects.create(
+            user=self.user,
+            post=self.post,
+            content="I am the other unread comment",
+            is_read=False,
+        )
+
+        # read comments
+        Comment.objects.create(
+            user=self.user, post=self.post, content="Hello world", is_read=True
+        )
+
+    # should only return unread comments
+    def test_does_count_equal_three(self):
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.get(reverse_lazy("notifications_count"))
+        expected_result = 2
+
+        self.assertEqual(expected_result, request.data["count"])

@@ -8,6 +8,7 @@ from .models import BlogPost, Comment, Follower, PostReaction
 class NotificationCommentSerializer(serializers.Serializer):
     user = CustomUserSerializer()
     content = serializers.CharField()
+    is_read = serializers.BooleanField()
 
 
 class CommentSerializer(serializers.ModelSerializer):
