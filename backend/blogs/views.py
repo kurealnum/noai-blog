@@ -131,9 +131,11 @@ class FeedListView(APIView):
 
         # id like to change this to a multiplier at some point
         follower_addition = 50
+        listicle_debuff = 30
         comment_score = 5
         reaction_score = 3
 
+        # initial query
         all_posts = (
             BlogPost.objects.all()
             .annotate(
@@ -146,6 +148,22 @@ class FeedListView(APIView):
             )
             .select_related("user")
             .order_by("-score")
+        )
+
+        # paginating list
+        all_posts = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
+
+        # adding listicle "debuff"
+        all_posts = all_posts.annotate(
+            score=Case(
+                When(
+                    is_listicle=True,
+                    then=ExpressionWrapper(
+                        F("score") - listicle_debuff, output_field=FloatField()
+                    ),
+                ),
+                default=ExpressionWrapper(F("score"), output_field=FloatField()),
+            )
         )
 
         # adding follower "boosts"
@@ -168,9 +186,7 @@ class FeedListView(APIView):
                 ),
             )
 
-        res = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
-
-        serializer = FeedBlogPostSerializer(res, many=True)
+        serializer = FeedBlogPostSerializer(all_posts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

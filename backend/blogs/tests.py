@@ -285,6 +285,15 @@ class FeedListTestCase(CustomTestCase):
 
         self.assertEqual(expected_response, response.data[0]["score"])
 
+    def test_feedlist_returns_correctly_with_listicle_debuff(self):
+        self.blog_post_1.is_listicle = True
+        self.blog_post_1.save()
+
+        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        expected_score = -30
+
+        self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore
+
 
 class FollowerViewTestCase(CustomTestCase):
     def setUp(self):

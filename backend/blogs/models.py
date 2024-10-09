@@ -11,6 +11,7 @@ class BlogPost(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     slug_field = models.SlugField(null=True, unique=True)
+    is_listicle = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse(
