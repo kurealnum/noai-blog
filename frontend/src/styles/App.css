@@ -94,6 +94,11 @@ body {
   color: var(--light-text);
 }
 
+.username-box a {
+  display: flex;
+  align-items: center;
+}
+
 #language-field {
   display: none;
 }
@@ -424,8 +429,11 @@ input[type="number"] {
 }
 
 ul {
-  list-style: none;
   padding: 0;
+}
+
+.text-based-page li {
+  margin-bottom: 10px;
 }
 
 .centered-page {
@@ -488,6 +496,10 @@ ul {
 
 .filler-wrapper {
   margin: 0 auto;
+}
+
+.username-box svg {
+  color: var(--tertiary);
 }
 
 @media (min-width: 600px) {

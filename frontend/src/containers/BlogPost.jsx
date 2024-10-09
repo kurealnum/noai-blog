@@ -17,7 +17,7 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
-import { Favorite } from "@mui/icons-material";
+import { CheckCircle, Favorite } from "@mui/icons-material";
 
 const marked = new Marked(
   markedHighlight({
@@ -109,6 +109,11 @@ function BlogPost() {
               <span className={doesExist ? null : "username-box-padding"}>
                 By {data["user"]["username"]}
               </span>
+              {data["user"]["approved_ai_usage"] ? (
+                <a href="/guidelines/#green-checkmarks-on-users-profiles">
+                  <CheckCircle />
+                </a>
+              ) : null}
             </div>
           </div>
           <button

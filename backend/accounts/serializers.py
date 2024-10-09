@@ -16,6 +16,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "date_joined",
             "technical_info",
             "profile_picture",
+            "approved_ai_usage",
         )
 
 

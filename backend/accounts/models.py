@@ -11,6 +11,7 @@ class CustomUser(AbstractUser):
     technical_info = models.TextField(max_length=150)
     password = models.CharField(max_length=100, unique=False)
     profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
+    approved_ai_usage = models.BooleanField(default=False)
 
 
 class Link(models.Model):

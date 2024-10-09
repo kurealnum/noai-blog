@@ -13,6 +13,7 @@ import {
 } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { Alert, Snackbar } from "@mui/material";
+import { CheckCircle } from "@mui/icons-material";
 
 function Homepage() {
   const { username } = useParams();
@@ -114,6 +115,14 @@ function Homepage() {
               <img id="pfp" src={userInfo["profile_picture"]}></img>
             ) : null}
             <span>{userInfo["username"]}</span>
+            {userInfo["approved_ai_usage"] ? (
+              <a
+                referrerPolicy="same-origin"
+                href="/guidelines/#green-checkmarks-on-users-profiles"
+              >
+                <CheckCircle />
+              </a>
+            ) : null}
           </div>
           <button
             type="button"

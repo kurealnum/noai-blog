@@ -120,8 +120,6 @@ class PostReplyListView(generics.ListAPIView):
         return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))
 
 
-# This view returns a feed of the top posts mixed in with new posts and posts sorted by number of comments
-# 60% of returned posts will be sorted by # of reactions, 30% will be sorted by newest, and 10% will be sorted by # of comments
 class FeedListView(APIView):
     permission_classes = (AllowAny,)
 

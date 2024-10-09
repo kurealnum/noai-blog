@@ -26,7 +26,7 @@ class FeedCustomUserSerializer(serializers.ModelSerializer):
 class SingleBlogPostUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
-        fields = ("username", "profile_picture")
+        fields = ("username", "profile_picture", "approved_ai_usage")
 
 
 class FeedBlogPostSerializer(serializers.Serializer):

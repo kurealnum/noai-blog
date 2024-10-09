@@ -18,9 +18,9 @@ function Guidelines() {
         </a>{" "}
         to submit an incident report. Alternatively, for more general requests,
         you can send an email to{" "}
-        <address type="email" href="mailto: thenoaiblog@gmail.com">
+        <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
           thenoaiblog@gmail.com
-        </address>
+        </a>
       </p>
       <h2>The basics</h2>
       <p>
@@ -218,7 +218,7 @@ function Guidelines() {
         resource in my post. It would not be appropriate for me to copy and
         paste the answer that ChatGPT gave to me directly into my post.
       </p>
-      <h3>
+      <h3 id="ai-assistance-information">
         I’m an author that isn’t fluent in English, but uses AI to help me
         translate my work into English. What about me?
       </h3>
@@ -230,7 +230,7 @@ function Guidelines() {
         . We would be happy to make accommodations for you – these
         accommodations would likely be “immunity” from AI checks, and a little
         sticker on your profile that says you’re approved to use AI. Optionally,
-        you may remain anonymous (until we have to approve your count for AI
+        you may remain anonymous (until we have to approve your content for AI
         usage, of course) by submitting a question through the incident report.
       </p>
       <h2>No listicles</h2>
@@ -357,6 +357,20 @@ function Guidelines() {
         You may not accept payment of any kind to create a post. If you would
         like to create a post for an organization/product out of the goodness of
         your heart, you may.
+      </p>
+      <h2
+        id="green-checkmarks-on-users-profiles"
+        name="green-checkmarks-on-users-profiles"
+      >
+        Green Checkmarks on user's profiles
+      </h2>
+      <p>
+        This checkmark indicates that a user has been approved to use AI
+        assistance to help create their content. See{" "}
+        <a className="tertiary-accent" href="#ai-assistance-information">
+          this section
+        </a>{" "}
+        for more info.
       </p>
       <h1>Sources Cited</h1>
       <p>
