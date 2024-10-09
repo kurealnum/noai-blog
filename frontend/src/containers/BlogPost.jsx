@@ -106,10 +106,13 @@ function BlogPost() {
               {doesExist ? (
                 <img id="pfp" src={data["user"]["profile_picture"]}></img>
               ) : null}
-              <span>By {data["user"]["username"]}</span>
+              <span className={doesExist ? null : "username-box-padding"}>
+                By {data["user"]["username"]}
+              </span>
             </div>
           </div>
           <button
+            className="reaction-button"
             data-testid="reaction-button"
             onClick={
               doesReactionExist

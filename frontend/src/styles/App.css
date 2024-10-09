@@ -29,10 +29,6 @@ body {
   margin: 0;
 }
 
-#register {
-  margin: 50px auto;
-}
-
 .accent-highlight {
   color: var(--accent);
 }
@@ -45,10 +41,16 @@ body {
   background: var(--background);
   border: 2px var(--primary) solid;
   border-radius: 10px;
+  margin-left: 20px;
+  margin-right: 20px;
   margin-top: 30px;
   padding: 10px;
   height: min-content;
   overflow: auto;
+}
+
+.custom-form textarea {
+  border: 1px var(--light-border-color) solid;
 }
 
 .custom-form form {
@@ -66,7 +68,7 @@ body {
 
 .custom-form input {
   border-radius: 10px;
-  border: 1px var(--primary) solid;
+  border: 1px var(--light-border-color) solid;
   padding: 4px;
   color: var(--light-text);
 }
@@ -248,8 +250,17 @@ p {
   align-items: center;
   flex-direction: column;
   gap: 15px;
-  padding-bottom: 4px;
+  padding-bottom: 10px;
   border-bottom: 3px var(--tertiary) solid;
+}
+
+.username-box-padding {
+  padding: 10px;
+  text-wrap: nowrap;
+}
+
+.reaction-button {
+  border: none;
 }
 
 #feed,
@@ -348,8 +359,8 @@ p {
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   width: 90%;
-  max-width: 900px;
 }
 
 .paginator {
@@ -445,10 +456,27 @@ ul {
   color: var(--tertiary);
 }
 
+.CodeMirror-cursor {
+  border-color: var(--light-text) !important;
+}
+
+.cm-formatting,
+.cm-comment {
+  background: var(--page-background) !important;
+}
+
+.filler {
+  height: 50px;
+}
+
+.filler-wrapper {
+  margin: 0 auto;
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
-    width: 95%;
+    width: 85%;
   }
   #simplemde-editor-2-wrapper {
     width: 100%;
@@ -457,13 +485,13 @@ ul {
 
 @media (min-width: 800px) {
   .text-based-page {
-    margin-right: 40px;
+    width: 60vw;
   }
   .info-bar {
     width: 400px;
   }
-  #create-post {
-    margin-right: 40px;
+  .custom-form {
+    margin: 50px auto;
   }
   #register {
     width: 500px;
@@ -476,7 +504,7 @@ ul {
 
   #simplemde-editor-2-wrapper,
   #create-post form {
-    max-width: 800px;
+    max-width: 85%;
   }
   textarea {
     width: 320px;
@@ -499,8 +527,8 @@ ul {
     display: flex;
     flex-direction: column;
     height: 88vh;
-    margin-right: 40px;
     margin-left: 40px;
+    margin-right: 0;
     min-width: 200px;
     justify-content: start;
     border: 1px var(--primary) solid;
@@ -544,7 +572,7 @@ ul {
   .blog-post,
   .comment,
   .comment-thumbnail {
-    width: 400px;
+    width: 450px;
   }
 
   .username-box {

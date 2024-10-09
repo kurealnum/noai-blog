@@ -121,7 +121,7 @@ function Settings() {
 
   if (newUserData != null && newLinks != null) {
     return (
-      <>
+      <div className="filler-wrapper">
         <form
           className="custom-form"
           aria-label="Settings"
@@ -298,7 +298,8 @@ function Settings() {
           </Snackbar>
         </form>
         <Outlet />
-      </>
+        <div className="filler"></div>
+      </div>
     );
   }
   // this doesn't make sense to use tanstack here
