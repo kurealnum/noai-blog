@@ -78,6 +78,23 @@ const multipleBlogPosts = [
   },
 ];
 
+const comment = [
+  {
+    user: {
+      username: "oscar",
+      email: "admin@gmail.com",
+      first_name: "oscar",
+      last_name: "gaske",
+      about_me: "Here's something about me.",
+      date_joined: "2024-10-08T02:05:31Z",
+      technical_info: "Python and DJango!",
+      profile_picture: null,
+    },
+    content: "This is my comment",
+    is_read: true,
+  },
+];
+
 // successful fetch returns that dont need a body
 const loginSuccess = true;
 const logoutSuccess = true;
@@ -102,6 +119,9 @@ const createReactionSuccess = true;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.get("/api/accounts/notifications/", () => {
+    return HttpResponse.json(comment);
+  }),
   http.delete("/api/accounts/manage-links/", () => {
     return HttpResponse.json(linkDeleteSuccess);
   }),

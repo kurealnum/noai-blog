@@ -6,6 +6,6 @@ import Guidelines from "../../src/containers/Guidelines";
 describe("Guidelines", () => {
   it("renders correctly", () => {
     render(<Guidelines />);
-    expect(screen.getByRole("paragraph")).toBeEmptyDOMElement();
+    expect(screen.getByText("Guidelines")).toBeVisible();
   });
 });

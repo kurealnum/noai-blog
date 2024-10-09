@@ -6,6 +6,7 @@ import AboutUs from "../../src/containers/AboutUs";
 describe("about us container", () => {
   it("returns a paragraph with content", () => {
     render(<AboutUs />);
-    expect(screen.getByRole("paragraph")).toBeInTheDocument();
+    expect(screen.getAllByRole("paragraph")).toHaveLength(2);
+    expect(screen.getByText("About Us")).toBeVisible();
   });
 });

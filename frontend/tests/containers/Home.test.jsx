@@ -6,6 +6,7 @@ import Home from "../../src/containers/Home";
 describe("Home", () => {
   it("renders correctly", () => {
     render(<Home />);
-    expect(screen.getByRole("paragraph")).toBeInTheDocument();
+    expect(screen.getByText("robots")).toBeVisible();
+    expect(screen.getByText("blogs")).toBeVisible();
   });
 });
