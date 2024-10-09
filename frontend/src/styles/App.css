@@ -263,6 +263,23 @@ p {
   border: none;
 }
 
+.feed-advertisement {
+  height: 100px;
+  border-radius: 10px;
+  border: var(--accent) 2px solid;
+  background: var(--primary);
+  width: 85vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.feed-advertisement a {
+  text-decoration: none;
+  color: var(--light-text);
+  font-style: italic;
+}
+
 #feed,
 #create-post,
 #error-page {
@@ -484,6 +501,9 @@ ul {
 }
 
 @media (min-width: 800px) {
+  .feed-advertisement {
+    width: 450px;
+  }
   .text-based-page {
     width: 60vw;
   }
