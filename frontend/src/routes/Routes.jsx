@@ -20,6 +20,7 @@ import RootBoundary from "../containers/RootBoundary";
 import CreatePost from "../containers/CreatePost";
 import LoginRedirect from "../containers/LoginRedirect";
 import Notifications from "../containers/Notifications";
+import Faq from "../containers/Faq";
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
     loader: getUserInfo,
     errorElement: <RootBoundary />,
     children: [
+      {
+        path: "faq",
+        element: <Faq />,
+      },
       {
         path: "login-redirect",
         element: <LoginRedirect />,
