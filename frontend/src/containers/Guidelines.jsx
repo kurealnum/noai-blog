@@ -12,7 +12,7 @@ function Guidelines() {
         Please use{" "}
         <a
           className="tertiary-accent"
-          href="https://forms.gle/dmiPPz9nC4XbqsXr9"
+          href="https://form.jotform.com/242828369788175"
         >
           this anonymous form
         </a>{" "}
@@ -69,7 +69,7 @@ function Guidelines() {
         assisted will be removed, but content that is only suspected to be AI
         generated/AI assisted will result in a message to the author of the post
         asking for “proof” of creation (read more about this in{" "}
-        <a href="#" className="tertiary-accent">
+        <a href="#suspected-content" className="tertiary-accent">
           this section
         </a>
         ).
@@ -138,7 +138,7 @@ function Guidelines() {
         post that is suspected to be AI generated/AI assisted will only result
         in a friendly email to the author asking for “proof” of creation (read
         more about this in{" "}
-        <a href="#" className="tertiary-accent">
+        <a href="#suspected-content" className="tertiary-accent">
           this section
         </a>
         ).
@@ -148,7 +148,7 @@ function Guidelines() {
         byeAI would prefer to minimize any and all possible biases in this
         process, so your feedback is important.
       </p>
-      <h3>
+      <h3 id="suspected-content">
         My content was suspected to be AI generated/AI assisted! What do I do?
       </h3>
       <p>
@@ -317,7 +317,7 @@ function Guidelines() {
         <li>It violates any of the above guidelines.</li>
         <li>
           It is overly political (see{" "}
-          <a href="keep-politics-out-of-it" className="tertiary-accent">
+          <a href="#keep-politics-out-of-it" className="tertiary-accent">
             this section
           </a>
           ).

@@ -227,7 +227,7 @@ h2 {
 
 h3 {
   color: var(--light-text);
-  font-weight: 300;
+  font-weight: 400;
   margin: 0 auto;
   margin-top: 20px;
   font-style: italic;
@@ -378,6 +378,7 @@ p {
 }
 
 .text-based-page {
+  line-height: 1.3em;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
@@ -502,6 +503,15 @@ ul {
   color: var(--tertiary);
 }
 
+.text-based-page h1,
+.text-based-page h2 {
+  margin-top: 45px;
+}
+
+.text-based-page h3 {
+  margin-top: 40px;
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
@@ -518,6 +528,7 @@ ul {
   }
   .text-based-page {
     width: 60vw;
+    max-width: 800px;
   }
   .info-bar {
     width: 400px;
