@@ -48,6 +48,7 @@ function NavBar() {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
               onClick={handleClick}
+              data-testid="open-dropdown"
             >
               {exists ? (
                 <img id="pfp" src={userData["profile_picture"]}></img>
@@ -56,7 +57,7 @@ function NavBar() {
               <Popper anchorEl={anchorEl} open={open} transition>
                 {({ TransitionProps }) => (
                   <Fade {...TransitionProps} timeout={140}>
-                    <ul class="dropdown-list">
+                    <ul className="dropdown-list">
                       <li>
                         <a href="/dashboard">Dashboard</a>
                       </li>

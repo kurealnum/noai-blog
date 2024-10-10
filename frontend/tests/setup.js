@@ -111,6 +111,7 @@ const followSuccess = true;
 const unfollowSuccess = true;
 const isFollowingSelf = false;
 const createReactionSuccess = true;
+const managePostReactions = false;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -119,6 +120,12 @@ const createReactionSuccess = true;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.get(
+    "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+    () => {
+      return HttpResponse.json(managePostReactions);
+    },
+  ),
   http.get("/api/accounts/notifications/", () => {
     return HttpResponse.json(comment);
   }),
