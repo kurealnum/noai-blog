@@ -46,7 +46,14 @@ const router = createBrowserRouter([
         path: "login-redirect",
         element: <LoginRedirect />,
       },
-      { path: "notifications", element: <Notifications /> },
+      {
+        path: "notifications",
+        element: (
+          <AuthenticatedRoute>
+            <Notifications />{" "}
+          </AuthenticatedRoute>
+        ),
+      },
       {
         path: "homepage/:username",
         element: (
@@ -58,9 +65,12 @@ const router = createBrowserRouter([
       {
         path: "create-post",
         element: (
-          <Page title="Create post">
-            <CreatePost />
-          </Page>
+          <AuthenticatedRoute>
+            {" "}
+            <Page title="Create post">
+              <CreatePost />
+            </Page>
+          </AuthenticatedRoute>
         ),
       },
       {
