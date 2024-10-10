@@ -134,13 +134,8 @@ body {
   margin-bottom: 50px;
 }
 
-#logo {
-  margin: 0 auto;
-  margin-top: auto;
-}
-
-#logo img {
-  width: 120px;
+img {
+  width: 90px;
 }
 
 .info-bar-box {
@@ -562,25 +557,7 @@ ul {
   }
   #root {
     display: flex;
-    flex-direction: row;
-  }
-  /*not sure why I have to be this specific, but its kinda scuffed*/
-  #root nav {
-    align-self: center;
-    display: flex;
     flex-direction: column;
-    height: 88vh;
-    margin-left: 40px;
-    margin-right: 0;
-    min-width: 200px;
-    justify-content: start;
-    border: 1px var(--primary) solid;
-    border-radius: 10px;
-    background: linear-gradient(
-      180deg,
-      rgba(34, 37, 39, 1) 0%,
-      rgba(57, 62, 65, 0.8) 100%
-    );
   }
 
   #dashboard {

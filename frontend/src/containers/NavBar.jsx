@@ -1,11 +1,8 @@
-import { Dialog, IconButton } from "@mui/material";
 import "../styles/NavBar.css";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
-import CloseIcon from "@mui/icons-material/Close";
-import MenuIcon from "@mui/icons-material/Menu";
 import { doesPathExist } from "../features/helpers";
-import Logo from "/logo.svg";
+import Logo from "/public/shortlogo.svg";
 import { Add, ExpandMore, Notifications } from "@mui/icons-material";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
@@ -25,9 +22,8 @@ function NavBar() {
 
   return (
     <nav>
-      <div>
-        {" "}
-        <button className="username-box">
+      <div className="nav-left">
+        <button className="nav-username-box">
           {userData["username"] == null ? (
             <a href="/login">Log in</a>
           ) : (

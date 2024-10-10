@@ -3,61 +3,55 @@ nav {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  background-color: var(--background);
+  background-color: var(--page-background);
   padding: 2px 8px;
-  margin: 10px 10px;
-  border: 1px solid var(--primary);
-  border-radius: 10px;
+  border-bottom: 1px solid var(--light-border-color);
   align-items: center;
-  height: min-content;
 }
 
-nav span {
-  font-size: var(--navbar-font-size);
+nav .nav-username-box {
+  background: var(--page-background);
+  border-radius: 10px;
+  border: 2px solid var(--accent);
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  padding: 5px;
 }
 
-nav span a {
-  text-decoration: none;
-  color: var(--accent);
+nav .nav-left {
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+}
+
+nav ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  gap: 7px;
+}
+
+nav svg {
+  color: var(--light-text);
+}
+nav li {
+  padding: 6px 11px;
+  border: var(--light-text) 1px solid;
+  border-radius: 10px;
+}
+
+nav li,
+nav a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 nav #pfp {
   border-radius: 50%;
-  height: 54px;
-  width: 54px;
-}
-
-nav #burger-menu {
-  width: 42px;
-}
-
-nav #menu-icon svg,
-nav #menu-icon {
-  width: 42px;
-  height: 42px;
-  padding: 0px;
-}
-
-nav button {
-  background: none;
-  border: none;
-}
-
-.link-list {
-  margin: 0 auto;
-  list-style: none;
-}
-
-.link-list li {
-  margin-bottom: 30px;
-}
-
-#dialog-close-button {
-  margin-left: auto;
-}
-
-.link-list li a {
-  text-decoration: none;
-  color: var(--dark-text);
-  font-size: var(--navbar-font-size);
+  height: 35px;
+  width: 35px;
 }
