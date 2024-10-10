@@ -7,6 +7,13 @@ function Guidelines() {
         content. That’s not our only rule though! Here’s all the “fun” rules we
         have.
       </p>
+      <p>
+        (If you're looking for the about us section, click{" "}
+        <a className="tertiary-accent" href="/about-us">
+          here
+        </a>
+        .)
+      </p>
       <h2>Contact Information</h2>
       <p>
         Please use{" "}

@@ -34,6 +34,16 @@ nav ul {
   gap: 7px;
 }
 
+#log-in-button {
+  padding: 5px;
+  color: var(--light-text);
+  text-decoration: none;
+  background: var(--page-background);
+  border-radius: 10px;
+  border: 2px solid var(--accent);
+  margin: auto;
+}
+
 nav svg {
   color: var(--light-text);
 }

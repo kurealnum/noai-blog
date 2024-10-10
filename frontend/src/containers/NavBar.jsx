@@ -3,12 +3,25 @@ import { Outlet, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doesPathExist } from "../features/helpers";
 import Logo from "/public/shortlogo.svg";
-import { Add, ExpandMore, Notifications } from "@mui/icons-material";
+import {
+  Add,
+  ExpandLess,
+  ExpandMore,
+  Notifications,
+} from "@mui/icons-material";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { Fade, Menu, Popper } from "@mui/material";
 
 function NavBar() {
   const userData = useLoaderData();
   const [exists, setExists] = useState(false);
+  const [open, setOpen] = useState(false);
+
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((previousOpen) => !previousOpen);
+  };
 
   useEffect(() => {
     if (userData != null) {
@@ -24,18 +37,44 @@ function NavBar() {
     <>
       <nav>
         <div className="nav-left">
-          <button className="nav-username-box">
-            {userData["username"] == null ? (
-              <a href="/login">Log in</a>
-            ) : (
-              <>
-                {exists ? (
-                  <img id="pfp" src={userData["profile_picture"]}></img>
-                ) : null}
-                <ExpandMore />
-              </>
-            )}{" "}
-          </button>
+          {userData == null ? (
+            <a id="log-in-button" href="/login">
+              Log in
+            </a>
+          ) : (
+            <button
+              className="nav-username-box"
+              aria-controls={open ? "basic-menu" : undefined}
+              aria-haspopup="true"
+              aria-expanded={open ? "true" : undefined}
+              onClick={handleClick}
+            >
+              {exists ? (
+                <img id="pfp" src={userData["profile_picture"]}></img>
+              ) : null}
+              {open ? <ExpandLess /> : <ExpandMore />}{" "}
+              <Popper anchorEl={anchorEl} open={open} transition>
+                {({ TransitionProps }) => (
+                  <Fade {...TransitionProps} timeout={140}>
+                    <ul class="dropdown-list">
+                      <li>
+                        <a href="/dashboard">Dashboard</a>
+                      </li>
+                      <li>
+                        <a href="/homepage">Homepage</a>
+                      </li>
+                      <li>
+                        <a href="/settings">Settings</a>
+                      </li>
+                      <li>
+                        <a href="/logout">Logout</a>
+                      </li>
+                    </ul>
+                  </Fade>
+                )}
+              </Popper>
+            </button>
+          )}
           <ul>
             <li className="navbar-item">
               <a href="/feed">
@@ -54,7 +93,9 @@ function NavBar() {
             </li>
           </ul>
         </div>
-        <img id="logo" src={Logo} alt="Logo"></img>
+        <a href="/guidelines">
+          <img id="logo" src={Logo} alt="Logo"></img>
+        </a>
       </nav>
       <Outlet />
     </>
