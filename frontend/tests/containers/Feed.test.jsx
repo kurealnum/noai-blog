@@ -9,14 +9,17 @@ import { beforeEach, describe, expect, it } from "vitest";
 import Feed from "../../src/containers/Feed";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Feed", () => {
   beforeEach(async () => {
     const queryClient = new QueryClient();
     render(
-      <QueryClientProvider client={queryClient}>
-        <Feed />
-      </QueryClientProvider>,
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <Feed />
+        </QueryClientProvider>
+      </BrowserRouter>,
     );
     await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
   });

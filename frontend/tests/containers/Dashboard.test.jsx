@@ -6,15 +6,24 @@ import {
 import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import Dashboard from "../../src/containers/Dashboard";
+import { BrowserRouter } from "react-router-dom";
 
 describe("Dashboard", () => {
   it("renders correctly", () => {
-    render(<Dashboard />);
+    render(
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>,
+    );
     expect(screen.getByText("Your comments")).toBeTruthy();
     expect(screen.getByText("Your posts")).toBeTruthy();
   });
   it("comments and posts render correctly", async () => {
-    render(<Dashboard />);
+    render(
+      <BrowserRouter>
+        <Dashboard />
+      </BrowserRouter>,
+    );
     await waitForElementToBeRemoved(() => screen.getAllByRole("progressbar"));
 
     const lists = screen.getAllByRole("list");
