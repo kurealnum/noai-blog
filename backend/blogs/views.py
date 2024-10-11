@@ -76,6 +76,29 @@ class BlogPostView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request):
+        data = request.data
+        # blog post specific data
+        user = self.request.user.id  # type: ignore
+        title = data["title"]
+        content = data["content"]
+        slug = data["slug"]
+        serializer_data = {
+            "user": user,
+            "title": title,
+            "content": content,
+        }
+
+        instance = generics.get_object_or_404(BlogPost, user=user, slug_field=slug)
+        serializer = PostSingleBlogPostSerializer(
+            data=serializer_data, instance=instance
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request):
         data = request.data
         user = self.request.user

@@ -29,6 +29,7 @@ urlpatterns = [
     path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
     path("delete-post/", BlogPostView.as_view(), name="get_post"),
     path("create-post/", BlogPostView.as_view(), name="create_post"),
+    path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
     path("manage-following/", FollowingView.as_view(), name="manage_following"),
     path(
