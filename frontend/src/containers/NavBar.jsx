@@ -1,5 +1,5 @@
 import "../styles/NavBar.css";
-import { Outlet, useLoaderData } from "react-router-dom";
+import { Link, Outlet, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { doesPathExist } from "../features/helpers";
 import Logo from "/public/shortlogo.svg";
@@ -59,16 +59,18 @@ function NavBar() {
                   <Fade {...TransitionProps} timeout={140}>
                     <ul className="dropdown-list">
                       <li>
-                        <a href="/dashboard">Dashboard</a>
+                        <Link to={"/dashboard"}>Dashboard</Link>
                       </li>
                       <li>
-                        <a href="/homepage">Homepage</a>
+                        <Link to={"/homepage/" + userData["username"]}>
+                          Homepage
+                        </Link>
                       </li>
                       <li>
-                        <a href="/settings">Settings</a>
+                        <Link to="/settings">Settings</Link>
                       </li>
                       <li>
-                        <a href="/logout">Logout</a>
+                        <Link to="/logout">Logout</Link>
                       </li>
                     </ul>
                   </Fade>
@@ -78,25 +80,25 @@ function NavBar() {
           )}
           <ul>
             <li className="navbar-item">
-              <a href="/feed">
+              <Link to="/feed">
                 <LibraryBooksIcon />
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
-              <a href="/create-post">
+              <Link to="/create-post">
                 <Add />
-              </a>
+              </Link>
             </li>
             <li className="navbar-item">
-              <a href="/notifications">
+              <Link to={"/notifications"}>
                 <Notifications />
-              </a>
+              </Link>
             </li>
           </ul>
         </div>
-        <a href="/guidelines">
+        <Link to="/guidelines">
           <img id="logo" src={Logo} alt="Logo"></img>
-        </a>
+        </Link>
       </nav>
       <Outlet />
     </>

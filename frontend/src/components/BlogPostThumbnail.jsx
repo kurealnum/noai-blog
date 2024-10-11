@@ -1,11 +1,12 @@
+import { Link } from "react-router-dom";
 import { slugify } from "../features/helpers";
 
 function BlogPostThumbnail({ title, username, createdDate, content }) {
   return (
     <li className="blog-post">
-      <a href={"/post/" + username + "/" + slugify(title) + "/"}>
+      <Link to={"/post/" + username + "/" + slugify(title) + "/"}>
         <h2>{title}</h2>
-      </a>
+      </Link>
       <div className="info">
         <p>{"By " + username}</p>
         <p>{createdDate.replace(/(T.*)/g, "")}</p>

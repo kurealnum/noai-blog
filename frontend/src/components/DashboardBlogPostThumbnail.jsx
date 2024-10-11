@@ -1,7 +1,8 @@
 import { Delete } from "@mui/icons-material";
 import { slugify } from "../features/helpers";
-import { Alert, Dialog, Snackbar } from "@mui/material";
+import { Dialog } from "@mui/material";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function DashboardBlogPostThumbnail({
   title,
@@ -20,9 +21,9 @@ function DashboardBlogPostThumbnail({
   }
   return (
     <li className="blog-post">
-      <a href={"/post/" + username + "/" + slugify(title) + "/"}>
+      <Link to={"/post/" + username + "/" + slugify(title) + "/"}>
         <h2>{title}</h2>
-      </a>
+      </Link>
       <div className="info">
         <p>{"By " + username}</p>
         <p>{createdDate.replace(/(T.*)/g, "")}</p>

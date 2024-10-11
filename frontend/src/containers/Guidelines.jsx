@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 function Guidelines() {
   return (
     <div className="text-based-page">
@@ -9,9 +11,9 @@ function Guidelines() {
       </p>
       <p>
         (If you're looking for the about us section, click{" "}
-        <a className="tertiary-accent" href="/about-us">
+        <Link className="tertiary-accent" to="/about-us">
           here
-        </a>
+        </Link>
         .)
       </p>
       <h2>Contact Information</h2>

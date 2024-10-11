@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useRouteLoaderData } from "react-router-dom";
+import { Link, useParams, useRouteLoaderData } from "react-router-dom";
 import "../styles/Homepage.css";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
@@ -116,12 +116,9 @@ function Homepage() {
             ) : null}
             <span>{userInfo["username"]}</span>
             {userInfo["approved_ai_usage"] ? (
-              <a
-                referrerPolicy="same-origin"
-                href="/guidelines/#green-checkmarks-on-users-profiles"
-              >
+              <Link to="/guidelines#green-checkmarks-on-users-profiles">
                 <CheckCircle />
-              </a>
+              </Link>
             ) : null}
           </div>
           <button

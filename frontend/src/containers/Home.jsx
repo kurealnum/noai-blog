@@ -1,4 +1,5 @@
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -8,18 +9,19 @@ function Home() {
           Because <span className="accent-highlight">blogs</span> shouldn't be
           written by <span className="accent-highlight">robots</span>.
         </h1>
-        <a href="/feed">
-          Take a look <ArrowForwardIosIcon />
-        </a>
+        <Link to={"/feed"}>
+          Take a look
+          <ArrowForwardIosIcon />
+        </Link>
       </div>
       <div className="info-box">
         <h2>No more AI generated content.</h2>
         <p>
           We don’t even allow AI assisted content. Check out how we moderate
           this{" "}
-          <a className="tertiary-accent" href="/guidelines">
+          <Link to="/guidelines" className="tertiary-accent">
             here
-          </a>
+          </Link>
           .
         </p>
       </div>
@@ -33,9 +35,9 @@ function Home() {
           If you aren’t a fan of blogs, consider sticking around. We’ll be
           releasing more AI-free content in the future.
         </p>
-        <a id="link-button" href="/register">
+        <Link to="/register" id="link-button">
           Sign Up <ArrowForwardIosIcon />
-        </a>
+        </Link>
       </div>
     </div>
   );

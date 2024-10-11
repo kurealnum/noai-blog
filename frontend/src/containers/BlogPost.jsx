@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import {
   createReaction,
   deleteReaction,
@@ -110,9 +110,9 @@ function BlogPost() {
                 By {data["user"]["username"]}
               </span>
               {data["user"]["approved_ai_usage"] ? (
-                <a href="/guidelines/#green-checkmarks-on-users-profiles">
+                <Link to="/guidelines#green-checkmarks-on-users-profiles">
                   <CheckCircle />
-                </a>
+                </Link>
               ) : null}
             </div>
           </div>

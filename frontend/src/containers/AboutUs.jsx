@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 function AboutUs() {
   return (
     <div className="text-based-page">
@@ -23,9 +24,9 @@ function AboutUs() {
         at a time. I sincerely hope you enjoy this project. If you’d like to
         give any feedback, please feel free to reach out. You can find contact
         information on the{" "}
-        <a href="/guidelines" className="tertiary-accent">
+        <Link to="/guidelines" className="tertiary-accent">
           guidelines
-        </a>{" "}
+        </Link>
         page.
       </p>
     </div>

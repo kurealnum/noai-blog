@@ -29,17 +29,15 @@ describe("Blog Post", () => {
     expect(screen.getByText("By oscar")).toBeVisible();
   });
   it("reacts and unreacts properly", async () => {
-    // i'd like to come back and test this at some point, but it just isnt worth my time atm
-    // weird rendering pattern because we need to change what the server returns mid test
-    //server.use(
-    //  http.get(
-    //    "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
-    //    () => {
-    //      return HttpResponse.json(false, { status: 404 });
+    //i'd like to come back and test this at some point, but it just isnt worth my time atm
+    //weird rendering pattern because we need to change what the server returns mid test
+    //const queryClient = new QueryClient({
+    //  defaultOptions: {
+    //    queries: {
+    //      retry: false,
     //    },
-    //  ),
-    //);
-    //const queryClient = new QueryClient();
+    //  },
+    //});
     //const toRender = (
     //  <QueryClientProvider client={queryClient}>
     //    <Router initialEntries={["/post/oscar/why-django-is-so-amazing"]}>
@@ -48,6 +46,14 @@ describe("Blog Post", () => {
     //      </Routes>
     //    </Router>
     //  </QueryClientProvider>
+    //);
+    //server.use(
+    //  http.get(
+    //    "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+    //    () => {
+    //      return HttpResponse.json(false, { status: 404 });
+    //    },
+    //  ),
     //);
     //const { rerender } = render(toRender);
     //await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
