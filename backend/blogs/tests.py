@@ -138,6 +138,22 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
 
+    def test_does_delete_work(self):
+        # create an object, then delete it
+        to_delete = BlogPost.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+        )
+        to_delete.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {"slug": to_delete.slug_field}
+        request = temp_client.delete(reverse_lazy("create_post"), data=data)
+        expected_status = 200
+        self.assertEqual(expected_status, request.status_code)
+
 
 class BlogPostListTestCase(CustomTestCase):
     def setUp(self) -> None:

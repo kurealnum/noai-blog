@@ -76,6 +76,15 @@ class BlogPostView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        data = request.data
+        user = self.request.user
+        to_delete = generics.get_object_or_404(
+            BlogPost, user=user, slug_field=data["slug"]
+        )
+        to_delete.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 # this is the view for *multiple* blog posts
 class BlogPostListView(APIView):
