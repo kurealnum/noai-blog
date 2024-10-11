@@ -6,7 +6,7 @@ import {
   getComments,
   limitLength,
 } from "../features/helpers";
-import BlogPostThumbnail from "../components/BlogPostThumbnail";
+import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -26,7 +26,9 @@ function Dashboard() {
       if (res) {
         const newPosts = posts.slice(0, index).concat(posts.slice(index + 1));
         setPosts(newPosts);
+        return res;
       }
+      return res;
     });
   }
 
@@ -59,7 +61,7 @@ function Dashboard() {
             <p role="progressbar">There's nothing here. Go make some posts!</p>
           ) : (
             posts.map((content, index) => (
-              <BlogPostThumbnail
+              <DashboardBlogPostThumbnail
                 key={index}
                 title={content.title}
                 username={content.user.username}
