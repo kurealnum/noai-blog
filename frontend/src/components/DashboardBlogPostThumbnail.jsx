@@ -20,8 +20,36 @@ function DashboardBlogPostThumbnail({
       setOpen(false);
     }
   }
+
+  function handleClose() {
+    setOpen(false);
+  }
+
   return (
     <li className="blog-post">
+      <div className="edit-buttons">
+        {" "}
+        <button onClick={() => editHelper(slugify(title))}>
+          <Edit />
+        </button>
+        <button onClick={() => setOpen(true)}>
+          <Delete />
+        </button>
+        <Dialog
+          open={open}
+          className="delete-post-confirm"
+          onClose={handleClose}
+        >
+          <h1>This will delete your post forever! Are you sure?</h1>
+          <button onClick={() => dialogHelper()} className="accent-border">
+            Yes, I am sure
+          </button>
+          <button onClick={handleClose} className="tertiary-border">
+            No, I'm not
+          </button>
+        </Dialog>
+      </div>
+
       <Link to={"/post/" + username + "/" + slugify(title) + "/"}>
         <h2>{title}</h2>
       </Link>
@@ -32,16 +60,6 @@ function DashboardBlogPostThumbnail({
       <p className="hint" data-testid="post-content">
         {content.length > 100 ? content.slice(0, 101) + "..." : content}
       </p>
-      <button onClick={() => setOpen(true)}>
-        <Delete />
-        <Dialog open={open}>
-          <h1>This will delete your post forever! Are you sure?</h1>
-          <button onClick={() => dialogHelper()}>Yes, I am sure</button>
-        </Dialog>
-      </button>
-      <button onClick={() => editHelper(slugify(title))}>
-        <Edit />
-      </button>
     </li>
   );
 }

@@ -29,6 +29,33 @@ body {
   margin: 0;
 }
 
+.edit-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.delete-post-confirm button {
+  width: 50%;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.accent-border {
+  border: var(--accent) solid 1px;
+}
+
+.tertiary-border {
+  border: var(--tertiary) solid 1px;
+}
+
+.edit-buttons button {
+  background: none;
+  border: none;
+}
+
 .accent-highlight {
   color: var(--accent);
 }
