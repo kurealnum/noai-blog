@@ -4,8 +4,8 @@
 button,
 input {
   --dark-text: #ffffff;
-  --background: rgba(57, 62, 65, 0.8);
-  --primary: #393e41;
+  --background: #202122;
+  --primary: #202122;
   --secondary: #b6ccfe;
   --accent: #e94f37;
   --tertiary: #879e14;
