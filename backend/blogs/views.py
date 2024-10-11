@@ -17,6 +17,7 @@ from accounts.models import CustomUser
 from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
 from blogs.serializers import (
     BlogPostSerializer,
+    CommentAndUserSerializer,
     CommentSerializer,
     FeedBlogPostSerializer,
     FollowerSerializer,
@@ -27,7 +28,7 @@ from blogs.serializers import (
 )
 
 
-class CommentListView(generics.ListAPIView):
+class CommentListUserView(generics.ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = CommentSerializer
 
@@ -140,6 +141,21 @@ class CommentReplyListView(generics.ListAPIView):
         user = self.request.user
         replyto_query = ReplyTo.objects.values_list("reply", flat=True)
         return Comment.objects.filter(user=user).filter(id__in=Subquery(replyto_query))
+
+
+# This view handles getting all comments for a BlogPost, creating a comment, editing a comment, and deletingr a comment
+class CommentListView(APIView):
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        if self.request.method.lower() != "get":  # type: ignore
+            permissions.append(IsAuthenticated())  # type: ignore
+        return permissions
+
+    def get(self, request, slug):
+        post = generics.get_object_or_404(BlogPost, slug_field=slug)
+        queryset = Comment.objects.all().select_related("user")
+        serializer = CommentAndUserSerializer(queryset, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 # This view returns replies to *posts* that a user has made

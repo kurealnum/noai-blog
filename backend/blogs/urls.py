@@ -9,11 +9,12 @@ from blogs.views import (
     FollowingView,
     PostReplyListView,
     CommentListView,
+    CommentListUserView,
     ReactionView,
 )
 
 urlpatterns = [
-    path("get-comments/", CommentListView.as_view(), name="get_comments"),
+    path("get-comments/<slug>/", CommentListView.as_view(), name="get_comments"),
     path(
         "get-comment-replies/",
         CommentReplyListView.as_view(),
@@ -30,6 +31,10 @@ urlpatterns = [
     path("delete-post/", BlogPostView.as_view(), name="get_post"),
     path("create-post/", BlogPostView.as_view(), name="create_post"),
     path("edit-post/", BlogPostView.as_view(), name="edit_post"),
+    path("manage-comments/", CommentListUserView.as_view(), name="manage_comments"),
+    path(
+        "manage-comments/<slug>/", CommentListUserView.as_view(), name="manage_comments"
+    ),
     path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
     path("manage-following/", FollowingView.as_view(), name="manage_following"),
     path(

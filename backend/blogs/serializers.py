@@ -29,6 +29,13 @@ class SingleBlogPostUserSerializer(serializers.ModelSerializer):
         fields = ("username", "profile_picture", "approved_ai_usage")
 
 
+class CommentAndUserSerializer(serializers.Serializer):
+    user = FeedCustomUserSerializer()
+    content = serializers.CharField()
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
+
+
 class FeedBlogPostSerializer(serializers.Serializer):
     user = FeedCustomUserSerializer()
     score = serializers.IntegerField()

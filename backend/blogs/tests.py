@@ -27,6 +27,7 @@ class CustomTestCase(TestCase):
             title="My awesome blog post",
             content="Here's something about my blog post",
         )
+        self.blog_post.save()
 
 
 class BlogTestCase(CustomTestCase):
@@ -92,7 +93,7 @@ class CommentTestCase(CustomTestCase):
         self.assertEqual(expected_result, query_res[1][2])
 
 
-class CommentListTestCase(CustomTestCase):
+class CommentListUserViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
         Comment.objects.create(
@@ -106,12 +107,30 @@ class CommentListTestCase(CustomTestCase):
         # temp client to log in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        request = temp_client.get(reverse_lazy("get_comments"))
+        request = temp_client.get(reverse_lazy("manage_comments"))
         # expected result for both
         expected_result = "This is NOT a reply!"
         result = json.loads(request.content)
         self.assertEqual(expected_result, result[0].get("content"))
         self.assertEqual(expected_result, result[1].get("content"))
+
+
+class CommentListViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
+        )
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="This is NOT a reply!"
+        )
+
+    def test_does_get_work_properly(self):
+        request = self.client.get(
+            reverse_lazy("get_comments", kwargs={"slug": self.blog_post.slug_field})
+        )
+        expected_length = 2
+        self.assertEqual(expected_length, len(request.data))  # type: ignore
 
 
 class BlogPostViewTestCase(CustomTestCase):
