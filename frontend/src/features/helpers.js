@@ -412,7 +412,6 @@ async function deletePost(slug) {
 }
 
 async function editPost(blogPost) {
-  console.log(blogPost);
   const config = {
     headers: {
       "Content-Type": "application/json",

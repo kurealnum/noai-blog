@@ -112,6 +112,7 @@ const unfollowSuccess = true;
 const isFollowingSelf = false;
 const createReactionSuccess = true;
 const managePostReactions = false;
+const editPostSuccess = true;
 
 // I use "oscar" as the username field for almost everything
 // also, there are a lot of "duplicate" urls, such as:
@@ -126,6 +127,9 @@ export const restHandlers = [
       return HttpResponse.json(managePostReactions);
     },
   ),
+  http.put("/api/blog-posts/edit-post/", () => {
+    return HttpResponse.json(editPostSuccess);
+  }),
   http.get("/api/accounts/notifications/", () => {
     return HttpResponse.json(comment);
   }),
