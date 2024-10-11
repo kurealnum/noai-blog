@@ -21,6 +21,7 @@ import CreatePost from "../containers/CreatePost";
 import LoginRedirect from "../containers/LoginRedirect";
 import Notifications from "../containers/Notifications";
 import Faq from "../containers/Faq";
+import EditPost from "../containers/EditPost";
 
 const router = createBrowserRouter([
   {
@@ -38,6 +39,7 @@ const router = createBrowserRouter([
     loader: getUserInfo,
     errorElement: <RootBoundary />,
     children: [
+      { path: "/edit-post/:slug", element: <EditPost /> },
       {
         path: "faq",
         element: <Faq />,

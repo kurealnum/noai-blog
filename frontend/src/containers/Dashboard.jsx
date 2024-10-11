@@ -7,10 +7,12 @@ import {
   limitLength,
 } from "../features/helpers";
 import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
   const [comments, setComments] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getBlogPosts().then((res) => {
@@ -30,6 +32,10 @@ function Dashboard() {
       }
       return res;
     });
+  }
+
+  function editHelper(slug) {
+    navigate("/edit-post/" + slug);
   }
 
   return (
@@ -68,6 +74,7 @@ function Dashboard() {
                 createdDate={content.created_date}
                 content={content.content}
                 deleteHelper={deleteHelper}
+                editHelper={editHelper}
                 index={index}
               />
             ))

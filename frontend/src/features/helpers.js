@@ -411,7 +411,23 @@ async function deletePost(slug) {
   return response.ok;
 }
 
+async function editPost(blogPost) {
+  console.log(blogPost);
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PUT",
+    body: JSON.stringify(blogPost),
+  };
+  const response = await fetch("/api/blog-posts/edit-post/", config);
+  return response.ok;
+}
+
 export {
+  editPost,
   deletePost,
   getNotifications,
   createReaction,
