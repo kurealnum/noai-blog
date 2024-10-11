@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import { getBlogPosts, getComments, limitLength } from "../features/helpers";
+import {
+  deletePost,
+  getBlogPosts,
+  getComments,
+  limitLength,
+} from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 
 function Dashboard() {
@@ -15,6 +20,15 @@ function Dashboard() {
       setComments(res);
     });
   }, []);
+
+  function deleteHelper(slug, index) {
+    deletePost(slug).then((res) => {
+      if (res) {
+        const newPosts = posts.slice(0, index).concat(posts.slice(index + 1));
+        setPosts(newPosts);
+      }
+    });
+  }
 
   return (
     <div id="dashboard">
@@ -51,6 +65,8 @@ function Dashboard() {
                 username={content.user.username}
                 createdDate={content.created_date}
                 content={content.content}
+                deleteHelper={deleteHelper}
+                index={index}
               />
             ))
           )}

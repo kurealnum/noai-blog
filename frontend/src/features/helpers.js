@@ -396,7 +396,23 @@ async function getNotifications() {
   return await response.json();
 }
 
+async function deletePost(slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "DELETE",
+    body: JSON.stringify({ slug: slug }),
+  };
+
+  const response = await fetch("/api/blog-posts/delete-post/", config);
+  return response.ok;
+}
+
 export {
+  deletePost,
   getNotifications,
   createReaction,
   deleteReaction,

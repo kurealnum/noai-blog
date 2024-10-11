@@ -94,6 +94,7 @@ class UserInfoTestCase(CustomTestCase):
         # result = UserInfoView.as_view()(request, username="bobby")  # type: ignore
         result = self.client.get(reverse_lazy("user_info") + "bobby/")
         expected_result = {
+            "approved_ai_usage": False,
             "username": "bobby",
             "email": "bobbyjoe@gmail.com",
             "first_name": "Bobby",
@@ -133,6 +134,7 @@ class UserInfoTestCase(CustomTestCase):
             "last_name": "Joe",
             "about_me": "I am Bobby Joe, destroyer of worlds.",
             "technical_info": "",
+            "approved_ai_usage": False,
         }
 
         # remove date joined and profile picture for testing purposes
