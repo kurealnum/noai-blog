@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { getNotifications } from "../features/helpers";
 import { CircularProgress } from "@mui/material";
-import CommentThumbnail from "../components/CommentThumbnail";
+import Comment from "../components/Comment";
 
 function Notifications() {
   const { data, error, isLoading, isSuccess, isError } = useQuery({
@@ -25,9 +25,14 @@ function Notifications() {
   if (isSuccess) {
     return (
       <div className="default-page">
-        <ul>
+        <ul className="list">
           {data.map((content, index) => (
-            <CommentThumbnail key={index} content={content} />
+            <Comment
+              content={content}
+              isReply={false}
+              key={index}
+              isNotification={true}
+            />
           ))}
         </ul>
       </div>

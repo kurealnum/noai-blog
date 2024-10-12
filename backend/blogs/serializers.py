@@ -5,9 +5,17 @@ from accounts.serializers import CustomUserSerializer
 from .models import BlogPost, Comment, Follower, PostReaction
 
 
+class NotificationBlogPostSerializer(serializers.Serializer):
+    user = CustomUserSerializer()
+    slug_field = serializers.CharField()
+
+
 class NotificationCommentSerializer(serializers.Serializer):
     user = CustomUserSerializer()
+    post = NotificationBlogPostSerializer()
     content = serializers.CharField()
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
     is_read = serializers.BooleanField()
 
 

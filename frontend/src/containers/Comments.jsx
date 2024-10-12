@@ -4,11 +4,11 @@ function Comments({ raw }) {
   const memo = new Set([]);
 
   function renderedCommentsHelper(nodes, level) {
-    const res = nodes.map((key) => {
+    const res = nodes.map((key, index) => {
       if (input[key] != undefined && memo.has(key) == false) {
         const recRes = (
           <>
-            <Comment content={data[key]} isReply={level > 1} key={key} />
+            <Comment content={data[key]} isReply={level > 1} key={index} />
             {renderedCommentsHelper(Object.keys(input[key]), level + 1)}
           </>
         );

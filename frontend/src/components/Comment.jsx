@@ -1,22 +1,39 @@
 import { CalendarMonth } from "@mui/icons-material";
 import { cleanDateTimeField } from "../features/helpers";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
-function Comment({ content, isReply }) {
+// isNotification will cause the comment to link to the post itself, not the user
+function Comment({ content, isReply, isNotification }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
-  return (
+  const mainComment = (
     <li className={isReply ? "comment comment-reply" : "comment"}>
       <div className="top-bar">
-        <div class="comment-username-box">
-          {isProfilePicture ? (
-            <img
-              className="pfp"
-              src={content["user"]["profile_picture"]}
-              onError={() => setIsProfilePicture(false)}
-            ></img>
-          ) : null}
-          <span>{content["user"]["username"]}</span>
-        </div>
+        {isNotification ? (
+          <div className="comment-username-box">
+            {isProfilePicture ? (
+              <img
+                className="pfp"
+                src={content["user"]["profile_picture"]}
+                onError={() => setIsProfilePicture(false)}
+              ></img>
+            ) : null}
+            <span>{content["user"]["username"]}</span>
+          </div>
+        ) : (
+          <Link to={"/homepage/" + content["user"]["username"]}>
+            <div className="comment-username-box">
+              {isProfilePicture ? (
+                <img
+                  className="pfp"
+                  src={content["user"]["profile_picture"]}
+                  onError={() => setIsProfilePicture(false)}
+                ></img>
+              ) : null}
+              <span>{content["user"]["username"]}</span>
+            </div>
+          </Link>
+        )}
         <div className="date-field">
           <div className="sub-date-field">
             <CalendarMonth />
@@ -33,6 +50,24 @@ function Comment({ content, isReply }) {
       <p className="comment-content">{content["content"]}</p>
     </li>
   );
+
+  if (isNotification) {
+    return (
+      <Link
+        className="link-comment"
+        to={
+          "/post/" +
+          content["post"]["user"]["username"] +
+          "/" +
+          content["post"]["slug_field"]
+        }
+      >
+        {mainComment}
+      </Link>
+    );
+  } else {
+    return <>{mainComment}</>;
+  }
 }
 
 export default Comment;

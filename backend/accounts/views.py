@@ -210,7 +210,9 @@ class NotificationView(APIView):
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        unread_comments = Comment.objects.filter(user=user).select_related("user")
+        unread_comments = Comment.objects.filter(reply_to__user=user).select_related(
+            "user", "post", "post__user"
+        )
 
         serializer = NotificationCommentSerializer(instance=unread_comments, many=True)
 
