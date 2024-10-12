@@ -14,7 +14,7 @@ from accounts.serializers import (
     PutCustomUserSerializer,
 )
 from blogs.models import Comment
-from blogs.serializers import CommentSerializer, NotificationCommentSerializer
+from blogs.serializers import NotificationCommentSerializer
 
 
 class LoginUserView(APIView):

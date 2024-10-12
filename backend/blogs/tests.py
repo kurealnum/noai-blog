@@ -2,7 +2,6 @@ import json
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
-from blogs.helpers import get_comment_replies
 from rest_framework.test import APIClient, APIRequestFactory
 
 from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment
@@ -65,27 +64,6 @@ class CommentTestCase(CustomTestCase):
         reaction_count = CommentReaction.objects.filter(user=self.user).count()
         expected_result = 1
         self.assertEqual(expected_result, reaction_count)
-
-    def test_reply_query(self):
-        # this is a hot mess. should probably wrap in function at somepoint
-        new_comment = Comment.objects.create(
-            user=self.user, post=self.blog_post, content="This is a reply!"
-        )
-        new_comment_two = Comment.objects.create(
-            user=self.user, post=self.blog_post, content="This is a reply!"
-        )
-        # this comment should *not* show in result of query
-        Comment.objects.create(
-            user=self.user,
-            post=self.blog_post,
-            content="This is a reply on a blog post!",
-        )
-
-        query_res = get_comment_replies(self.comment.id)  # type: ignore
-        # this is the content of the comment. Checking that the entire comment is equivalent to a given expected result is too much of a pain
-        expected_result = "This is a reply!"
-        self.assertEqual(expected_result, query_res[0][2])
-        self.assertEqual(expected_result, query_res[1][2])
 
 
 class CommentListUserViewTestCase(CustomTestCase):
@@ -238,6 +216,7 @@ class CommentReplyListTestCase(CustomTestCase):
             user=self.user,
             post=self.blog_post,
             content="This IS a reply!",
+            reply_to=self.comment,
         )
 
     # checks to ensure that this view only returns replies to *comments* that a user has made
@@ -260,6 +239,7 @@ class PostReplyListTestCase(CustomTestCase):
             user=self.user,
             post=self.blog_post,
             content="This IS a reply!",
+            reply_to=self.comment,
         )
 
     # checks to ensure that this view only returns replies to *posts* that a user has made

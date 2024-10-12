@@ -1,5 +1,6 @@
 from django.db.models import (
     F,
+    Q,
     Case,
     Count,
     ExpressionWrapper,
@@ -139,7 +140,7 @@ class CommentReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Comment.objects.filter(user=user).filter(id__in=Subquery(replyto_query))
+        return Comment.objects.filter(user=user).exclude(reply_to=None)
 
 
 # This view handles getting all comments for a BlogPost, creating a comment, editing a comment, and deletingr a comment
@@ -164,7 +165,7 @@ class PostReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))
+        return Comment.objects.filter(user=user, reply_to=None)
 
 
 class FeedListView(APIView):

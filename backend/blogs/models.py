@@ -52,7 +52,7 @@ class Comment(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
     reply_to = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="reply_to"
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="reply"
     )
 
 
