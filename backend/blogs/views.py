@@ -14,7 +14,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from accounts.models import CustomUser
-from blogs.models import BlogPost, Comment, Follower, PostReaction, ReplyTo
+from blogs.models import BlogPost, Comment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
     CommentAndUserSerializer,
@@ -139,7 +139,6 @@ class CommentReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        replyto_query = ReplyTo.objects.values_list("reply", flat=True)
         return Comment.objects.filter(user=user).filter(id__in=Subquery(replyto_query))
 
 
@@ -153,7 +152,7 @@ class CommentListView(APIView):
 
     def get(self, request, slug):
         post = generics.get_object_or_404(BlogPost, slug_field=slug)
-        queryset = Comment.objects.all().select_related("user")
+        queryset = Comment.objects.filter(post=post).select_related("user")
         serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -165,7 +164,6 @@ class PostReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        replyto_query = ReplyTo.objects.values_list("reply", flat=True)
         return Comment.objects.filter(user=user).exclude(id__in=Subquery(replyto_query))
 
 

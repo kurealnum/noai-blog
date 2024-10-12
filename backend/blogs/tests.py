@@ -1,12 +1,11 @@
 import json
-from typing_extensions import OrderedDict
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from blogs.helpers import get_comment_replies
 from rest_framework.test import APIClient, APIRequestFactory
 
-from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment, ReplyTo
+from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment
 
 
 class CustomTestCase(TestCase):
@@ -72,13 +71,9 @@ class CommentTestCase(CustomTestCase):
         new_comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is a reply!"
         )
-        ReplyTo.objects.create(comment=new_comment, reply=self.comment)
-
         new_comment_two = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is a reply!"
         )
-        ReplyTo.objects.create(comment=new_comment_two, reply=new_comment)
-
         # this comment should *not* show in result of query
         Comment.objects.create(
             user=self.user,
@@ -245,8 +240,6 @@ class CommentReplyListTestCase(CustomTestCase):
             content="This IS a reply!",
         )
 
-        ReplyTo.objects.create(comment=self.comment, reply=self.comment_two)
-
     # checks to ensure that this view only returns replies to *comments* that a user has made
     def test_commentreplylist_returns_correctly(self):
         # temp client for logging in
@@ -268,8 +261,6 @@ class PostReplyListTestCase(CustomTestCase):
             post=self.blog_post,
             content="This IS a reply!",
         )
-
-        ReplyTo.objects.create(comment=self.comment, reply=self.comment_two)
 
     # checks to ensure that this view only returns replies to *posts* that a user has made
     def test_postreplylist_returns_correctly(self):

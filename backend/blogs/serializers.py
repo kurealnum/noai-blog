@@ -30,7 +30,8 @@ class SingleBlogPostUserSerializer(serializers.ModelSerializer):
 
 
 class CommentAndUserSerializer(serializers.Serializer):
-    user = FeedCustomUserSerializer()
+    user = SingleBlogPostUserSerializer()
+    reply_to = CommentSerializer()
     content = serializers.CharField()
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()

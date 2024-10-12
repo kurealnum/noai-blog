@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import {
   createReaction,
+  getCommentsByPost,
   deleteReaction,
   doesPathExist,
   getBlogPost,
@@ -35,6 +36,10 @@ function BlogPost() {
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
     queryKey: ["getBlogPost", username, slug],
     queryFn: () => getBlogPost({ username, slug }),
+  });
+  const getCommentsByPostQuery = useQuery({
+    queryKey: ["getCommentsByPost", slug],
+    queryFn: () => getCommentsByPost(slug),
   });
   const [doesExist, setDoesExist] = useState(false);
 
@@ -143,6 +148,17 @@ function BlogPost() {
             __html: DOMPurify.sanitize(marked.parse(data["content"])),
           }}
         ></div>
+        <div>
+          <h2>Comments</h2>
+          {getCommentsByPostQuery.isSuccess ? (
+            //data.map((content) => {
+            //  <p>Hello</p>;
+            //})
+            <p>He</p>
+          ) : (
+            <h3>There was an error fetching the comments!</h3>
+          )}
+        </div>
       </div>
     );
   }

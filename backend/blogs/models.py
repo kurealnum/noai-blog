@@ -51,17 +51,11 @@ class Comment(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
+    reply_to = models.ForeignKey(
+        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="reply_to"
+    )
 
 
 class CommentReaction(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     comment = models.ForeignKey(to=Comment, on_delete=models.SET_NULL, null=True)
-
-
-class ReplyTo(models.Model):
-    comment = models.ForeignKey(
-        to=Comment, on_delete=models.CASCADE, related_name="comment_id"
-    )
-    reply = models.ForeignKey(
-        to=Comment, on_delete=models.CASCADE, related_name="reply_id"
-    )

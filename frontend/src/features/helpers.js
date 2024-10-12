@@ -425,8 +425,31 @@ async function editPost(blogPost) {
   return response.ok;
 }
 
+async function getCommentsByPost(slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    credentials: "include",
+    method: "GET",
+  };
+  const response = await fetch(
+    "/api/blog-posts/get-comments/" + slug + "/",
+    config,
+  );
+  return await response.json();
+}
+
+function renderedComments(data) {
+  const input = {};
+  x.forEach((comment) => {});
+}
+
+function renderedCommentsHelper(data) {}
+
 export {
   editPost,
+  getCommentsByPost,
   deletePost,
   getNotifications,
   createReaction,
