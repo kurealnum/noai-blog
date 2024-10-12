@@ -185,12 +185,35 @@ img {
   color: var(--dark-text) !important;
 }
 
-#member-since {
+#member-since,
+.sub-date-field {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
   width: fit-content;
+}
+
+.date-field {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.date-field p {
+  margin-top: 3px;
+  margin-bottom: 8px;
+}
+
+.edited-on {
+  font-style: italic;
+  margin-top: 3px;
+  font-size: var(--small-text-size);
+}
+
+.comment-content {
+  margin-top: 5px;
+  text-align: left;
 }
 
 .dropdown-list {
@@ -217,6 +240,19 @@ img {
   width: 54px;
 }
 
+.pfp {
+  border-radius: 50%;
+  height: 38px;
+  width: 38px;
+}
+
+.comment-username-box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
 textarea {
   resize: none;
   height: 3lh;
@@ -232,7 +268,6 @@ textarea {
 .blog-post,
 .comment,
 .comment-thumbnail {
-  margin: 0 auto;
   width: 85vw;
   background: var(--background);
   padding: 5px 10px;
@@ -241,6 +276,23 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#blog-post h2 {
+  margin-top: 90px;
+}
+
+.comment-reply {
+  margin-left: 50px;
+  width: calc(85vw - 50px);
+}
+
+.comment .top-bar {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
 }
 
 .unread {
@@ -637,6 +689,10 @@ ul {
   .comment,
   .comment-thumbnail {
     width: 450px;
+  }
+
+  .comment-reply {
+    width: 400px;
   }
 
   .username-box {

@@ -1,3 +1,5 @@
+import Comment from "../components/Comment";
+
 function Comments({ raw }) {
   const memo = new Set([]);
 
@@ -6,9 +8,7 @@ function Comments({ raw }) {
       if (input[key] != undefined && memo.has(key) == false) {
         const recRes = (
           <>
-            <p className={level > 1 ? "comment-reply" : null}>
-              {key}, level: {level}
-            </p>
+            <Comment content={data[key]} isReply={level > 1} key={key} />
             {renderedCommentsHelper(Object.keys(input[key]), level + 1)}
           </>
         );
@@ -18,11 +18,7 @@ function Comments({ raw }) {
       if (memo.has(key) == true) {
         return null;
       }
-      return (
-        <p className={level > 1 ? "comment-reply" : null}>
-          {key}, level: {level}
-        </p>
-      );
+      return <Comment content={data[key]} isReply={level > 1} key={key} />;
     });
     return res;
   }
@@ -53,9 +49,9 @@ function Comments({ raw }) {
     }
   });
 
-  console.log(input);
-
-  return <ul>{renderedCommentsHelper(Object.keys(input), 1)}</ul>;
+  return (
+    <ul className="list">{renderedCommentsHelper(Object.keys(input), 1)}</ul>
+  );
 }
 
 export default Comments;

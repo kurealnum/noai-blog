@@ -440,7 +440,13 @@ async function getCommentsByPost(slug) {
   return await response.json();
 }
 
+// cleans up date time field from Django
+function cleanDateTimeField(date) {
+  return date.replace(/(T.*)/g, "");
+}
+
 export {
+  cleanDateTimeField,
   editPost,
   getCommentsByPost,
   deletePost,
