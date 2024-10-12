@@ -19,6 +19,7 @@ import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
 import { CheckCircle, Favorite } from "@mui/icons-material";
+import Comments from "./Comments";
 
 const marked = new Marked(
   markedHighlight({
@@ -151,10 +152,7 @@ function BlogPost() {
         <div>
           <h2>Comments</h2>
           {getCommentsByPostQuery.isSuccess ? (
-            //data.map((content) => {
-            //  <p>Hello</p>;
-            //})
-            <p>He</p>
+            <Comments raw={getCommentsByPostQuery.data} />
           ) : (
             <h3>There was an error fetching the comments!</h3>
           )}

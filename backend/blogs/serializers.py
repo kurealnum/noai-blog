@@ -35,6 +35,7 @@ class CommentAndUserSerializer(serializers.Serializer):
     content = serializers.CharField()
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+    id = serializers.IntegerField()
 
 
 class FeedBlogPostSerializer(serializers.Serializer):

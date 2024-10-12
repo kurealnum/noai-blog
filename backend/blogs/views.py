@@ -153,7 +153,7 @@ class CommentListView(APIView):
 
     def get(self, request, slug):
         post = generics.get_object_or_404(BlogPost, slug_field=slug)
-        queryset = Comment.objects.filter(post=post).select_related("user")
+        queryset = Comment.objects.filter(post=post).select_related("user", "reply_to")
         serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 

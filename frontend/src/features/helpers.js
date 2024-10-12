@@ -205,7 +205,7 @@ async function getComments() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/get-comments/", config);
+  const response = await fetch("/api/blog-posts/manage-comments/", config);
   if (response.ok) {
     return await response.json();
   }
@@ -439,13 +439,6 @@ async function getCommentsByPost(slug) {
   );
   return await response.json();
 }
-
-function renderedComments(data) {
-  const input = {};
-  x.forEach((comment) => {});
-}
-
-function renderedCommentsHelper(data) {}
 
 export {
   editPost,
