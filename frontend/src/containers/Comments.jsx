@@ -1,6 +1,6 @@
 import Comment from "../components/Comment";
 
-function Comments({ raw }) {
+function Comments({ raw, refetch }) {
   const memo = new Set([]);
 
   function renderedCommentsHelper(nodes, level) {
@@ -12,6 +12,7 @@ function Comments({ raw }) {
               content={data[key]}
               isReply={level > 1}
               key={data[key]["id"]}
+              refetch={refetch}
             />
             {renderedCommentsHelper(Object.keys(input[key]), level + 1)}
           </>
@@ -27,6 +28,7 @@ function Comments({ raw }) {
           content={data[key]}
           isReply={level > 1}
           key={data[key]["id"]}
+          refetch={refetch}
         />
       );
     });

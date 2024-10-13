@@ -5,7 +5,7 @@ import { Link, useRouteLoaderData } from "react-router-dom";
 import { Dialog } from "@mui/material";
 
 // isNotification will cause the comment to link to the post itself, not the user
-function Comment({ content, isReply, isNotification }) {
+function Comment({ content, isReply, isNotification, refetch }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
   const userData = useRouteLoaderData("root");
   const [open, setOpen] = useState(false);
@@ -18,6 +18,7 @@ function Comment({ content, isReply, isNotification }) {
     deleteComment(id).then((res) => {
       if (res) {
         setOpen(false);
+        refetch();
       }
     });
   }
@@ -28,11 +29,15 @@ function Comment({ content, isReply, isNotification }) {
         {isNotification ? (
           <div className="comment-username-box">
             {isProfilePicture ? (
-              <img
-                className="pfp"
-                src={content["user"]["profile_picture"]}
-                onError={() => setIsProfilePicture(false)}
-              ></img>
+              <>
+                {content["user"]["profile_picture"] != null ? (
+                  <img
+                    className="pfp"
+                    src={content["user"]["profile_picture"]}
+                    onError={() => setIsProfilePicture(false)}
+                  ></img>
+                ) : null}
+              </>
             ) : null}
             <span>{content["user"]["username"]}</span>
           </div>
@@ -40,11 +45,15 @@ function Comment({ content, isReply, isNotification }) {
           <Link to={"/homepage/" + content["user"]["username"]}>
             <div className="comment-username-box">
               {isProfilePicture ? (
-                <img
-                  className="pfp"
-                  src={content["user"]["profile_picture"]}
-                  onError={() => setIsProfilePicture(false)}
-                ></img>
+                <>
+                  {content["user"]["profile_picture"] != null ? (
+                    <img
+                      className="pfp"
+                      src={content["user"]["profile_picture"]}
+                      onError={() => setIsProfilePicture(false)}
+                    ></img>
+                  ) : null}
+                </>
               ) : null}
               <span>{content["user"]["username"]}</span>
             </div>
@@ -66,7 +75,7 @@ function Comment({ content, isReply, isNotification }) {
       <p className="comment-content">{content["content"]}</p>
       {userData != undefined &&
       userData["username"] == content["user"]["username"] ? (
-        <>
+        <div className="edit-buttons right-align">
           <button onClick={() => setOpen(true)}>
             <Delete />
           </button>
@@ -87,7 +96,7 @@ function Comment({ content, isReply, isNotification }) {
               No, I'm not
             </button>
           </Dialog>
-        </>
+        </div>
       ) : null}
     </li>
   );

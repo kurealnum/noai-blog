@@ -63,6 +63,8 @@ class Comment(models.Model):
     def delete(self, *args, **kwargs):  # type: ignore
         self.content = "This comment was deleted"
         self.is_read = True
+        self.user = get_sentinel_user()
+        self.save()
         return
 
 

@@ -152,7 +152,10 @@ function BlogPost() {
         <div>
           <h2>Comments</h2>
           {getCommentsByPostQuery.isSuccess ? (
-            <Comments raw={getCommentsByPostQuery.data} />
+            <Comments
+              raw={getCommentsByPostQuery.data}
+              refetch={getCommentsByPostQuery.refetch}
+            />
           ) : (
             <h3>There was an error fetching the comments!</h3>
           )}

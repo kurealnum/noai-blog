@@ -453,9 +453,11 @@ async function deleteComment(id) {
     },
     credentials: "include",
     method: "DELETE",
-    body: JSON.stringify(id),
   };
-  const response = await fetch("/api/blog-posts/delete-comment/", config);
+  const response = await fetch(
+    "/api/blog-posts/delete-comment/" + id + "/",
+    config,
+  );
   return response.ok;
 }
 
