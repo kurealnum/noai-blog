@@ -118,6 +118,24 @@ class CommentListViewTestCase(CustomTestCase):
         expected_result = 200
         self.assertEqual(expected_result, request.status_code)
 
+    # should only update content
+    def test_does_put_work_properly(self):
+        new_comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="Comment"
+        )
+        id = new_comment.pk
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.patch(
+            reverse_lazy("delete_comment", args=[id]), data={"content": "Edited!"}
+        )
+
+        expected_response = "Edited!"
+        expected_status = 200
+        self.assertEqual(expected_status, request.status_code)
+        self.assertEqual(expected_response, request.data["content"])
+
 
 class BlogPostViewTestCase(CustomTestCase):
     def test_does_work_with_correct_title(self):

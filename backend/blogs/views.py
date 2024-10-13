@@ -157,6 +157,20 @@ class CommentListView(APIView):
         serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    # in this case, updating a comment only involves changing the content
+    def patch(self, request, id):
+        data = request.data
+        user = self.request.user
+        comment = generics.get_object_or_404(Comment, pk=id, user=user)
+        serializer = CommentSerializer(
+            instance=comment, data={"content": data["content"], "user": user.id}  # type: ignore
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def delete(self, request, id):
         user = self.request.user
         comment = generics.get_object_or_404(Comment, user=user, pk=id)
