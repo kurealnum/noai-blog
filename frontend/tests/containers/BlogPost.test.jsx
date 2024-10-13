@@ -8,9 +8,6 @@ import { describe, expect, it } from "vitest";
 import BlogPost from "../../src/containers/BlogPost";
 import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import userEvent from "@testing-library/user-event";
-import server from "../setup";
-import { HttpResponse, http } from "msw";
 
 describe("Blog Post", () => {
   it("renders correctly", async () => {
@@ -25,8 +22,9 @@ describe("Blog Post", () => {
       </QueryClientProvider>,
     );
     await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
-    expect(screen.getByRole("heading")).toBeVisible();
+    expect(screen.getByText("Comments")).toBeVisible();
     expect(screen.getByText("By oscar")).toBeVisible();
+    expect(screen.getByText("This is my comment")).toBeVisible();
   });
   it("reacts and unreacts properly", async () => {
     //i'd like to come back and test this at some point, but it just isnt worth my time atm

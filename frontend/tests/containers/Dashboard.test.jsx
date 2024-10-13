@@ -30,7 +30,7 @@ describe("Dashboard", () => {
     const listItems = screen.getAllByRole("listitem");
     const headers = screen.getAllByRole("heading");
     expect(lists).toHaveLength(2);
-    expect(listItems).toHaveLength(2);
+    expect(listItems).toHaveLength(8);
 
     //length 3 because of the one blog post that is rendered
     expect(headers).toHaveLength(3);

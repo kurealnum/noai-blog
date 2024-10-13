@@ -4,11 +4,15 @@ function Comments({ raw }) {
   const memo = new Set([]);
 
   function renderedCommentsHelper(nodes, level) {
-    const res = nodes.map((key, index) => {
+    const res = nodes.map((key) => {
       if (input[key] != undefined && memo.has(key) == false) {
         const recRes = (
           <>
-            <Comment content={data[key]} isReply={level > 1} key={index} />
+            <Comment
+              content={data[key]}
+              isReply={level > 1}
+              key={data[key]["id"]}
+            />
             {renderedCommentsHelper(Object.keys(input[key]), level + 1)}
           </>
         );
@@ -18,7 +22,13 @@ function Comments({ raw }) {
       if (memo.has(key) == true) {
         return null;
       }
-      return <Comment content={data[key]} isReply={level > 1} key={key} />;
+      return (
+        <Comment
+          content={data[key]}
+          isReply={level > 1}
+          key={data[key]["id"]}
+        />
+      );
     });
     return res;
   }
@@ -49,8 +59,11 @@ function Comments({ raw }) {
     }
   });
 
+  // WHY DO WE HAVE TO HAVE A KEY FOR THE F**KING WRAPPER ELEMENT
   return (
-    <ul className="list">{renderedCommentsHelper(Object.keys(input), 1)}</ul>
+    <ul className="list" key={1}>
+      {renderedCommentsHelper(Object.keys(input), 1)}
+    </ul>
   );
 }
 

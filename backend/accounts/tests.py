@@ -439,27 +439,40 @@ class NotificationViewTestCase(CustomTestCase):
             user=self.user, title="My blog post", content="My weird blog post"
         )
 
+        self.original_comment = Comment.objects.create(
+            user=self.user, post=self.post, content="Hello world", is_read=True
+        )
+
+        # read comments
+        Comment.objects.create(
+            user=self.user,
+            post=self.post,
+            content="Hello world",
+            is_read=True,
+            reply_to=self.original_comment,
+        )
+
         # unread comments
         Comment.objects.create(
-            user=self.user, post=self.post, content="Hello world", is_read=False
+            user=self.user,
+            post=self.post,
+            content="Hello world",
+            is_read=False,
+            reply_to=self.original_comment,
         )
         Comment.objects.create(
             user=self.user,
             post=self.post,
             content="I am the other unread comment",
             is_read=False,
-        )
-
-        # read comments
-        Comment.objects.create(
-            user=self.user, post=self.post, content="Hello world", is_read=True
+            reply_to=self.original_comment,
         )
 
     def test_does_get_return_correctly(self):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.get(reverse_lazy("notifications"))
-        expected_result = "I am the other unread comment"
+        expected_result = "Hello world"
         expected_read = False
         expected_length = 3
 
