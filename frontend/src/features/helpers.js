@@ -461,7 +461,26 @@ async function deleteComment(id) {
   return response.ok;
 }
 
+async function editComment(id, content) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PATCH",
+    body: JSON.stringify({ content: content }),
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/edit-comment/" + id + "/",
+    config,
+  );
+  return response.ok;
+}
+
 export {
+  editComment,
   deleteComment,
   cleanDateTimeField,
   editPost,

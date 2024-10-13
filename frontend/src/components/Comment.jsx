@@ -1,5 +1,9 @@
-import { CalendarMonth, Delete } from "@mui/icons-material";
-import { cleanDateTimeField, deleteComment } from "../features/helpers";
+import { CalendarMonth, Close, Delete, Edit } from "@mui/icons-material";
+import {
+  cleanDateTimeField,
+  deleteComment,
+  editComment,
+} from "../features/helpers";
 import { useState } from "react";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import { Dialog } from "@mui/material";
@@ -7,17 +11,28 @@ import { Dialog } from "@mui/material";
 // isNotification will cause the comment to link to the post itself, not the user
 function Comment({ content, isReply, isNotification, refetch }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
+  const [editInputOpen, setEditInputOpen] = useState(false);
   const userData = useRouteLoaderData("root");
   const [open, setOpen] = useState(false);
   function handleClose() {
     setOpen(false);
   }
 
-  function dialogHelper(e) {
+  function deleteDialogHelper(e) {
     const id = e.target.dataset["id"];
     deleteComment(id).then((res) => {
       if (res) {
         setOpen(false);
+        refetch();
+      }
+    });
+  }
+
+  function editHelper(e) {
+    e.preventDefault();
+    editComment(e.target[1].dataset["id"], e.target[0].value).then((res) => {
+      if (res) {
+        setEditInputOpen(false);
         refetch();
       }
     });
@@ -72,9 +87,34 @@ function Comment({ content, isReply, isNotification, refetch }) {
           ) : null}
         </div>
       </div>
-      <p className="comment-content" data-testid={"comment" + content["id"]}>
-        {content["content"]}
-      </p>
+      {editInputOpen ? (
+        <>
+          <form onSubmit={(e) => editHelper(e)} className="edit-comment-form">
+            <textarea />
+            <div className="edit-buttons">
+              <button
+                type="submit"
+                className="tertiary-accent"
+                data-id={content["id"]}
+              >
+                Save
+              </button>
+              <button
+                className="accent-highlight"
+                type="button"
+                id="close"
+                onClick={() => setEditInputOpen(false)}
+              >
+                <Close />
+              </button>
+            </div>
+          </form>
+        </>
+      ) : (
+        <p className="comment-content" data-testid={"comment" + content["id"]}>
+          {content["content"]}
+        </p>
+      )}
       {userData != undefined &&
       userData["username"] == content["user"]["username"] ? (
         <div className="edit-buttons right-align">
@@ -92,7 +132,7 @@ function Comment({ content, isReply, isNotification, refetch }) {
             <h1>This will delete your comment forever! Are you sure?</h1>
             <button
               data-id={content.id}
-              onClick={(e) => dialogHelper(e)}
+              onClick={(e) => deleteDialogHelper(e)}
               className="accent-border"
             >
               Yes, I am sure
@@ -101,6 +141,12 @@ function Comment({ content, isReply, isNotification, refetch }) {
               No, I'm not
             </button>
           </Dialog>
+          <button
+            onClick={() => setEditInputOpen(true)}
+            data-testid={"delete-comment" + content["id"]}
+          >
+            <Edit />
+          </button>
         </div>
       ) : null}
     </li>
