@@ -72,11 +72,16 @@ function Comment({ content, isReply, isNotification, refetch }) {
           ) : null}
         </div>
       </div>
-      <p className="comment-content">{content["content"]}</p>
+      <p className="comment-content" data-testid={"comment" + content["id"]}>
+        {content["content"]}
+      </p>
       {userData != undefined &&
       userData["username"] == content["user"]["username"] ? (
         <div className="edit-buttons right-align">
-          <button onClick={() => setOpen(true)}>
+          <button
+            onClick={() => setOpen(true)}
+            data-testid={"delete-comment" + content["id"]}
+          >
             <Delete />
           </button>
           <Dialog
