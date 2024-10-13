@@ -105,6 +105,19 @@ class CommentListViewTestCase(CustomTestCase):
         expected_length = 2
         self.assertEqual(expected_length, len(request.data))  # type: ignore
 
+    # delete should not actually delete the comment -- instead, it should set the content of the comment to "This comment was deleted" and change the user to a "ghost" user
+    def test_does_delete_work_properly(self):
+        new_comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="Comment"
+        )
+        id = new_comment.pk
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.delete(reverse_lazy("delete_comment", args=[id]))
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
+
 
 class BlogPostViewTestCase(CustomTestCase):
     def test_does_work_with_correct_title(self):

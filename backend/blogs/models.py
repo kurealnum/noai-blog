@@ -1,7 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 from accounts.models import CustomUser
+
+
+def get_sentinel_user():
+    return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
 class BlogPost(models.Model):
@@ -43,17 +48,22 @@ class PostReaction(models.Model):
 
 
 class Comment(models.Model):
-    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    user = models.ForeignKey(to=CustomUser, on_delete=models.SET(get_sentinel_user))
     post = models.ForeignKey(
-        to=BlogPost, on_delete=models.SET_NULL, null=True, blank=True
+        to=BlogPost, on_delete=models.CASCADE, null=True, blank=True
     )
     content = models.TextField(max_length=2000)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     is_read = models.BooleanField(default=False)
     reply_to = models.ForeignKey(
-        "self", on_delete=models.CASCADE, null=True, blank=True, related_name="reply"
+        "self", on_delete=models.DO_NOTHING, null=True, blank=True, related_name="reply"
     )
+
+    def delete(self, *args, **kwargs):  # type: ignore
+        self.content = "This comment was deleted"
+        self.is_read = True
+        return
 
 
 class CommentReaction(models.Model):

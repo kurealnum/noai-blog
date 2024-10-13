@@ -157,6 +157,12 @@ class CommentListView(APIView):
         serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    def delete(self, request, id):
+        user = self.request.user
+        comment = generics.get_object_or_404(Comment, user=user, pk=id)
+        comment.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 # This view returns replies to *posts* that a user has made
 class PostReplyListView(generics.ListAPIView):
