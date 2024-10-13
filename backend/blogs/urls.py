@@ -15,6 +15,7 @@ from blogs.views import (
 
 urlpatterns = [
     path("get-comments/<slug>/", CommentListView.as_view(), name="get_comments"),
+    path("delete-comment/<id>/", CommentListView.as_view(), name="delete_comment"),
     path(
         "get-comment-replies/",
         CommentReplyListView.as_view(),

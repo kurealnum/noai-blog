@@ -1,11 +1,27 @@
-import { CalendarMonth } from "@mui/icons-material";
-import { cleanDateTimeField } from "../features/helpers";
+import { CalendarMonth, Delete } from "@mui/icons-material";
+import { cleanDateTimeField, deleteComment } from "../features/helpers";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
+import { Dialog } from "@mui/material";
 
 // isNotification will cause the comment to link to the post itself, not the user
 function Comment({ content, isReply, isNotification }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
+  const userData = useRouteLoaderData("root");
+  const [open, setOpen] = useState(false);
+  function handleClose() {
+    setOpen(false);
+  }
+
+  function dialogHelper(e) {
+    const id = e.target.dataset["id"];
+    deleteComment(id).then((res) => {
+      if (res) {
+        setOpen(false);
+      }
+    });
+  }
+
   const mainComment = (
     <li className={isReply ? "comment comment-reply" : "comment"}>
       <div className="top-bar">
@@ -48,6 +64,31 @@ function Comment({ content, isReply, isNotification }) {
         </div>
       </div>
       <p className="comment-content">{content["content"]}</p>
+      {userData != undefined &&
+      userData["username"] == content["user"]["username"] ? (
+        <>
+          <button onClick={() => setOpen(true)}>
+            <Delete />
+          </button>
+          <Dialog
+            open={open}
+            className="delete-post-confirm"
+            onClose={handleClose}
+          >
+            <h1>This will delete your comment forever! Are you sure?</h1>
+            <button
+              data-id={content.id}
+              onClick={(e) => dialogHelper(e)}
+              className="accent-border"
+            >
+              Yes, I am sure
+            </button>
+            <button onClick={handleClose} className="tertiary-border">
+              No, I'm not
+            </button>
+          </Dialog>
+        </>
+      ) : null}
     </li>
   );
 

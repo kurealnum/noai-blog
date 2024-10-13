@@ -445,7 +445,22 @@ function cleanDateTimeField(date) {
   return date.replace(/(T.*)/g, "");
 }
 
+async function deleteComment(id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "DELETE",
+    body: JSON.stringify(id),
+  };
+  const response = await fetch("/api/blog-posts/delete-comment/", config);
+  return response.ok;
+}
+
 export {
+  deleteComment,
   cleanDateTimeField,
   editPost,
   getCommentsByPost,

@@ -10,7 +10,7 @@ import {
   Notifications,
 } from "@mui/icons-material";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import { Fade, Menu, Popper } from "@mui/material";
+import { Fade, Popper } from "@mui/material";
 
 function NavBar() {
   const userData = useLoaderData();
