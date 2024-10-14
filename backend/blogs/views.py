@@ -162,11 +162,20 @@ class CommentListView(APIView):
     def post(self, request):
         data = request.data
         new_comment = {
-            "user": self.request.user,
+            "user": self.request.user.id,  # type:ignore
             "post": generics.get_object_or_404(
                 BlogPost, slug_field=data["slug"], user=self.request.user
-            ),
+            ).pk,
+            "content": data["content"],
+            "is_read": False,
+            "reply_to": data["reply_to"],
         }
+        serializer = CommentSerializer(data=new_comment)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # in this case, updating a comment only involves changing the content
     def patch(self, request, id):

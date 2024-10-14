@@ -91,7 +91,7 @@ class CommentListUserViewTestCase(CustomTestCase):
 class CommentListViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
-        Comment.objects.create(
+        self.comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
         Comment.objects.create(
@@ -100,7 +100,13 @@ class CommentListViewTestCase(CustomTestCase):
 
     def test_does_get_work_properly(self):
         request = self.client.get(
-            reverse_lazy("get_comments", kwargs={"slug": self.blog_post.slug_field})
+            reverse_lazy(
+                "get_comments",
+                kwargs={
+                    "slug": self.blog_post.slug_field,
+                    "username": self.user.username,
+                },
+            )
         )
         expected_length = 2
         self.assertEqual(expected_length, len(request.data))  # type: ignore
@@ -128,13 +134,38 @@ class CommentListViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.patch(
-            reverse_lazy("delete_comment", args=[id]), data={"content": "Edited!"}
+            reverse_lazy("edit_comment", args=[id]), data={"content": "Edited!"}
         )
 
         expected_response = "Edited!"
         expected_status = 200
         self.assertEqual(expected_status, request.status_code)
         self.assertEqual(expected_response, request.data["content"])
+
+    def test_does_create_work_properly_without_reply_to(self):
+        data = {
+            "slug": self.blog_post.slug_field,
+            "content": "This is some content",
+            "reply_to": "",
+        }
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.post(reverse_lazy("create_comment"), data)
+        expected_status = 201
+        self.assertEqual(expected_status, request.status_code)
+
+    # "with" reply_to
+    def test_does_create_work_properly_with_reply_to(self):
+        data = {
+            "slug": self.blog_post.slug_field,
+            "content": "This is some content",
+            "reply_to": self.comment.pk,
+        }
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.post(reverse_lazy("create_comment"), data)
+        expected_status = 201
+        self.assertEqual(expected_status, request.status_code)
 
 
 class BlogPostViewTestCase(CustomTestCase):

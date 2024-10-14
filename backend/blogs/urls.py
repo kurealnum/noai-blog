@@ -30,6 +30,7 @@ urlpatterns = [
     ),
     path("delete-comment/<id>/", CommentListView.as_view(), name="delete_comment"),
     path("edit-comment/<id>/", CommentListView.as_view(), name="edit_comment"),
+    path("create-comment/", CommentListView.as_view(), name="create_comment"),
     # BlogPostLISTView
     path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
     path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),
