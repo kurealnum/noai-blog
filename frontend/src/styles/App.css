@@ -32,6 +32,29 @@ input {
   margin-bottom: 12px;
 }
 
+.create-comment-form {
+  padding: 0;
+  width: 90%;
+  margin: 0 auto;
+  margin-bottom: 60px;
+}
+
+.create-comment-form textarea {
+  margin: 0 auto;
+  padding: 1%;
+  width: 98%;
+  height: 7em;
+}
+
+.create-comment-form button {
+  padding: 10px 20px;
+  background: var(--tertiary);
+  color: var(--light-text);
+  border-radius: 10px;
+  border: none;
+  margin-top: 10px;
+}
+
 .edit-comment-form textarea {
   margin-bottom: 5px;
   padding: 0;

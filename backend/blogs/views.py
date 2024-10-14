@@ -161,6 +161,13 @@ class CommentListView(APIView):
 
     def post(self, request):
         data = request.data
+
+        # this is mainly for the frontend, because it is being a pain.
+        if "reply_to" not in data.keys():
+            reply_to = None
+        else:
+            reply_to = data["reply_to"]
+
         new_comment = {
             "user": self.request.user.id,  # type:ignore
             "post": generics.get_object_or_404(
@@ -168,7 +175,7 @@ class CommentListView(APIView):
             ).pk,
             "content": data["content"],
             "is_read": False,
-            "reply_to": data["reply_to"],
+            "reply_to": reply_to,
         }
         serializer = CommentSerializer(data=new_comment)
         if serializer.is_valid():

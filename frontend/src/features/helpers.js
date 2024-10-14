@@ -479,7 +479,25 @@ async function editComment(id, content) {
   return response.ok;
 }
 
+async function createComment(slug, content, replyTo) {
+  if (!replyTo) {
+    replyTo = "";
+  }
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "POST",
+    credentials: "include",
+    body: JSON.stringify({ slug: slug, content: content, replyTo: replyTo }),
+  };
+  const response = await fetch("/api/blog-posts/create-comment/", config);
+  return response.ok;
+}
+
 export {
+  createComment,
   editComment,
   deleteComment,
   cleanDateTimeField,

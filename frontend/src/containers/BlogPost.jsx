@@ -6,6 +6,7 @@ import {
   doesPathExist,
   getBlogPost,
   getReaction,
+  createComment,
 } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -34,6 +35,8 @@ const marked = new Marked(
 function BlogPost() {
   const { username, slug } = useParams();
   const [doesReactionExist, setDoesReactionExist] = useState(false);
+  const [doesExist, setDoesExist] = useState(false);
+
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
     queryKey: ["getBlogPost", username, slug],
     queryFn: () => getBlogPost({ username, slug }),
@@ -42,7 +45,6 @@ function BlogPost() {
     queryKey: ["getCommentsByPost", slug],
     queryFn: () => getCommentsByPost(username, slug),
   });
-  const [doesExist, setDoesExist] = useState(false);
 
   useEffect(() => {
     getReaction(slug).then((res) => {
@@ -72,6 +74,16 @@ function BlogPost() {
         refetch();
       } else {
         setDoesReactionExist(true);
+      }
+    });
+  }
+
+  function createCommentHelper(e) {
+    e.preventDefault();
+    createComment(slug, e.target[0].value).then((res) => {
+      if (res) {
+        getCommentsByPostQuery.refetch();
+        e.target[0].value = "";
       }
     });
   }
@@ -151,6 +163,13 @@ function BlogPost() {
         ></div>
         <div>
           <h2>Comments</h2>
+          <form
+            onSubmit={(e) => createCommentHelper(e)}
+            className="create-comment-form"
+          >
+            <textarea defaultValue={"Add to the discussion..."}></textarea>
+            <button type="submit">Comment</button>
+          </form>
           {getCommentsByPostQuery.isSuccess ? (
             <Comments
               raw={getCommentsByPostQuery.data}
