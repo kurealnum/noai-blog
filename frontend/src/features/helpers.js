@@ -425,7 +425,7 @@ async function editPost(blogPost) {
   return response.ok;
 }
 
-async function getCommentsByPost(slug) {
+async function getCommentsByPost(username, slug) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -434,7 +434,7 @@ async function getCommentsByPost(slug) {
     method: "GET",
   };
   const response = await fetch(
-    "/api/blog-posts/get-comments/" + slug + "/",
+    "/api/blog-posts/get-comments/" + username + "/" + slug + "/",
     config,
   );
   return await response.json();

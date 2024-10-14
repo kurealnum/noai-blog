@@ -1,4 +1,4 @@
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useRouteLoaderData } from "react-router-dom";
 import {
   createReaction,
   getCommentsByPost,
@@ -10,7 +10,7 @@ import {
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
 import DOMPurify from "dompurify";
 import hljs from "highlight.js";
@@ -40,7 +40,7 @@ function BlogPost() {
   });
   const getCommentsByPostQuery = useQuery({
     queryKey: ["getCommentsByPost", slug],
-    queryFn: () => getCommentsByPost(slug),
+    queryFn: () => getCommentsByPost(username, slug),
   });
   const [doesExist, setDoesExist] = useState(false);
 

@@ -151,11 +151,22 @@ class CommentListView(APIView):
             permissions.append(IsAuthenticated())  # type: ignore
         return permissions
 
-    def get(self, request, slug):
-        post = generics.get_object_or_404(BlogPost, slug_field=slug)
+    def get(self, request, username, slug):
+        post = generics.get_object_or_404(
+            BlogPost, slug_field=slug, user__username=username
+        )
         queryset = Comment.objects.filter(post=post).select_related("user", "reply_to")
         serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+        new_comment = {
+            "user": self.request.user,
+            "post": generics.get_object_or_404(
+                BlogPost, slug_field=data["slug"], user=self.request.user
+            ),
+        }
 
     # in this case, updating a comment only involves changing the content
     def patch(self, request, id):
@@ -320,7 +331,7 @@ class ReactionView(APIView):
 
     def get(self, request, slug):
         user = self.request.user
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         serializer = ReactionSerializer(reaction)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -328,7 +339,7 @@ class ReactionView(APIView):
     def post(self, request):
         user = self.request.user.id  # type: ignore
         slug = request.data["slug"]
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug).pk
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user).pk
         data = {"user": user, "post": blog_post}
         serializer = ReactionSerializer(data=data)
         if serializer.is_valid():
@@ -340,7 +351,7 @@ class ReactionView(APIView):
     def delete(self, request):
         user = self.request.user
         slug = request.data["slug"]
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         reaction.delete()
         return Response(status=status.HTTP_200_OK)

@@ -23,7 +23,11 @@ urlpatterns = [
     path("get-post-replies/", PostReplyListView.as_view(), name="get_post_replies"),
     path("feed/<index>/", (FeedListView.as_view()), name="feed"),
     # CommentListView URLs
-    path("get-comments/<slug>/", CommentListView.as_view(), name="get_comments"),
+    path(
+        "get-comments/<username>/<slug>/",
+        CommentListView.as_view(),
+        name="get_comments",
+    ),
     path("delete-comment/<id>/", CommentListView.as_view(), name="delete_comment"),
     path("edit-comment/<id>/", CommentListView.as_view(), name="edit_comment"),
     # BlogPostLISTView

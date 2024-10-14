@@ -2,7 +2,6 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
-  waitFor,
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -16,10 +15,9 @@ import NavBar from "../../src/containers/NavBar";
 describe("Blog Post", () => {
   beforeEach(async () => {
     const queryClient = new QueryClient();
-
     const routes = [
       {
-        path: "/post/:username/:slug",
+        path: "/:username/:slug",
         element: <BlogPost />,
       },
       {
@@ -31,7 +29,7 @@ describe("Blog Post", () => {
     ];
 
     const router = createMemoryRouter(routes, {
-      initialEntries: ["/post/oscar/why-django-is-so-amazing"],
+      initialEntries: ["/oscar/why-django-is-so-amazing"],
       initialIndex: 0,
     });
     render(
