@@ -25,6 +25,11 @@ input {
   color: var(--light-text);
 }
 
+#blog-post {
+  width: 95%;
+  margin: 0 auto;
+}
+
 .edit-comment-form {
   padding: 0;
   width: 100%;
@@ -197,7 +202,7 @@ body {
   width: 70%;
   margin: 0 auto;
   justify-content: center;
-  gap: 50px;
+  gap: 35px;
   margin-bottom: 50px;
 }
 
@@ -252,7 +257,20 @@ img {
 }
 
 .comment-content {
-  margin-top: 5px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.blog-post-content {
+  width: 100%;
+}
+
+.blog-post-content-align-center p {
+  text-align: center;
+}
+
+.blog-post-content-align-left p {
   text-align: left;
 }
 
@@ -664,6 +682,9 @@ ul {
 }
 
 @media (min-width: 800px) {
+  #blog-post {
+    max-width: 800px;
+  }
   .feed-advertisement {
     width: 450px;
   }
@@ -777,6 +798,12 @@ ul {
   #register,
   #login {
     width: 600px;
+  }
+  .comment {
+    width: 550px;
+  }
+  .comment-reply {
+    width: 500px;
   }
 }
 

@@ -19,7 +19,12 @@ import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
-import { CheckCircle, Favorite } from "@mui/icons-material";
+import {
+  CheckCircle,
+  Favorite,
+  FormatAlignCenter,
+  FormatAlignLeft,
+} from "@mui/icons-material";
 import Comments from "./Comments";
 
 const marked = new Marked(
@@ -36,6 +41,7 @@ function BlogPost() {
   const { username, slug } = useParams();
   const [doesReactionExist, setDoesReactionExist] = useState(false);
   const [doesExist, setDoesExist] = useState(false);
+  const [isLeftAligned, setIsLeftAligned] = useState(false);
 
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
     queryKey: ["getBlogPost", username, slug],
@@ -155,8 +161,19 @@ function BlogPost() {
             <CalendarMonthIcon />
             <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
           </div>
+          <button
+            className="reaction-button"
+            onClick={() => setIsLeftAligned(!isLeftAligned)}
+          >
+            {isLeftAligned ? <FormatAlignCenter /> : <FormatAlignLeft />}
+          </button>
         </div>
         <div
+          className={
+            isLeftAligned
+              ? "blog-post-content-align-left"
+              : "blog-post-content-align-right"
+          }
           dangerouslySetInnerHTML={{
             __html: DOMPurify.sanitize(marked.parse(data["content"])),
           }}
