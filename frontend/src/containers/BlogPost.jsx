@@ -167,7 +167,7 @@ function BlogPost() {
             onSubmit={(e) => createCommentHelper(e)}
             className="create-comment-form"
           >
-            <textarea defaultValue={"Add to the discussion..."}></textarea>
+            <textarea></textarea>
             <button type="submit">Comment</button>
           </form>
           {getCommentsByPostQuery.isSuccess ? (

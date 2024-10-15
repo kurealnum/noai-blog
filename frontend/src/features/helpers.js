@@ -490,7 +490,7 @@ async function createComment(slug, content, replyTo) {
     },
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ slug: slug, content: content, replyTo: replyTo }),
+    body: JSON.stringify({ slug: slug, content: content, reply_to: replyTo }),
   };
   const response = await fetch("/api/blog-posts/create-comment/", config);
   return response.ok;
