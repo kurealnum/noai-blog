@@ -22,6 +22,8 @@ import LoginRedirect from "../containers/LoginRedirect";
 import Notifications from "../containers/Notifications";
 import Faq from "../containers/Faq";
 import EditPost from "../containers/EditPost";
+import Followers from "../containers/Followers";
+import Following from "../containers/Following";
 
 const router = createBrowserRouter([
   {
@@ -43,6 +45,26 @@ const router = createBrowserRouter([
       {
         path: "faq",
         element: <Faq />,
+      },
+      {
+        path: "followers",
+        element: (
+          <AuthenticatedRoute>
+            <Page title="Followers">
+              <Followers />
+            </Page>
+          </AuthenticatedRoute>
+        ),
+      },
+      {
+        path: "following",
+        element: (
+          <AuthenticatedRoute>
+            <Page title="Followers">
+              <Following />
+            </Page>
+          </AuthenticatedRoute>
+        ),
       },
       {
         path: "login-redirect",

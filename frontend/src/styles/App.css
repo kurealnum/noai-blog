@@ -20,6 +20,7 @@ input {
   --small-text-size: 14px;
   --light-border-color: rgba(255, 255, 255, 0.4);
   --landing-page-header: 40px;
+  --light-svg-color: rgba(255, 255, 255, 0.85);
   font-family: "Raleway", "Times New Roman", Times, serif;
   background: var(--page-background);
   color: var(--light-text);
@@ -309,11 +310,37 @@ img {
   width: 38px;
 }
 
-.comment-username-box {
+.comment-username-box,
+.profile {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.profile {
+  gap: 14px;
+  color: var(--light-text);
+  padding: 10px 22px;
+  border: var(--light-border-color) solid 1px;
+  border-radius: 10px;
+  width: min-content;
+}
+
+.follow-list {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  max-width: 650px;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 30px;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 textarea {

@@ -496,7 +496,29 @@ async function createComment(slug, content, replyTo) {
   return response.ok;
 }
 
+async function getFollowers() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  return await response.json();
+}
+
+async function getFollowing() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/manage-following/", config);
+  return await response.json();
+}
+
 export {
+  getFollowing,
+  getFollowers,
   createComment,
   editComment,
   deleteComment,

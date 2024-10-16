@@ -224,6 +224,22 @@ const manageCommentsResult = [
   },
 ];
 
+const manageFollowing = [
+  {
+    id: 2,
+    user: {
+      username: "deleted",
+      profile_picture: null,
+      approved_ai_usage: false,
+    },
+    follower: {
+      username: "oscar",
+      profile_picture: "/media/profile_pictures/IMG_1794.jpg",
+      approved_ai_usage: true,
+    },
+  },
+];
+
 const manageLinks = [
   { id: 7, link: "https://google.com", name: "MyLink", user: 1 },
 ];
@@ -401,6 +417,22 @@ const comment = [
   },
 ];
 
+const manageFollowers = [
+  {
+    id: 2,
+    user: {
+      username: "deleted",
+      profile_picture: null,
+      approved_ai_usage: false,
+    },
+    follower: {
+      username: "oscar",
+      profile_picture: "/media/profile_pictures/IMG_1794.jpg",
+      approved_ai_usage: true,
+    },
+  },
+];
+
 // successful fetch returns that dont need a body
 const loginSuccess = true;
 const logoutSuccess = true;
@@ -427,6 +459,12 @@ const editPostSuccess = true;
 // /api/accounts/manage-links/
 // this is because a lot of the views on the backend have paths for requests with *and* without the username
 export const restHandlers = [
+  http.get("/api/blog-posts/manage-following/", () => {
+    return HttpResponse.json(manageFollowing);
+  }),
+  http.get("/api/blog-posts/manage-followers/", () => {
+    return HttpResponse.json(manageFollowers);
+  }),
   http.get("/api/blog-posts/manage-comments/", () => {
     return HttpResponse.json(manageCommentsResult);
   }),

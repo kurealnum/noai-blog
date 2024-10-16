@@ -7,7 +7,7 @@ import {
   limitLength,
 } from "../features/helpers";
 import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Dashboard() {
   const [posts, setPosts] = useState([]);
@@ -40,6 +40,14 @@ function Dashboard() {
 
   return (
     <div id="dashboard">
+      <section>
+        <Link to="/followers">
+          <button>View followers</button>
+        </Link>
+        <Link to="/following">
+          <button>View following</button>
+        </Link>
+      </section>
       <section className="list-section">
         <h1>Your comments</h1>
         <ul className="list">

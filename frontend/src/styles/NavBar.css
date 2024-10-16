@@ -45,11 +45,11 @@ nav ul {
 }
 
 nav svg {
-  color: var(--light-text);
+  color: var(--light-svg-color);
 }
 nav li {
   padding: 6px 11px;
-  border: var(--light-text) 1px solid;
+  border: var(--light-border-color) 1px solid;
   border-radius: 10px;
 }
 

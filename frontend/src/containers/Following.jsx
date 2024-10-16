@@ -1,0 +1,40 @@
+import { useQuery } from "@tanstack/react-query";
+import { getFollowing } from "../features/helpers";
+import { CircularProgress } from "@mui/material";
+import Profile from "../components/Profile";
+
+function Following() {
+  const getFollowingQuery = useQuery({
+    queryFn: getFollowing,
+    queryKey: ["getFollowing"],
+  });
+
+  if (getFollowingQuery.isError) {
+    return (
+      <div id="error-page">
+        <h1>There was an error!</h1>
+        <p>{getFollowingQuery.error}</p>
+      </div>
+    );
+  }
+
+  if (getFollowingQuery.isLoading) {
+    return (
+      <div className="default-page">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (getFollowingQuery.isSuccess) {
+    return (
+      <ul className="follow-list">
+        {getFollowingQuery.data.map((content, index) => (
+          <Profile content={content} key={index} />
+        ))}
+      </ul>
+    );
+  }
+}
+
+export default Following;
