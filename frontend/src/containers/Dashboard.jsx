@@ -40,12 +40,12 @@ function Dashboard() {
 
   return (
     <div id="dashboard">
-      <section>
-        <Link to="/followers">
-          <button>View followers</button>
+      <section className="flex-row-spacing vertical-margin-50">
+        <Link to="/followers" className="link-button">
+          View followers
         </Link>
-        <Link to="/following">
-          <button>View following</button>
+        <Link to="/following" className="link-button">
+          View following
         </Link>
       </section>
       <section className="list-section">

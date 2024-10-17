@@ -28,11 +28,14 @@ function Followers() {
 
   if (getFollowersQuery.isSuccess) {
     return (
-      <ul className="follow-list">
-        {getFollowersQuery.data.map((content, index) => (
-          <Profile content={content} key={index} />
-        ))}
-      </ul>
+      <>
+        <h1>Followers</h1>
+        <ul className="follow-list">
+          {getFollowersQuery.data.map((content, index) => (
+            <Profile content={content} key={index} />
+          ))}
+        </ul>
+      </>
     );
   }
 }

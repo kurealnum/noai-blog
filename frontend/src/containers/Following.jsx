@@ -28,11 +28,14 @@ function Following() {
 
   if (getFollowingQuery.isSuccess) {
     return (
-      <ul className="follow-list">
-        {getFollowingQuery.data.map((content, index) => (
-          <Profile content={content} key={index} />
-        ))}
-      </ul>
+      <>
+        <h1>Following</h1>
+        <ul className="follow-list">
+          {getFollowingQuery.data.map((content, index) => (
+            <Profile content={content} key={index} />
+          ))}
+        </ul>
+      </>
     );
   }
 }

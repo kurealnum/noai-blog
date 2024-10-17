@@ -26,6 +26,17 @@ input {
   color: var(--light-text);
 }
 
+.flex-row-spacing {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.vertical-margin-50 {
+  margin: 50px 0;
+}
+
 #blog-post {
   width: 95%;
   margin: 0 auto;
@@ -534,7 +545,8 @@ p {
 }
 
 #landing-page a,
-#link-button {
+#link-button,
+.link-button {
   text-decoration: none;
   display: flex;
   flex-direction: row;
@@ -546,7 +558,7 @@ p {
   border: 0px;
   border-radius: 10px;
   font-size: var(--subtext-font-size);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .info-box:last-of-type {
