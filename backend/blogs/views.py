@@ -1,11 +1,9 @@
 from django.db.models import (
     F,
-    Q,
     Case,
     Count,
     ExpressionWrapper,
     FloatField,
-    Subquery,
     When,
 )
 from django.http.response import Http404
@@ -355,7 +353,7 @@ class ReactionView(APIView):
     def post(self, request):
         user = self.request.user.id  # type: ignore
         slug = request.data["slug"]
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user).pk
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug).pk
         data = {"user": user, "post": blog_post}
         serializer = ReactionSerializer(data=data)
         if serializer.is_valid():

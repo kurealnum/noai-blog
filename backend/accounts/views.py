@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import Http404
 from rest_framework import generics, status
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -210,8 +211,10 @@ class NotificationView(APIView):
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        unread_comments = Comment.objects.filter(reply_to__user=user).select_related(
-            "user", "post", "post__user"
+        unread_comments = (
+            Comment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
+            .select_related("user", "post", "post__user")
+            .order_by("-created_date")
         )
 
         serializer = NotificationCommentSerializer(instance=unread_comments, many=True)
@@ -227,6 +230,8 @@ class NotificationView(APIView):
 
 
 class NotificationCountView(APIView):
+    permission_classes = (IsAuthenticated,)
+
     def get(self, request):
         user = self.request.user.id  # type: ignore
         unread_comments = Comment.objects.filter(user=user, is_read=False).count()

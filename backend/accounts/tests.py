@@ -438,12 +438,23 @@ class NotificationViewTestCase(CustomTestCase):
         self.post = BlogPost.objects.create(
             user=self.user, title="My blog post", content="My weird blog post"
         )
-
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+        self.alt_post = BlogPost.objects.create(
+            user=self.altuser, title="huh", content="My weird blog post"
+        )
         self.original_comment = Comment.objects.create(
             user=self.user, post=self.post, content="Hello world", is_read=True
         )
 
-        # read comments
+        # these should be included in the get request
         Comment.objects.create(
             user=self.user,
             post=self.post,
@@ -451,8 +462,6 @@ class NotificationViewTestCase(CustomTestCase):
             is_read=True,
             reply_to=self.original_comment,
         )
-
-        # unread comments
         Comment.objects.create(
             user=self.user,
             post=self.post,
@@ -462,10 +471,18 @@ class NotificationViewTestCase(CustomTestCase):
         )
         Comment.objects.create(
             user=self.user,
-            post=self.post,
+            post=self.alt_post,
             content="I am the other unread comment",
             is_read=False,
             reply_to=self.original_comment,
+        )
+
+        # this should not be included
+        Comment.objects.create(
+            user=self.user,
+            post=self.alt_post,
+            content="I am the other unread comment",
+            is_read=False,
         )
 
     def test_does_get_return_correctly(self):
@@ -474,7 +491,7 @@ class NotificationViewTestCase(CustomTestCase):
         request = temp_client.get(reverse_lazy("notifications"))
         expected_result = "Hello world"
         expected_read = False
-        expected_length = 3
+        expected_length = 4
 
         self.assertEqual(expected_result, request.data[1]["content"])
         self.assertEqual(expected_read, request.data[1]["is_read"])

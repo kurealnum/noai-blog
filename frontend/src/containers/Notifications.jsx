@@ -4,7 +4,7 @@ import { CircularProgress } from "@mui/material";
 import Comment from "../components/Comment";
 
 function Notifications() {
-  const { data, error, isLoading, isSuccess, isError } = useQuery({
+  const { data, error, isLoading, isSuccess, isError, refetch } = useQuery({
     queryFn: () => getNotifications(),
     queryKey: ["getNotifications"],
   });
@@ -32,6 +32,7 @@ function Notifications() {
               isReply={false}
               key={index}
               isNotification={true}
+              refetch={refetch}
             />
           ))}
         </ul>

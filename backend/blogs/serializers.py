@@ -16,6 +16,7 @@ class NotificationCommentSerializer(serializers.Serializer):
     content = serializers.CharField()
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+    id = serializers.IntegerField()
     is_read = serializers.BooleanField()
 
 

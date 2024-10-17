@@ -516,7 +516,18 @@ async function getFollowing() {
   return await response.json();
 }
 
+async function getNotificationCount() {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/accounts/notifications-count/", config);
+  return await response.json();
+}
+
 export {
+  getNotificationCount,
   getFollowing,
   getFollowers,
   createComment,

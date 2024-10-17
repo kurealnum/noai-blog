@@ -210,23 +210,7 @@ function Comment({ content, isReply, isNotification, refetch }) {
     </>
   );
 
-  if (isNotification) {
-    return (
-      <Link
-        className="link-comment"
-        to={
-          "/post/" +
-          content["post"]["user"]["username"] +
-          "/" +
-          content["post"]["slug_field"]
-        }
-      >
-        {mainComment}
-      </Link>
-    );
-  } else {
-    return <>{mainComment}</>;
-  }
+  return <>{mainComment}</>;
 }
 
 export default Comment;
