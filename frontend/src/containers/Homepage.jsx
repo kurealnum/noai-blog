@@ -14,6 +14,7 @@ import {
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { Alert, Snackbar } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
+import Profile from "../components/Profile";
 
 function Homepage() {
   const { username } = useParams();
@@ -110,17 +111,7 @@ function Homepage() {
     return (
       <div id="homepage">
         <div className="user-box">
-          <div className="username-box">
-            {doesExist ? (
-              <img id="pfp" src={userInfo["profile_picture"]}></img>
-            ) : null}
-            <span>{userInfo["username"]}</span>
-            {userInfo["approved_ai_usage"] ? (
-              <Link to="/guidelines#green-checkmarks-on-users-profiles">
-                <CheckCircle />
-              </Link>
-            ) : null}
-          </div>
+          <Profile content={{ user: userInfo }} />
           <button
             type="button"
             onClick={

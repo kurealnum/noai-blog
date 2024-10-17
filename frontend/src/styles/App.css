@@ -342,6 +342,19 @@ a {
   width: min-content;
 }
 
+.profile a {
+  color: var(--light-text);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile svg {
+  color: var(--tertiary);
+  padding: 0;
+}
+
 .follow-list {
   display: flex;
   flex-direction: row;

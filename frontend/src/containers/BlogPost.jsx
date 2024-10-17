@@ -26,6 +26,7 @@ import {
   FormatAlignLeft,
 } from "@mui/icons-material";
 import Comments from "./Comments";
+import Profile from "../components/Profile";
 
 const marked = new Marked(
   markedHighlight({
@@ -40,7 +41,6 @@ const marked = new Marked(
 function BlogPost() {
   const { username, slug } = useParams();
   const [doesReactionExist, setDoesReactionExist] = useState(false);
-  const [doesExist, setDoesExist] = useState(false);
   const [isLeftAligned, setIsLeftAligned] = useState(false);
 
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
@@ -113,32 +113,12 @@ function BlogPost() {
   if (isSuccess) {
     document.title = "NoAI Blog" + " - " + data["title"];
 
-    doesPathExist(data["user"]["profile_picture"]).then((res) => {
-      if (res) {
-        setDoesExist(true);
-      } else {
-        setDoesExist(false);
-      }
-    });
-
     return (
       <div id="blog-post">
         <h1>{data.title}</h1>
         <div className="info-bar">
           <div className="info-bar-box">
-            <div className="username-box username-box-no-change">
-              {doesExist ? (
-                <img id="pfp" src={data["user"]["profile_picture"]}></img>
-              ) : null}
-              <span className={doesExist ? null : "username-box-padding"}>
-                By {data["user"]["username"]}
-              </span>
-              {data["user"]["approved_ai_usage"] ? (
-                <Link to="/guidelines#green-checkmarks-on-users-profiles">
-                  <CheckCircle />
-                </Link>
-              ) : null}
-            </div>
+            <Profile content={data} />
           </div>
           <button
             className="reaction-button"

@@ -1,10 +1,11 @@
+import { CheckCircle } from "@mui/icons-material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function Profile({ content }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
   return (
-    <Link to={"/homepage/" + content["user"]["username"]}>
+    <>
       <div className="profile">
         {isProfilePicture ? (
           <>
@@ -17,9 +18,16 @@ function Profile({ content }) {
             ) : null}
           </>
         ) : null}
-        <span>{content["user"]["username"]}</span>
+        <Link to={"/homepage/" + content["user"]["username"]}>
+          <span>{content["user"]["username"]}</span>
+        </Link>
+        {content["user"]["approved_ai_usage"] ? (
+          <Link to="/guidelines#green-checkmarks-on-users-profiles">
+            <CheckCircle />
+          </Link>
+        ) : null}
       </div>
-    </Link>
+    </>
   );
 }
 
