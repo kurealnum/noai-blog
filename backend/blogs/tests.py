@@ -523,7 +523,7 @@ class ModeratorModifyPostViewTestCase(CustomTestCase):
             )
         )
 
-        expected_result = 200
+        expected_result = 204
         flagged_blog_post = BlogPost.objects.get(
             user__username="bobby", slug_field=self.blog_post.slug_field
         )
@@ -576,7 +576,7 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
         )
 
         new_comment = Comment.objects.get(pk=comment.pk)
-        expected_status = 200
+        expected_status = 204
         self.assertEqual(expected_status, request.status_code)
         self.assertTrue(new_comment.flagged)
 
@@ -594,3 +594,58 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
         expected_status = 403
         self.assertEqual(expected_status, request.status_code)
         self.assertFalse(new_comment.flagged)
+
+
+class ModeratorModifyUserViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.moderator = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_mod=True,
+        )
+        self.moderator.set_password("TerriblePassword123")
+        self.moderator.save()
+
+    def test_does_patch_work_with_mod_user(self):
+        user = CustomUser.objects.create(
+            email="testuser@gmail.com",
+            first_name="test",
+            last_name="user",
+            about_me="I am a test user, destroyer of worlds.",
+            username="testuser1",
+        )
+
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.patch(
+            reverse_lazy("toggle_flagged_user", kwargs={"id": user.pk})
+        )
+
+        new_user = CustomUser.objects.get(pk=user.pk)
+        expected_status = 204
+        self.assertEqual(expected_status, request.status_code)
+        self.assertTrue(new_user.flagged)
+
+    def test_does_patch_work_with_non_mod_user(self):
+        user = CustomUser.objects.create(
+            email="testuser@gmail.com",
+            first_name="test",
+            last_name="user",
+            about_me="I am a test user, destroyer of worlds.",
+            username="testuser2",
+        )
+
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.patch(
+            reverse_lazy("toggle_flagged_user", kwargs={"id": user.pk})
+        )
+
+        new_user = CustomUser.objects.get(pk=user.pk)
+        expected_status = 403
+        self.assertEqual(expected_status, request.status_code)
+        self.assertFalse(new_user.flagged)

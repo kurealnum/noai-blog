@@ -9,6 +9,7 @@ from blogs.views import (
     FollowingView,
     ModeratorModifyCommentView,
     ModeratorModifyPostView,
+    ModeratorModifyUserView,
     PostReplyListView,
     CommentListView,
     CommentListUserView,
@@ -73,5 +74,11 @@ urlpatterns = [
         "toggle-flagged-comment/<id>/",
         ModeratorModifyCommentView.as_view(),
         name="toggle_flagged_comment",
+    ),
+    # ModeratorModifyUserView
+    path(
+        "toggle-flagged-user/<id>/",
+        ModeratorModifyUserView.as_view(),
+        name="toggle_flagged_user",
     ),
 ]

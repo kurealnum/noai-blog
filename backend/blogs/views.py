@@ -391,3 +391,12 @@ class ModeratorModifyCommentView(APIView):
         comment = generics.get_object_or_404(Comment, pk=id)
         comment.toggle_flagged()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ModeratorModifyUserView(APIView):
+    permission_classes = (IsModerator,)
+
+    def patch(self, request, id):
+        user = generics.get_object_or_404(CustomUser, pk=id)
+        user.toggle_flagged()
+        return Response(status=status.HTTP_204_NO_CONTENT)
