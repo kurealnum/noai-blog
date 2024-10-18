@@ -499,7 +499,7 @@ class ReactionViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.status_code)
 
 
-class ModeratorModifyPostView(CustomTestCase):
+class ModeratorModifyPostViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
         self.moderator = CustomUser.objects.create(
@@ -518,24 +518,79 @@ class ModeratorModifyPostView(CustomTestCase):
         temp_client.login(password="TerriblePassword123", username="bethy")
         request = temp_client.patch(
             reverse_lazy(
-                "toggle_flagged",
+                "toggle_flagged_post",
                 kwargs={"username": "bobby", "slug": self.blog_post.slug_field},
             )
         )
 
         expected_result = 200
+        flagged_blog_post = BlogPost.objects.get(
+            user__username="bobby", slug_field=self.blog_post.slug_field
+        )
         self.assertEqual(expected_result, request.status_code)
+        self.assertTrue(flagged_blog_post.flagged)
 
     # this is more of a test for the helper permission function
     def test_does_patch_work_with_non_mod_user(self):
+        blog_post = BlogPost.objects.create(
+            user=self.user,
+            title="another blog post yay",
+            content="Here's something about my blog post",
+        )
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
         request = temp_client.patch(
             reverse_lazy(
-                "toggle_flagged",
+                "toggle_flagged_post",
                 kwargs={"username": "bobby", "slug": self.blog_post.slug_field},
             )
         )
 
         expected_result = 403
         self.assertEqual(expected_result, request.status_code)
+        self.assertFalse(blog_post.flagged)
+
+
+class ModeratorModifyCommentViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.moderator = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_mod=True,
+        )
+        self.moderator.set_password("TerriblePassword123")
+        self.moderator.save()
+
+    def test_does_patch_work_with_mod_user(self):
+        comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.patch(
+            reverse_lazy("toggle_flagged_comment", kwargs={"id": comment.pk}),
+        )
+
+        new_comment = Comment.objects.get(pk=comment.pk)
+        expected_status = 200
+        self.assertEqual(expected_status, request.status_code)
+        self.assertTrue(new_comment.flagged)
+
+    def test_does_patch_work_with_non_mod_user(self):
+        comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.patch(
+            reverse_lazy("toggle_flagged_comment", kwargs={"id": comment.pk}),
+        )
+
+        new_comment = Comment.objects.get(pk=comment.pk)
+        expected_status = 403
+        self.assertEqual(expected_status, request.status_code)
+        self.assertFalse(new_comment.flagged)

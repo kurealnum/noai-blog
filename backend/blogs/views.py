@@ -381,4 +381,15 @@ class ModeratorModifyPostView(APIView):
             BlogPost, slug_field=slug, user__username=username
         )
         blog_post.flagged = not blog_post.flagged
+        blog_post.save()
+        return Response(status=status.HTTP_200_OK)
+
+
+class ModeratorModifyCommentView(APIView):
+    permission_classes = (IsModerator,)
+
+    def patch(self, request, id):
+        comment = generics.get_object_or_404(Comment, pk=id)
+        comment.flagged = not comment.flagged
+        comment.save()
         return Response(status=status.HTTP_200_OK)
