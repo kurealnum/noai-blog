@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from accounts.helpers import IsModerator
 from accounts.models import CustomUser
 from blogs.models import BlogPost, Comment, Follower, PostReaction
 from blogs.serializers import (
@@ -368,4 +369,16 @@ class ReactionView(APIView):
         blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         reaction.delete()
+        return Response(status=status.HTTP_200_OK)
+
+
+class ModeratorModifyPostView(APIView):
+    permission_classes = (IsModerator,)
+
+    # this is a toggle: it will set blog_post.flagged to the opposite of blog_post.flagged
+    def patch(self, request, slug, username):
+        blog_post = generics.get_object_or_404(
+            BlogPost, slug_field=slug, user__username=username
+        )
+        blog_post.flagged = not blog_post.flagged
         return Response(status=status.HTTP_200_OK)

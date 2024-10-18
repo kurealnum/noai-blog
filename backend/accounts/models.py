@@ -12,6 +12,9 @@ class CustomUser(AbstractUser):
     password = models.CharField(max_length=100, unique=False)
     profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
     approved_ai_usage = models.BooleanField(default=False)
+    is_mod = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    flagged = models.BooleanField(default=False)
 
 
 class Link(models.Model):

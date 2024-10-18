@@ -7,6 +7,7 @@ from blogs.views import (
     FeedListView,
     FollowerView,
     FollowingView,
+    ModeratorModifyPostView,
     PostReplyListView,
     CommentListView,
     CommentListUserView,
@@ -59,5 +60,11 @@ urlpatterns = [
         "manage-post-reactions/<slug>/",
         ReactionView.as_view(),
         name="manage_post_reactions",
+    ),
+    # ModeratorModifyPostView
+    path(
+        "toggle-flagged/<username>/<slug>/",
+        ModeratorModifyPostView.as_view(),
+        name="toggle_flagged",
     ),
 ]

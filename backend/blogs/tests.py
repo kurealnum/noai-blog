@@ -497,3 +497,43 @@ class ReactionViewTestCase(CustomTestCase):
         request = temp_client.delete(reverse_lazy("manage_post_reactions"), data=data)
         expected_result = 200
         self.assertEqual(expected_result, request.status_code)
+
+
+class ModeratorModifyPostView(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.moderator = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_mod=True,
+        )
+
+    def test_does_patch_work(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.patch(
+            reverse_lazy(
+                "toggle_flagged",
+                kwargs={"username": "bobby", "slug": self.blog_post.slug_field},
+            )
+        )
+
+        expected_result = 200
+        self.assertEqual(expected_result, request.status_code)
+
+    # this is more of a test for the helper permission function
+    def test_does_patch_work_with_non_mod_user(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.patch(
+            reverse_lazy(
+                "toggle_flagged",
+                kwargs={"username": "bobby", "slug": self.blog_post.slug_field},
+            )
+        )
+
+        expected_result = 403
+        self.assertEqual(expected_result, request.status_code)

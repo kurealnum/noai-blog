@@ -17,6 +17,7 @@ class BlogPost(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
     slug_field = models.SlugField(null=True, unique=True)
     is_listicle = models.BooleanField(default=False)
+    flagged = models.BooleanField(default=False)
 
     def get_absolute_url(self):
         return reverse(
@@ -59,6 +60,7 @@ class Comment(models.Model):
     reply_to = models.ForeignKey(
         "self", on_delete=models.DO_NOTHING, null=True, blank=True, related_name="reply"
     )
+    flagged = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):  # type: ignore
         self.content = "This comment was deleted"
