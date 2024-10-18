@@ -510,6 +510,8 @@ class ModeratorModifyPostView(CustomTestCase):
             username="bethy",
             is_mod=True,
         )
+        self.moderator.set_password("TerriblePassword123")
+        self.moderator.save()
 
     def test_does_patch_work(self):
         temp_client = APIClient()
