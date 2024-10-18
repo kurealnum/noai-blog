@@ -1,6 +1,7 @@
 from django.urls import path
 
 from blogs.views import (
+    AdminGetAllFlaggedPosts,
     BlogPostListView,
     BlogPostView,
     CommentReplyListView,
@@ -80,5 +81,11 @@ urlpatterns = [
         "toggle-flagged-user/<id>/",
         ModeratorModifyUserView.as_view(),
         name="toggle_flagged_user",
+    ),
+    # AdminGetAllPostsView
+    path(
+        "get-flagged-posts/",
+        AdminGetAllFlaggedPosts.as_view(),
+        name="get_flagged_posts",
     ),
 ]

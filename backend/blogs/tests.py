@@ -649,3 +649,50 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
         expected_status = 403
         self.assertEqual(expected_status, request.status_code)
         self.assertFalse(new_user.flagged)
+
+
+class AdminGetAllPostsTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        # unflagged posts
+        BlogPost.objects.create(
+            user=self.user,
+            title="omg so many tests",
+            content="Here's something about my blog post",
+        )
+        BlogPost.objects.create(
+            user=self.user,
+            title="test 93",
+            content="Here's something about my blog post",
+            flagged=False,
+        )
+
+        # flagged posts
+        BlogPost.objects.create(
+            user=self.user,
+            title="test idek anymore",
+            content="A flagged post",
+            flagged=True,
+        )
+
+        self.admin = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_admin=True,
+        )
+        self.admin.set_password("TerriblePassword123")
+        self.admin.save()
+
+    def test_does_get_return_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.get(reverse_lazy("get_flagged_posts"))
+
+        expected_length = 1
+        expected_content = "A flagged post"
+
+        self.assertEqual(expected_length, len(request.data))
+        self.assertEqual(expected_content, request.data[0]["content"])

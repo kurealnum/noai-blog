@@ -54,6 +54,7 @@ class FeedBlogPostSerializer(serializers.Serializer):
     content = serializers.CharField(max_length=101)  # see blog post serializer
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+    flagged = serializers.BooleanField()
 
 
 # for get requests
@@ -66,6 +67,7 @@ class SingleBlogPostSerializer(serializers.Serializer):
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
     likes = serializers.IntegerField()
+    flagged = serializers.BooleanField()
 
 
 # for post, patch, etc.
@@ -83,6 +85,7 @@ class BlogPostSerializer(serializers.Serializer):
     )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
+    flagged = serializers.BooleanField()
 
 
 class GetFollowerSerializer(serializers.ModelSerializer):
