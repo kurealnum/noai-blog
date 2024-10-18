@@ -28,6 +28,10 @@ class BlogPost(models.Model):
         self.slug_field = slugify(self.title)
         return super().save(*args, **kwargs)
 
+    def toggle_flagged(self):
+        self.flagged = not self.flagged
+        self.save()
+
 
 class Follower(models.Model):
     follower = models.ForeignKey(
@@ -68,6 +72,10 @@ class Comment(models.Model):
         self.user = get_sentinel_user()
         self.save()
         return
+
+    def toggle_flagged(self):
+        self.flagged = not self.flagged
+        self.save()
 
 
 class CommentReaction(models.Model):

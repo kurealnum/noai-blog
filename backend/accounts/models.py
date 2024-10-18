@@ -16,6 +16,10 @@ class CustomUser(AbstractUser):
     is_admin = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
 
+    def toggle_flagged(self):
+        self.flagged = not self.flagged
+        self.save()
+
 
 class Link(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)

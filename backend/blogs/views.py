@@ -380,9 +380,8 @@ class ModeratorModifyPostView(APIView):
         blog_post = generics.get_object_or_404(
             BlogPost, slug_field=slug, user__username=username
         )
-        blog_post.flagged = not blog_post.flagged
-        blog_post.save()
-        return Response(status=status.HTTP_200_OK)
+        blog_post.toggle_flagged()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ModeratorModifyCommentView(APIView):
@@ -390,6 +389,5 @@ class ModeratorModifyCommentView(APIView):
 
     def patch(self, request, id):
         comment = generics.get_object_or_404(Comment, pk=id)
-        comment.flagged = not comment.flagged
-        comment.save()
-        return Response(status=status.HTTP_200_OK)
+        comment.toggle_flagged()
+        return Response(status=status.HTTP_204_NO_CONTENT)
