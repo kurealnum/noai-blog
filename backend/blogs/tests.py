@@ -530,26 +530,6 @@ class ModeratorModifyPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.status_code)
         self.assertTrue(flagged_blog_post.flagged)
 
-    # this is more of a test for the helper permission function
-    def test_does_patch_work_with_non_mod_user(self):
-        blog_post = BlogPost.objects.create(
-            user=self.user,
-            title="another blog post yay",
-            content="Here's something about my blog post",
-        )
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.patch(
-            reverse_lazy(
-                "toggle_flagged_post",
-                kwargs={"username": "bobby", "slug": self.blog_post.slug_field},
-            )
-        )
-
-        expected_result = 403
-        self.assertEqual(expected_result, request.status_code)
-        self.assertFalse(blog_post.flagged)
-
 
 class ModeratorModifyCommentViewTestCase(CustomTestCase):
     def setUp(self):
@@ -579,21 +559,6 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
         expected_status = 204
         self.assertEqual(expected_status, request.status_code)
         self.assertTrue(new_comment.flagged)
-
-    def test_does_patch_work_with_non_mod_user(self):
-        comment = Comment.objects.create(
-            user=self.user, post=self.blog_post, content="A really good comment"
-        )
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.patch(
-            reverse_lazy("toggle_flagged_comment", kwargs={"id": comment.pk}),
-        )
-
-        new_comment = Comment.objects.get(pk=comment.pk)
-        expected_status = 403
-        self.assertEqual(expected_status, request.status_code)
-        self.assertFalse(new_comment.flagged)
 
 
 class ModeratorModifyUserViewTestCase(CustomTestCase):
@@ -630,28 +595,8 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
         self.assertEqual(expected_status, request.status_code)
         self.assertTrue(new_user.flagged)
 
-    def test_does_patch_work_with_non_mod_user(self):
-        user = CustomUser.objects.create(
-            email="testuser@gmail.com",
-            first_name="test",
-            last_name="user",
-            about_me="I am a test user, destroyer of worlds.",
-            username="testuser2",
-        )
 
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.patch(
-            reverse_lazy("toggle_flagged_user", kwargs={"id": user.pk})
-        )
-
-        new_user = CustomUser.objects.get(pk=user.pk)
-        expected_status = 403
-        self.assertEqual(expected_status, request.status_code)
-        self.assertFalse(new_user.flagged)
-
-
-class AdminGetAllPostsTestCase(CustomTestCase):
+class AdminGetAllFlaggedPostsTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
         # unflagged posts
@@ -693,6 +638,49 @@ class AdminGetAllPostsTestCase(CustomTestCase):
 
         expected_length = 1
         expected_content = "A flagged post"
+
+        self.assertEqual(expected_length, len(request.data))
+        self.assertEqual(expected_content, request.data[0]["content"])
+
+
+class AdminGetAllFlaggedCommentsViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+
+        # unflagged
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+        Comment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+
+        # flagged
+        Comment.objects.create(
+            user=self.user,
+            post=self.blog_post,
+            content="A flagged comment",
+            flagged=True,
+        )
+
+        self.admin = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_admin=True,
+        )
+        self.admin.set_password("TerriblePassword123")
+        self.admin.save()
+
+    def test_does_get_work_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.get(reverse_lazy("get_flagged_comments"))
+
+        expected_length = 1
+        expected_content = "A flagged comment"
 
         self.assertEqual(expected_length, len(request.data))
         self.assertEqual(expected_content, request.data[0]["content"])

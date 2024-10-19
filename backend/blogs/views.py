@@ -409,3 +409,12 @@ class AdminGetAllFlaggedPosts(APIView):
         queryset = BlogPost.objects.filter(flagged=True)
         serializer = BlogPostSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AdminGetAllFlaggedComments(APIView):
+    permission_classes = (IsAdmin,)
+
+    def get(self, request):
+        queryset = Comment.objects.filter(flagged=True)
+        serializer = CommentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
