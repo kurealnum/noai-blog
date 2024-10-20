@@ -587,7 +587,7 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bethy")
         request = temp_client.patch(
-            reverse_lazy("toggle_flagged_user", kwargs={"id": user.pk})
+            reverse_lazy("toggle_flagged_user", kwargs={"username": user.username})
         )
 
         user.refresh_from_db()

@@ -81,7 +81,7 @@ urlpatterns = [
     ),
     # ModeratorModifyUserView
     path(
-        "toggle-flagged-user/<id>/",
+        "toggle-flagged-user/<username>/",
         ModeratorModifyUserView.as_view(),
         name="toggle_flagged_user",
     ),
