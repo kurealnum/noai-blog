@@ -590,10 +590,10 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
             reverse_lazy("toggle_flagged_user", kwargs={"id": user.pk})
         )
 
-        new_user = CustomUser.objects.get(pk=user.pk)
+        user.refresh_from_db()
         expected_status = 204
         self.assertEqual(expected_status, request.status_code)
-        self.assertTrue(new_user.flagged)
+        self.assertTrue(user.flagged)
 
 
 class AdminGetAllFlaggedPostsTestCase(CustomTestCase):
@@ -737,3 +737,38 @@ class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
 
         self.assertEqual(expected_length, len(request.data))
         self.assertEqual(expected_content, request.data[-1]["about_me"])
+
+
+class AdminManageListicleViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.admin = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_admin=True,
+        )
+        self.admin.set_password("TerriblePassword123")
+        self.admin.save()
+
+    def test_does_patch_work(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.patch(
+            reverse_lazy(
+                "toggle_listicle",
+                kwargs={
+                    "username": self.blog_post.user.username,
+                    "slug": self.blog_post.slug_field,
+                },
+            )
+        )
+
+        expected_status = 204
+
+        self.blog_post.refresh_from_db()
+
+        self.assertEqual(expected_status, request.status_code)
+        self.assertTrue(self.blog_post.is_listicle)

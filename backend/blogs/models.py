@@ -32,6 +32,10 @@ class BlogPost(models.Model):
         self.flagged = not self.flagged
         self.save()
 
+    def toggle_listicle(self):
+        self.is_listicle = not self.is_listicle
+        self.save()
+
 
 class Follower(models.Model):
     follower = models.ForeignKey(

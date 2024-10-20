@@ -4,6 +4,7 @@ from blogs.views import (
     AdminGetAllFlaggedCommentsView,
     AdminGetAllFlaggedPostsView,
     AdminGetAllFlaggedUsersView,
+    AdminManageListicleView,
     BlogPostListView,
     BlogPostView,
     CommentReplyListView,
@@ -68,7 +69,7 @@ urlpatterns = [
     ),
     # ModeratorModifyPostView
     path(
-        "toggle-flagged-comment/<username>/<slug>/",
+        "toggle-flagged-post/<username>/<slug>/",
         ModeratorModifyPostView.as_view(),
         name="toggle_flagged_post",
     ),
@@ -101,5 +102,11 @@ urlpatterns = [
         "get-flagged-users/",
         AdminGetAllFlaggedUsersView.as_view(),
         name="get_flagged_users",
+    ),
+    # AdminManageListicleView
+    path(
+        "toggle-listicle/<username>/<slug>/",
+        AdminManageListicleView.as_view(),
+        name="toggle_listicle",
     ),
 ]

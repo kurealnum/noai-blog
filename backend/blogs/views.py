@@ -428,3 +428,14 @@ class AdminGetAllFlaggedUsersView(APIView):
         queryset = CustomUser.objects.filter(flagged=True)
         serializer = CustomUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AdminManageListicleView(APIView):
+    permission_classes = (IsAdmin,)
+
+    def patch(self, request, username, slug):
+        blog_post = generics.get_object_or_404(
+            BlogPost, user__username=username, slug_field=slug
+        )
+        blog_post.toggle_listicle()
+        return Response(status=status.HTTP_204_NO_CONTENT)
