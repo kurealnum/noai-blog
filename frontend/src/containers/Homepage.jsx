@@ -156,13 +156,7 @@ function Homepage() {
               <p>There's nothing here. Go make some posts!</p>
             ) : (
               blogPosts.map((content, index) => (
-                <BlogPostThumbnail
-                  key={index}
-                  title={content.title}
-                  username={content.user.username}
-                  createdDate={content.created_date}
-                  content={content.content}
-                />
+                <BlogPostThumbnail key={index} content={content} />
               ))
             )}
           </div>

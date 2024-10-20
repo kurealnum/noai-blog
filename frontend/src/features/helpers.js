@@ -526,7 +526,30 @@ async function getNotificationCount() {
   return await response.json();
 }
 
+async function toggleFlagPost(username, slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PATCH",
+  };
+  const response = await fetch(
+    "/api/blog-posts/toggle-flagged-post/" + username + "/" + slug + "/",
+    config,
+  );
+  return response.ok;
+}
+
+async function toggleFlagComment(id) {}
+
+async function toggleFlagUser(username) {}
+
 export {
+  toggleFlagPost,
+  toggleFlagComment,
+  toggleFlagUser,
   getNotificationCount,
   getFollowing,
   getFollowers,

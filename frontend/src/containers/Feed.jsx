@@ -42,13 +42,7 @@ function Feed() {
     <div id="feed">
       {data.map((content, index) => (
         <>
-          <BlogPostThumbnail
-            key={index}
-            title={content.title}
-            username={content.user.username}
-            createdDate={content.created_date}
-            content={content.content}
-          />
+          <BlogPostThumbnail key={index} content={content} />
           {(index + 1) % advertiseRatio == 0 ? (
             <div
               className="feed-advertisement"
