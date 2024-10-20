@@ -14,6 +14,7 @@ from rest_framework.views import APIView
 
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
+from accounts.serializers import CustomUserSerializer
 from blogs.models import BlogPost, Comment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
@@ -402,7 +403,7 @@ class ModeratorModifyUserView(APIView):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class AdminGetAllFlaggedPosts(APIView):
+class AdminGetAllFlaggedPostsView(APIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request):
@@ -411,10 +412,19 @@ class AdminGetAllFlaggedPosts(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class AdminGetAllFlaggedComments(APIView):
+class AdminGetAllFlaggedCommentsView(APIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request):
         queryset = Comment.objects.filter(flagged=True)
         serializer = CommentSerializer(queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class AdminGetAllFlaggedUsersView(APIView):
+    permission_classes = (IsAdmin,)
+
+    def get(self, request):
+        queryset = CustomUser.objects.filter(flagged=True)
+        serializer = CustomUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

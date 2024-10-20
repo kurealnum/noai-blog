@@ -684,3 +684,56 @@ class AdminGetAllFlaggedCommentsViewTestCase(CustomTestCase):
 
         self.assertEqual(expected_length, len(request.data))
         self.assertEqual(expected_content, request.data[0]["content"])
+
+
+class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+
+        # flagged users
+        self.user_one = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="userone",
+            flagged=True,
+        )
+        self.user_two = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="usertwo",
+            flagged=True,
+        )
+        self.user_three = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="flaggeduser3.",
+            username="userthree",
+            flagged=True,
+        )
+
+        self.admin = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_admin=True,
+        )
+        self.admin.set_password("TerriblePassword123")
+        self.admin.save()
+
+    def test_does_get_work_properly(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+        request = temp_client.get(reverse_lazy("get_flagged_users"))
+
+        expected_length = 3
+        expected_content = "flaggeduser3."
+
+        self.assertEqual(expected_length, len(request.data))
+        self.assertEqual(expected_content, request.data[-1]["about_me"])
