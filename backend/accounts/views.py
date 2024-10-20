@@ -53,7 +53,14 @@ class CheckAuthenticatedView(APIView):
             isAuthenticated = user.is_authenticated
 
             if isAuthenticated:
-                res = Response({"isAuthenticated": "success"}, status=200)
+                res = Response(
+                    {
+                        "isAuthenticated": "success",
+                        "is_mod": user.is_mod,
+                        "is_admin": user.is_admin,
+                    },
+                    status=200,
+                )
                 res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
                 return res
             else:

@@ -1,7 +1,6 @@
 /* v8 ignore start */
 import { createBrowserRouter } from "react-router-dom";
 import Login from "../containers/Login";
-import AuthenticatedRoute from "./AuthenticatedRoutes";
 import Dashboard from "../containers/Dashboard";
 import Logout from "../containers/Logout";
 import Feed from "../containers/Feed";
@@ -14,7 +13,6 @@ import NavBar from "../containers/NavBar";
 import Settings from "../containers/Settings";
 import Homepage from "../containers/Homepage";
 import BlogPost from "../containers/BlogPost";
-import PublicRoute from "./PublicRoutes";
 import Page from "./Page";
 import RootBoundary from "../containers/RootBoundary";
 import CreatePost from "../containers/CreatePost";
@@ -29,7 +27,7 @@ const router = createBrowserRouter([
   {
     path: "",
     element: (
-      <Page title="Home">
+      <Page title="Home" type={"public"}>
         <Home />
       </Page>
     ),
@@ -44,26 +42,26 @@ const router = createBrowserRouter([
       { path: "/edit-post/:slug", element: <EditPost /> },
       {
         path: "faq",
-        element: <Faq />,
+        element: (
+          <Page type={"public"}>
+            <Faq />
+          </Page>
+        ),
       },
       {
         path: "followers",
         element: (
-          <AuthenticatedRoute>
-            <Page title="Followers">
-              <Followers />
-            </Page>
-          </AuthenticatedRoute>
+          <Page title="Followers" type={"private"}>
+            <Followers />
+          </Page>
         ),
       },
       {
         path: "following",
         element: (
-          <AuthenticatedRoute>
-            <Page title="Followers">
-              <Following />
-            </Page>
-          </AuthenticatedRoute>
+          <Page title="Followers" type={"private"}>
+            <Following />
+          </Page>
         ),
       },
       {
@@ -73,15 +71,15 @@ const router = createBrowserRouter([
       {
         path: "notifications",
         element: (
-          <AuthenticatedRoute>
+          <Page title={"Notifications"} type={"private"}>
             <Notifications />{" "}
-          </AuthenticatedRoute>
+          </Page>
         ),
       },
       {
         path: "homepage/:username",
         element: (
-          <Page title="Homepage">
+          <Page title="Homepage" type={"public"}>
             <Homepage />
           </Page>
         ),
@@ -89,18 +87,15 @@ const router = createBrowserRouter([
       {
         path: "create-post",
         element: (
-          <AuthenticatedRoute>
-            {" "}
-            <Page title="Create post">
-              <CreatePost />
-            </Page>
-          </AuthenticatedRoute>
+          <Page title="Create post" type={"private"}>
+            <CreatePost />
+          </Page>
         ),
       },
       {
         path: "feed",
         element: (
-          <Page title="Feed">
+          <Page type="private" title="Feed">
             <Feed />
           </Page>
         ),
@@ -108,17 +103,15 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: (
-          <Page title="Register">
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
+          <Page title="Register" type={"public"}>
+            <Register />
           </Page>
         ),
       },
       {
         path: "about-us",
         element: (
-          <Page title="About Us">
+          <Page title="About Us" type={"public"}>
             <AboutUs />
           </Page>
         ),
@@ -126,17 +119,15 @@ const router = createBrowserRouter([
       {
         path: "settings",
         element: (
-          <Page title="Settings">
-            <AuthenticatedRoute>
-              <Settings />
-            </AuthenticatedRoute>
+          <Page title="Settings" type={"private"}>
+            <Settings />
           </Page>
         ),
       },
       {
         path: "guidelines",
         element: (
-          <Page title="Guidelines">
+          <Page title="Guidelines" type={"public"}>
             <Guidelines />
           </Page>
         ),
@@ -144,37 +135,31 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: (
-          <Page title="Login">
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
+          <Page title="Login" type="public">
+            <Login />
           </Page>
         ),
       },
       {
         path: "dashboard",
         element: (
-          <Page title="Dashboard">
-            <AuthenticatedRoute>
-              <Dashboard />
-            </AuthenticatedRoute>
+          <Page title="Dashboard" type={"private"}>
+            <Dashboard />
           </Page>
         ),
       },
       {
         path: "logout",
         element: (
-          <Page title="Logout">
-            <AuthenticatedRoute>
-              <Logout />
-            </AuthenticatedRoute>
+          <Page title="Logout" type={"private"}>
+            <Logout />
           </Page>
         ),
       },
       {
         path: "post/:username/:slug",
         element: (
-          <Page>
+          <Page type={"public"} title={"Blog Post"}>
             <BlogPost />
           </Page>
         ),
