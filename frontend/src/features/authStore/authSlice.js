@@ -5,6 +5,9 @@ export const authSlice = createSlice({
   name: "auth",
   initialState: {
     isAuthenticated: false,
+    isMod: false,
+    isAdmin: false,
+    isSuperuser: false,
   },
   reducers: {
     checkAuthenticated: authReducer,

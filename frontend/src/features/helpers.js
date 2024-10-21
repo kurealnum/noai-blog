@@ -1,3 +1,5 @@
+import store from "./authStore/store";
+
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -546,7 +548,25 @@ async function toggleFlagComment(id) {}
 
 async function toggleFlagUser(username) {}
 
+function isMod() {
+  const currentStore = store.getState().auth;
+  return currentStore.isMod || currentStore.isAdmin || currentStore.isSuperuser;
+}
+
+function isAdmin() {
+  const currentStore = store.getState().auth;
+  return currentStore.isAdmin || currentStore.isSuperuser;
+}
+
+function isSuperuser() {
+  const currentStore = store.getState().auth;
+  return currentStore.isSuperuser;
+}
+
 export {
+  isMod,
+  isAdmin,
+  isSuperuser,
   toggleFlagPost,
   toggleFlagComment,
   toggleFlagUser,

@@ -55,16 +55,25 @@ class CheckAuthenticatedView(APIView):
             if isAuthenticated:
                 res = Response(
                     {
-                        "isAuthenticated": "success",
+                        "is_authenticated": True,
                         "is_mod": user.is_mod,
                         "is_admin": user.is_admin,
+                        "is_superuser": user.is_superuser,
                     },
                     status=200,
                 )
                 res.set_cookie("user_id", user.id, samesite="Strict")  # type: ignore
                 return res
             else:
-                return Response({"isAuthenticated": "error"}, status=403)
+                return Response(
+                    {
+                        "is_authenticated": False,
+                        "is_mod": False,
+                        "is_admin": False,
+                        "is_superuser": False,
+                    },
+                    status=403,
+                )
         except Exception:
             return Response(
                 {"error": "Something went wrong when checking authentication status"},

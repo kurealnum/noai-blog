@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import {
+  isMod,
   toggleFlagComment,
   toggleFlagPost,
   toggleFlagUser,
@@ -10,6 +11,10 @@ import {
 // content is used for the url (i.e, username and slug, or just slug, or id, etc)
 function FlagButton({ type, isFlaggedParam, content }) {
   const [isFlagged, setIsFlagged] = useState(isFlaggedParam);
+
+  if (!isMod()) {
+    return null;
+  }
 
   function setIsFlaggedHelper() {
     if (type === "post") {

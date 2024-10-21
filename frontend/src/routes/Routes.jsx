@@ -95,7 +95,7 @@ const router = createBrowserRouter([
       {
         path: "feed",
         element: (
-          <Page type="private" title="Feed">
+          <Page type="public" title="Feed">
             <Feed />
           </Page>
         ),
