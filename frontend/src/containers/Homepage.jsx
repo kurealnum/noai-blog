@@ -15,6 +15,7 @@ import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { Alert, Snackbar } from "@mui/material";
 import { CheckCircle } from "@mui/icons-material";
 import Profile from "../components/Profile";
+import FlagButton from "../components/FlagButton";
 
 function Homepage() {
   const { username } = useParams();
@@ -23,7 +24,6 @@ function Homepage() {
   const [blogPosts, setBlogPosts] = useState([]);
   const [links, setLinks] = useState([]);
   const [doesUserExist, setDoesUserExist] = useState(false);
-  const [doesExist, setDoesExist] = useState();
   const [isFollowing, setIsFollowing] = useState(false);
 
   // for rendering snackbar
@@ -51,13 +51,6 @@ function Homepage() {
       setUserInfo(res);
       if (res != null) {
         setDoesUserExist(true);
-        doesPathExist(res["profile_picture"]).then((result) => {
-          if (result) {
-            setDoesExist(true);
-          } else {
-            setDoesExist(false);
-          }
-        });
       }
     });
     getBlogPosts(username).then((res) => {
@@ -110,6 +103,11 @@ function Homepage() {
   if (doesUserExist) {
     return (
       <div id="homepage">
+        <FlagButton
+          type={"user"}
+          isFlaggedParam={userInfo["flagged"]}
+          content={userInfo}
+        />
         <div className="user-box">
           <Profile content={{ user: userInfo }} />
           <button

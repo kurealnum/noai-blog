@@ -17,6 +17,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
             "technical_info",
             "profile_picture",
             "approved_ai_usage",
+            "flagged",
         )
 
 

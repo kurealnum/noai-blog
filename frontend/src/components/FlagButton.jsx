@@ -32,7 +32,7 @@ function FlagButton({ type, isFlaggedParam, content }) {
       });
     }
     if (type === "user") {
-      toggleFlagUser(content["user"]).then((res) => {
+      toggleFlagUser(content["username"]).then((res) => {
         if (res) {
           setIsFlagged(!isFlagged);
         }

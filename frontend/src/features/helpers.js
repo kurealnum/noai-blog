@@ -544,9 +544,37 @@ async function toggleFlagPost(username, slug) {
   return response.ok;
 }
 
-async function toggleFlagComment(id) {}
+async function toggleFlagComment(id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PATCH",
+  };
+  const response = await fetch(
+    "/api/blog-posts/toggle-flagged-comment/" + id + "/",
+    config,
+  );
+  return response.ok;
+}
 
-async function toggleFlagUser(username) {}
+async function toggleFlagUser(username) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PATCH",
+  };
+  const response = await fetch(
+    "/api/blog-posts/toggle-flagged-user/" + username + "/",
+    config,
+  );
+  return response.ok;
+}
 
 function isMod() {
   const currentStore = store.getState().auth;

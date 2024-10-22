@@ -10,6 +10,7 @@ import { Link, useParams, useRouteLoaderData } from "react-router-dom";
 import { Dialog } from "@mui/material";
 import { Reply } from "@mui/icons-material";
 import store from "../features/authStore/store";
+import FlagButton from "./FlagButton";
 
 // isNotification will cause the comment to link to the post itself, not the user
 function Comment({ content, isReply, isNotification, refetch }) {
@@ -106,6 +107,11 @@ function Comment({ content, isReply, isNotification, refetch }) {
               </p>
             ) : null}
           </div>
+          <FlagButton
+            type={"comment"}
+            isFlaggedParam={content["flagged"]}
+            content={content}
+          />
         </div>
         {editInputOpen ? (
           <form onSubmit={(e) => editHelper(e)} className="edit-comment-form">
