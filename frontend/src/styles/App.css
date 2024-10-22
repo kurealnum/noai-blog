@@ -166,6 +166,11 @@ body {
   font-size: var(--subtext-font-size);
 }
 
+button {
+  border: none;
+  background: none;
+}
+
 .custom-form #save {
   width: 200px;
   margin: 20px auto;

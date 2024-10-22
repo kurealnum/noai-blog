@@ -2,6 +2,7 @@ import {
   render,
   waitForElementToBeRemoved,
   screen,
+  waitFor,
 } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { beforeEach, describe, expect, it } from "vitest";
@@ -11,9 +12,34 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { getUserInfo } from "../../src/features/helpers";
 import userEvent from "@testing-library/user-event";
 import NavBar from "../../src/containers/NavBar";
+import server from "../setup";
+import { HttpResponse, http } from "msw";
+import { MemoryRouter as Router, Routes, Route } from "react-router-dom";
 
 describe("Blog Post", () => {
   beforeEach(async () => {
+    server.use(
+      http.get(
+        "/api/blog-posts/get-comments/oscar/why-django-is-so-amazing/",
+        () => {
+          return HttpResponse.json([
+            {
+              user: {
+                username: "oscar",
+                profile_picture: "/media/profile_pictures/IMG_1801.jpg",
+                approved_ai_usage: true,
+              },
+              reply_to: null,
+              content: "edited!!!",
+              created_date: "2024-10-17T17:35:23.318694Z",
+              updated_date: "2024-10-22T01:09:34.453660Z",
+              id: 16,
+              flagged: false,
+            },
+          ]);
+        },
+      ),
+    );
     const queryClient = new QueryClient();
     const routes = [
       {
@@ -40,9 +66,8 @@ describe("Blog Post", () => {
     await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
   });
   it("renders correctly", async () => {
-    //expect(screen.getByText("Comments")).toBeVisible();
-    //expect(screen.getByText("By oscar")).toBeVisible();
-    //expect(screen.getByText("This is my comment")).toBeVisible();
+    expect(screen.getByText("Comments")).toBeVisible();
+    expect(screen.getByText("edited!!!")).toBeVisible();
   });
   it("deletes comment properly", async () => {
     //const commentContent = screen.getByTestId("comment2");
@@ -52,65 +77,43 @@ describe("Blog Post", () => {
     //expect(screen.getByRole("dialog")).toBeVisible();
   });
   it("reacts and unreacts properly", async () => {
-    //i'd like to come back and test this at some point, but it just isnt worth my time atm
-    //weird rendering pattern because we need to change what the server returns mid test
-    //const queryClient = new QueryClient({
-    //  defaultOptions: {
-    //    queries: {
-    //      retry: false,
-    //    },
-    //  },
-    //});
-    //const toRender = (
-    //  <QueryClientProvider client={queryClient}>
-    //    <Router initialEntries={["/post/oscar/why-django-is-so-amazing"]}>
-    //      <Routes>
-    //        <Route path="/post/:username/:slug" element={<BlogPost />} />
-    //      </Routes>
-    //    </Router>
-    //  </QueryClientProvider>
-    //);
-    //server.use(
-    //  http.get(
-    //    "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
-    //    () => {
-    //      return HttpResponse.json(false, { status: 404 });
-    //    },
-    //  ),
-    //);
-    //const { rerender } = render(toRender);
-    //await waitForElementToBeRemoved(() => screen.getByRole("progressbar"));
-    //expect(screen.getByTestId("FavoriteBorderIcon")).toBeVisible();
-    //const reactionButton = screen.getByTestId("reaction-button");
-    //await userEvent.click(reactionButton);
-    //
-    //server.use(
-    //  http.get(
-    //    "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
-    //    () => {
-    //      return HttpResponse.json(true, { status: 200 });
-    //    },
-    //  ),
-    //);
-    //server.use(
-    //  http.get("/api/blog-posts/get-post/why-django-is-so-amazing/", () => {
-    //    return HttpResponse.json({
-    //      user: {
-    //        username: "oscar",
-    //        profile_picture: "/media/profile_pictures/pfp.png",
-    //      },
-    //      title: "Why Django is so amazing!",
-    //      content: "Hello world! This is my blog post.",
-    //      created_date: "2024-09-09T18:35:07.417021Z",
-    //      updated_date: "2024-09-17T16:52:43.289900Z",
-    //      likes: 1,
-    //    });
-    //  }),
-    //);
-    //
-    //rerender(toRender);
-    //
-    //await waitForElementToBeRemoved(() => screen.getByTestId("FavoriteIcon"));
-    //expect(screen.getByTestId("FavoriteIcon"));
+    server.use(
+      http.get(
+        "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+        () => {
+          return HttpResponse.json(false, { status: 404 });
+        },
+      ),
+    );
+    expect(screen.getByTestId("FavoriteIcon")).toBeVisible();
+    expect(screen.getByTestId("reaction-count")).toHaveTextContent("0");
+    const reactionButton = screen.getByTestId("reaction-button-icon");
+    await userEvent.click(reactionButton);
+
+    server.use(
+      http.get(
+        "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+        () => {
+          return HttpResponse.json(true, { status: 200 });
+        },
+      ),
+    );
+    server.use(
+      http.get("/api/blog-posts/get-post/why-django-is-so-amazing/", () => {
+        return HttpResponse.json({
+          user: {
+            username: "oscar",
+            profile_picture: "/media/profile_pictures/pfp.png",
+          },
+          title: "Why Django is so amazing!",
+          content: "Hello world! This is my blog post.",
+          created_date: "2024-09-09T18:35:07.417021Z",
+          updated_date: "2024-09-17T16:52:43.289900Z",
+          likes: 1,
+        });
+      }),
+    );
+    await waitFor(() => screen.getByTestId("reaction-count").value == 1);
+    expect(screen.getByTestId("FavoriteIcon"));
   });
 });

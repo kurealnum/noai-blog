@@ -122,7 +122,7 @@ function BlogPost() {
           </div>
           <button
             className="reaction-button"
-            data-testid="reaction-button"
+            data-testid="reaction-button-icon"
             onClick={
               doesReactionExist
                 ? () => deleteReactionHelper()

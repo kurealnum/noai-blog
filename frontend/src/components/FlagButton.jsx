@@ -7,6 +7,7 @@ import {
   toggleFlagPost,
   toggleFlagUser,
 } from "../features/helpers";
+import { Flag, OutlinedFlag } from "@mui/icons-material";
 
 // content is used for the url (i.e, username and slug, or just slug, or id, etc)
 function FlagButton({ type, isFlaggedParam, content }) {
@@ -42,7 +43,7 @@ function FlagButton({ type, isFlaggedParam, content }) {
 
   return (
     <button onClick={setIsFlaggedHelper}>
-      {isFlagged ? "Flagged" : "Not flagged"}
+      {isFlagged ? <Flag /> : <OutlinedFlag />}
     </button>
   );
 }
