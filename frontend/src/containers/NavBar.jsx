@@ -1,10 +1,11 @@
 import "../styles/NavBar.css";
 import { Link, Outlet, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { doesPathExist } from "../features/helpers";
+import { doesPathExist, isAdmin } from "../features/helpers";
 import Logo from "/public/shortlogo.svg";
 import {
   Add,
+  AdminPanelSettings,
   ExpandLess,
   ExpandMore,
   Notifications,
@@ -94,6 +95,13 @@ function NavBar() {
                 <Notifications />
               </Link>
             </li>
+            {isAdmin() ? (
+              <li className="navbar-item">
+                <Link to={"/admin-dashboard"}>
+                  <AdminPanelSettings />
+                </Link>
+              </li>
+            ) : null}
           </ul>
         </div>
         <Link to="/guidelines">

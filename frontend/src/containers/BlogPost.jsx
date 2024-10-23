@@ -1,12 +1,12 @@
-import { Link, useParams, useRouteLoaderData } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import {
   createReaction,
   getCommentsByPost,
   deleteReaction,
-  doesPathExist,
   getBlogPost,
   getReaction,
   createComment,
+  slugify,
 } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -20,13 +20,13 @@ import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
 import {
-  CheckCircle,
   Favorite,
   FormatAlignCenter,
   FormatAlignLeft,
 } from "@mui/icons-material";
 import Comments from "./Comments";
 import Profile from "../components/Profile";
+import FlagButton from "../components/FlagButton";
 
 const marked = new Marked(
   markedHighlight({
@@ -147,6 +147,14 @@ function BlogPost() {
           >
             {isLeftAligned ? <FormatAlignCenter /> : <FormatAlignLeft />}
           </button>
+          <FlagButton
+            type={"post"}
+            isFlaggedParam={data["flagged"]}
+            content={{
+              username: data["user"]["username"],
+              slug: slugify(data["title"]),
+            }}
+          />
         </div>
         <div
           className={
