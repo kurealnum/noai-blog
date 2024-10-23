@@ -95,13 +95,6 @@ function NavBar() {
                 <Notifications />
               </Link>
             </li>
-            {isAdmin() ? (
-              <li className="navbar-item">
-                <Link to={"/admin-dashboard"}>
-                  <AdminPanelSettings />
-                </Link>
-              </li>
-            ) : null}
           </ul>
         </div>
         <Link to="/guidelines">

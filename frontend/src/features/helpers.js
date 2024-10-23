@@ -660,6 +660,23 @@ async function adminDeletePost(username, slug) {
   );
   return response.ok;
 }
+
+async function adminDeleteComment(id) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "DELETE",
+    credentials: "include",
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/admin/manage-comment/" + id + "/",
+    config,
+  );
+  return response.ok;
+}
 // END OF ADMIN FUNCTIONS
 
 function isMod() {
@@ -683,6 +700,7 @@ function isAuthenticated() {
 }
 
 export {
+  adminDeleteComment,
   adminDeletePost,
   toggleListicle,
   getFlaggedPosts,

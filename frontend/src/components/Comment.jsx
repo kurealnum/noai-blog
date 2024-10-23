@@ -4,16 +4,23 @@ import {
   createComment,
   deleteComment,
   editComment,
+  isAdmin,
+  isAuthenticated,
 } from "../features/helpers";
 import { useState } from "react";
 import { Link, useParams, useRouteLoaderData } from "react-router-dom";
 import { Dialog } from "@mui/material";
 import { Reply } from "@mui/icons-material";
-import store from "../features/authStore/store";
 import FlagButton from "./FlagButton";
 
 // isNotification will cause the comment to link to the post itself, not the user
-function Comment({ content, isReply, isNotification, refetch }) {
+function Comment({
+  content,
+  isReply,
+  isNotification,
+  refetch,
+  isAdminDashboard,
+}) {
   const { slug } = useParams();
   const [isProfilePicture, setIsProfilePicture] = useState(true);
   const [editInputOpen, setEditInputOpen] = useState(false);
@@ -27,6 +34,15 @@ function Comment({ content, isReply, isNotification, refetch }) {
   function deleteDialogHelper(e) {
     const id = e.target.dataset["id"];
     deleteComment(id).then((res) => {
+      if (res) {
+        setOpen(false);
+        refetch();
+      }
+    });
+  }
+
+  function adminDeleteDialogHelper() {
+    deleteComment(content["id"]).then((res) => {
       if (res) {
         setOpen(false);
         refetch();
@@ -143,7 +159,7 @@ function Comment({ content, isReply, isNotification, refetch }) {
           </p>
         )}
         <div className="edit-buttons">
-          {store.getState().auth.isAuthenticated ? (
+          {isAuthenticated() ? (
             <button onClick={() => setEditReplyOpen(true)}>
               <Reply />
             </button>
@@ -180,6 +196,35 @@ function Comment({ content, isReply, isNotification, refetch }) {
               >
                 <Edit />
               </button>
+            </div>
+          ) : null}
+          {isAdminDashboard && isAdmin() ? (
+            <div className="flex-row-spacing">
+              <button onClick={() => setOpen(true)}>
+                <Delete />
+              </button>
+              <Dialog
+                open={open}
+                className="delete-post-confirm"
+                onClose={() => setOpen(false)}
+              >
+                <h1>
+                  This will delete SOMEONE ELSE'S POST FOREVER as well as ALL OF
+                  THE COMMENTS!!! Are you sure?
+                </h1>
+                <button
+                  onClick={() => adminDeleteDialogHelper()}
+                  className="accent-border"
+                >
+                  Yes, I am sure
+                </button>
+                <button
+                  onClick={() => setOpen(false)}
+                  className="tertiary-border"
+                >
+                  No, I'm not
+                </button>
+              </Dialog>
             </div>
           ) : null}
         </div>

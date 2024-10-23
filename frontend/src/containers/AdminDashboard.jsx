@@ -68,7 +68,12 @@ function AdminDashboard() {
         </section>
         <section id="flagged-comments">
           {flaggedQueries[1].data.map((content, index) => (
-            <Comment content={content} key={index} />
+            <Comment
+              content={content}
+              key={index}
+              isAdminDashboard={true}
+              refetch={flaggedQueries[1].refetch}
+            />
           ))}
         </section>
         <section id="flagged-users">
