@@ -643,6 +643,23 @@ async function toggleListicle(username, slug) {
   );
   return response.ok;
 }
+
+async function adminDeletePost(username, slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "DELETE",
+    credentials: "include",
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/admin/manage-post/" + username + "/" + slug + "/",
+    config,
+  );
+  return response.ok;
+}
 // END OF ADMIN FUNCTIONS
 
 function isMod() {
@@ -666,6 +683,7 @@ function isAuthenticated() {
 }
 
 export {
+  adminDeletePost,
   toggleListicle,
   getFlaggedPosts,
   getFlaggedUsers,
