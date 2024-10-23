@@ -528,6 +528,7 @@ async function getNotificationCount() {
   return await response.json();
 }
 
+// MODERATOR FUNCTIONS
 async function toggleFlagPost(username, slug) {
   const config = {
     headers: {
@@ -575,6 +576,57 @@ async function toggleFlagUser(username) {
   );
   return response.ok;
 }
+// END OF MODERATOR FUNCTIONS
+// ---
+// ADMIN FUNCTIONS
+async function getFlaggedPosts() {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/get-flagged-posts/", config);
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
+}
+
+async function getFlaggedComments() {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/get-flagged-comments/", config);
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
+}
+
+async function getFlaggedUsers() {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch("/api/blog-posts/get-flagged-users/", config);
+  if (response.ok) {
+    return await response.json();
+  }
+  return null;
+}
+// END OF ADMIN FUNCTIONS
 
 function isMod() {
   const currentStore = store.getState().auth;
@@ -591,7 +643,16 @@ function isSuperuser() {
   return currentStore.isSuperuser;
 }
 
+function isAuthenticated() {
+  const currentStore = store.getState().auth;
+  return currentStore.isAuthenticated;
+}
+
 export {
+  getFlaggedPosts,
+  getFlaggedUsers,
+  getFlaggedComments,
+  isAuthenticated,
   isMod,
   isAdmin,
   isSuperuser,

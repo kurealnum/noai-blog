@@ -22,6 +22,7 @@ import Faq from "../containers/Faq";
 import EditPost from "../containers/EditPost";
 import Followers from "../containers/Followers";
 import Following from "../containers/Following";
+import AdminDashboard from "../containers/AdminDashboard";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,14 @@ const router = createBrowserRouter([
     errorElement: <RootBoundary />,
     children: [
       { path: "/edit-post/:slug", element: <EditPost /> },
+      {
+        path: "admin-dashboard",
+        element: (
+          <Page title={"Admin Dashboard"} type={"admin"}>
+            <AdminDashboard />
+          </Page>
+        ),
+      },
       {
         path: "faq",
         element: (

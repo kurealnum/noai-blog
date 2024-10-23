@@ -13,6 +13,12 @@ import {
 import { CircularProgress } from "@mui/material";
 import store from "../features/authStore/store";
 import { Navigate } from "react-router-dom";
+import {
+  isAdmin,
+  isAuthenticated,
+  isMod,
+  isSuperuser,
+} from "../features/helpers";
 
 const blogName = "NoAI Blog - ";
 
@@ -51,10 +57,13 @@ function Page({ children, title, type }) {
 
   if (type === "public") {
     return children;
-  } else if (
-    type == "private" &&
-    store.getState().auth.isAuthenticated === true
-  ) {
+  } else if (type == "private" && isAuthenticated()) {
+    return children;
+  } else if (type == "moderator" && isMod()) {
+    return children;
+  } else if (type == "admin" && isAdmin()) {
+    return children;
+  } else if (type == "superuser" && isSuperuser()) {
     return children;
   } else {
     return <Navigate to="/login" replace={true} />;
