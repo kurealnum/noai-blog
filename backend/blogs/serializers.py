@@ -87,6 +87,7 @@ class BlogPostSerializer(serializers.Serializer):
     created_date = serializers.DateTimeField()
     updated_date = serializers.DateTimeField()
     flagged = serializers.BooleanField()
+    is_listicle = serializers.BooleanField()
 
 
 class GetFollowerSerializer(serializers.ModelSerializer):

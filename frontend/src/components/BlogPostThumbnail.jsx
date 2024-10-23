@@ -1,8 +1,18 @@
 import { Link } from "react-router-dom";
-import { slugify } from "../features/helpers";
+import { isAdmin, slugify, toggleListicle } from "../features/helpers";
 import FlagButton from "./FlagButton";
+import { useMutation } from "@tanstack/react-query";
+import { PlaylistAdd, PlaylistRemove } from "@mui/icons-material";
 
-function BlogPostThumbnail({ content }) {
+function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
+  const toggleListicleMutation = useMutation({
+    mutationFn: () =>
+      toggleListicle(content["user"]["username"], slugify(content["title"])),
+    onSuccess: (data, variables, context) => {
+      refetch();
+    },
+  });
+
   return (
     <li className="blog-post">
       <FlagButton
@@ -33,6 +43,11 @@ function BlogPostThumbnail({ content }) {
           ? content["content"].slice(0, 101) + "..."
           : content["content"]}
       </p>
+      {isAdminDashboard && isAdmin() ? (
+        <button onClick={() => toggleListicleMutation.mutate()}>
+          {content["is_listicle"] ? <PlaylistRemove /> : <PlaylistAdd />}
+        </button>
+      ) : null}
     </li>
   );
 }

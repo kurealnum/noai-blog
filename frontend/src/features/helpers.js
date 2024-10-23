@@ -626,6 +626,23 @@ async function getFlaggedUsers() {
   }
   return null;
 }
+
+async function toggleListicle(username, slug) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    credentials: "include",
+    method: "PATCH",
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/toggle-listicle/" + username + "/" + slug + "/",
+    config,
+  );
+  return response.ok;
+}
 // END OF ADMIN FUNCTIONS
 
 function isMod() {
@@ -649,6 +666,7 @@ function isAuthenticated() {
 }
 
 export {
+  toggleListicle,
   getFlaggedPosts,
   getFlaggedUsers,
   getFlaggedComments,

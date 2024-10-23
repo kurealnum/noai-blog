@@ -58,7 +58,12 @@ function AdminDashboard() {
       <div className="flex-row-spacing">
         <section id="flagged-posts">
           {flaggedQueries[0].data.map((content, index) => (
-            <BlogPostThumbnail content={content} key={index} />
+            <BlogPostThumbnail
+              content={content}
+              key={index}
+              isAdminDashboard={true}
+              refetch={flaggedQueries[0].refetch}
+            />
           ))}
         </section>
         <section id="flagged-comments">
