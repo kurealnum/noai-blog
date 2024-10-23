@@ -64,16 +64,14 @@ class LoginUserTestCase(CustomTestCase):
 class CheckAuthenticatedTestCase(CustomTestCase):
     def test_does_unauthenticated_user_fail(self):
         request = self.client.get(reverse_lazy("is_authenticated"))
-        expected_result = "error"
-        self.assertEqual(expected_result, request.data["isAuthenticated"])  # type: ignore (for request.data)
+        self.assertFalse(request.data["is_authenticated"])  # type: ignore (for request.data)
 
     def test_does_authenticated_user_pass(self):
         # making a temp client because we have to authenticate
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.get(reverse_lazy("is_authenticated"))
-        expected_result = "success"
-        self.assertEqual(expected_result, request.data["isAuthenticated"])  # type: ignore (for request.data)
+        self.assertTrue(request.data["is_authenticated"])  # type: ignore (for request.data)
 
 
 class LogoutUserTestCase(CustomTestCase):
@@ -101,6 +99,7 @@ class UserInfoTestCase(CustomTestCase):
             "last_name": "Joe",
             "about_me": "I am Bobby Joe, destroyer of worlds.",
             "technical_info": "",
+            "flagged": False,
         }
 
         # remove date joined and profile picture for testing purposes
@@ -135,6 +134,7 @@ class UserInfoTestCase(CustomTestCase):
             "about_me": "I am Bobby Joe, destroyer of worlds.",
             "technical_info": "",
             "approved_ai_usage": False,
+            "flagged": False,
         }
 
         # remove date joined and profile picture for testing purposes

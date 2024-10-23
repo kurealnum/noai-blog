@@ -26,6 +26,16 @@ class CustomTestCase(TestCase):
             content="Here's something about my blog post",
         )
         self.blog_post.save()
+        self.admin = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Beth",
+            last_name="Lasty",
+            about_me="I am Beth, destroyer of worlds.",
+            username="bethy",
+            is_admin=True,
+        )
+        self.admin.set_password("TerriblePassword123")
+        self.admin.save()
 
 
 class BlogTestCase(CustomTestCase):
@@ -507,7 +517,7 @@ class ModeratorModifyPostViewTestCase(CustomTestCase):
             first_name="Beth",
             last_name="Lasty",
             about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
+            username="moderator",
             is_mod=True,
         )
         self.moderator.set_password("TerriblePassword123")
@@ -515,7 +525,7 @@ class ModeratorModifyPostViewTestCase(CustomTestCase):
 
     def test_does_patch_work(self):
         temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bethy")
+        temp_client.login(password="TerriblePassword123", username="moderator")
         request = temp_client.patch(
             reverse_lazy(
                 "toggle_flagged_post",
@@ -539,7 +549,7 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
             first_name="Beth",
             last_name="Lasty",
             about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
+            username="moderator",
             is_mod=True,
         )
         self.moderator.set_password("TerriblePassword123")
@@ -550,7 +560,7 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
             user=self.user, post=self.blog_post, content="A really good comment"
         )
         temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bethy")
+        temp_client.login(password="TerriblePassword123", username="moderator")
         request = temp_client.patch(
             reverse_lazy("toggle_flagged_comment", kwargs={"id": comment.pk}),
         )
@@ -569,7 +579,7 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
             first_name="Beth",
             last_name="Lasty",
             about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
+            username="moderator",
             is_mod=True,
         )
         self.moderator.set_password("TerriblePassword123")
@@ -585,7 +595,7 @@ class ModeratorModifyUserViewTestCase(CustomTestCase):
         )
 
         temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bethy")
+        temp_client.login(password="TerriblePassword123", username="moderator")
         request = temp_client.patch(
             reverse_lazy("toggle_flagged_user", kwargs={"username": user.username})
         )
@@ -620,17 +630,6 @@ class AdminGetAllFlaggedPostsTestCase(CustomTestCase):
             flagged=True,
         )
 
-        self.admin = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Beth",
-            last_name="Lasty",
-            about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
-            is_admin=True,
-        )
-        self.admin.set_password("TerriblePassword123")
-        self.admin.save()
-
     def test_does_get_return_properly(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bethy")
@@ -662,17 +661,6 @@ class AdminGetAllFlaggedCommentsViewTestCase(CustomTestCase):
             content="A flagged comment",
             flagged=True,
         )
-
-        self.admin = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Beth",
-            last_name="Lasty",
-            about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
-            is_admin=True,
-        )
-        self.admin.set_password("TerriblePassword123")
-        self.admin.save()
 
     def test_does_get_work_properly(self):
         temp_client = APIClient()
@@ -716,17 +704,6 @@ class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
             flagged=True,
         )
 
-        self.admin = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Beth",
-            last_name="Lasty",
-            about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
-            is_admin=True,
-        )
-        self.admin.set_password("TerriblePassword123")
-        self.admin.save()
-
     def test_does_get_work_properly(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bethy")
@@ -740,19 +717,6 @@ class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
 
 
 class AdminManageListicleViewTestCase(CustomTestCase):
-    def setUp(self):
-        super().setUp()
-        self.admin = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Beth",
-            last_name="Lasty",
-            about_me="I am Beth, destroyer of worlds.",
-            username="bethy",
-            is_admin=True,
-        )
-        self.admin.set_password("TerriblePassword123")
-        self.admin.save()
-
     def test_does_patch_work(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bethy")
@@ -772,3 +736,85 @@ class AdminManageListicleViewTestCase(CustomTestCase):
 
         self.assertEqual(expected_status, request.status_code)
         self.assertTrue(self.blog_post.is_listicle)
+
+
+class AdminManagePostViewTestCase(CustomTestCase):
+    def test_delete_post(self):
+        post = BlogPost.objects.create(
+            user=self.user,
+            title="i will be deleted",
+            content="Here's something about my blog post",
+        )
+
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+
+        request = temp_client.delete(
+            reverse_lazy(
+                "admin_manage_post",
+                kwargs={
+                    "username": self.user.username,
+                    "slug": post.slug_field,
+                },
+            )
+        )
+
+        expected_status = 204
+        self.assertEqual(expected_status, request.status_code)
+
+        with self.assertRaises(BlogPost.DoesNotExist):
+            BlogPost.objects.get(
+                user__username=self.user.username, slug_field=post.slug_field
+            )
+
+
+class AdminManageCommentViewTestCase(CustomTestCase):
+    # this should NOT actually delete the comment. see the delete method in the model
+    def test_delete_comment(self):
+        comment = Comment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+
+        request = temp_client.delete(
+            reverse_lazy(
+                "admin_manage_comment",
+                kwargs={"id": comment.pk},
+            )
+        )
+
+        expected_status = 204
+        self.assertEqual(expected_status, request.status_code)
+
+        comment.refresh_from_db()
+        expected_content = "This comment was deleted"
+        self.assertEqual(expected_content, comment.content)
+
+
+class AdminManageUserViewTestCase(CustomTestCase):
+    def test_delete_user(self):
+        user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+            username="todelete",
+        )
+
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bethy")
+
+        request = temp_client.delete(
+            reverse_lazy(
+                "admin_manage_user",
+                kwargs={"username": user.username},
+            )
+        )
+
+        expected_status = 204
+        self.assertEqual(expected_status, request.status_code)
+
+        with self.assertRaises(CustomUser.DoesNotExist):
+            CustomUser.objects.get(username=user.username)

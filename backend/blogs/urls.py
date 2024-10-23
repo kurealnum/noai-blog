@@ -4,7 +4,10 @@ from blogs.views import (
     AdminGetAllFlaggedCommentsView,
     AdminGetAllFlaggedPostsView,
     AdminGetAllFlaggedUsersView,
+    AdminManageCommentView,
     AdminManageListicleView,
+    AdminManagePostView,
+    AdminManagerUserView,
     BlogPostListView,
     BlogPostView,
     CommentReplyListView,
@@ -108,5 +111,23 @@ urlpatterns = [
         "toggle-listicle/<username>/<slug>/",
         AdminManageListicleView.as_view(),
         name="toggle_listicle",
+    ),
+    # AdminManagePostView
+    path(
+        "admin/manage-post/<username>/<slug>/",
+        AdminManagePostView.as_view(),
+        name="admin_manage_post",
+    ),
+    # AdminManageCommentView
+    path(
+        "admin/manage-comment/<id>/",
+        AdminManageCommentView.as_view(),
+        name="admin_manage_comment",
+    ),
+    # AdminManageUserView
+    path(
+        "admin/manage-user/<username>/",
+        AdminManagerUserView.as_view(),
+        name="admin_manage_user",
     ),
 ]

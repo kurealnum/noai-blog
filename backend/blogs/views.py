@@ -439,3 +439,32 @@ class AdminManageListicleView(APIView):
         )
         blog_post.toggle_listicle()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AdminManagePostView(APIView):
+    permission_classes = (IsAdmin,)
+
+    def delete(self, request, username, slug):
+        blog_post = generics.get_object_or_404(
+            BlogPost, user__username=username, slug_field=slug
+        )
+        blog_post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AdminManageCommentView(APIView):
+    permission_classes = (IsAdmin,)
+
+    def delete(self, request, id):
+        comment = generics.get_object_or_404(Comment, pk=id)
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class AdminManagerUserView(APIView):
+    permission_classes = (IsAdmin,)
+
+    def delete(self, request, username):
+        user = generics.get_object_or_404(CustomUser, username=username)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
