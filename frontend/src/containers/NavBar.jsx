@@ -8,6 +8,7 @@ import {
   ExpandLess,
   ExpandMore,
   Notifications,
+  NotificationsActive,
 } from "@mui/icons-material";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Fade, Popper } from "@mui/material";
@@ -16,6 +17,9 @@ function NavBar() {
   const userData = useLoaderData();
   const [exists, setExists] = useState(false);
   const [open, setOpen] = useState(false);
+  const [isNewNotification, setIsNewNotification] = useState(
+    userData["notifications"] > 0,
+  );
 
   const [anchorEl, setAnchorEl] = useState(null);
   const handleClick = (event) => {
@@ -90,8 +94,15 @@ function NavBar() {
               </Link>
             </li>
             <li className="navbar-item">
-              <Link to={"/notifications"}>
-                <Notifications />
+              <Link
+                to={"/notifications"}
+                onClick={() => setIsNewNotification(false)}
+              >
+                {isNewNotification ? (
+                  <NotificationsActive />
+                ) : (
+                  <Notifications />
+                )}
               </Link>
             </li>
           </ul>

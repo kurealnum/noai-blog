@@ -26,6 +26,11 @@ input {
   color: var(--light-text);
 }
 
+.unread-notification {
+  border: var(--light-text) 2px solid !important;
+}
+
+[data-testid="NotificationsActiveIcon"],
 [data-testid="DeleteIcon"] {
   color: var(--accent) !important;
 }

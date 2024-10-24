@@ -76,7 +76,12 @@ function Comment({
 
   const mainComment = (
     <>
-      <li className={isReply ? "comment comment-reply" : "comment"}>
+      <li
+        className={
+          (isReply ? "comment comment-reply" : "comment") +
+          (content["is_read"] ? " " : " unread-notification")
+        }
+      >
         <div className="top-bar">
           {isNotification ? (
             <div className="comment-username-box">

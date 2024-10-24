@@ -12,7 +12,7 @@ nav {
 nav .nav-username-box {
   background: var(--page-background);
   border-radius: 10px;
-  border: 2px solid var(--accent);
+  border: 1px solid var(--light-border-color);
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -64,4 +64,5 @@ nav #pfp {
   border-radius: 50%;
   height: 35px;
   width: 35px;
+  margin-right: 8px;
 }

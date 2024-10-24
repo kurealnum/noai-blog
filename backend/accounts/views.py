@@ -111,7 +111,7 @@ class UserInfoView(APIView):
 
             # this only gets comments, nothing else
             notifications_count = Comment.objects.filter(
-                user=user, is_read=False
+                Q(post__user=user) | Q(reply_to__user=user), is_read=False
             ).count()
             serializer = CustomUserSerializer(res)
             return Response(
@@ -240,15 +240,20 @@ class NotificationView(APIView):
             Comment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
             .select_related("user", "post", "post__user")
             .order_by("-created_date")
+            .exclude(user__username=self.request.user.username)  # type: ignore
         )
+
+        # limit notifications to 100 (for now at least)
+        to_update_comments = unread_comments
+        unread_comments = unread_comments[:100]
 
         serializer = NotificationCommentSerializer(instance=unread_comments, many=True)
 
         # not sure why I have to update comments after I declare response, but I do
         response = Response(data=serializer.data, status=status.HTTP_200_OK)
 
-        unread_comments.update(is_read=True)
-        for comment in unread_comments:
+        to_update_comments.update(is_read=True)
+        for comment in to_update_comments:
             comment.save()
 
         return response
