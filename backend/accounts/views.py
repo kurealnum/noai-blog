@@ -96,6 +96,7 @@ class UserInfoView(APIView):
     permission_classes = (AllowAny,)
 
     def get(self, request, username=None):
+        # notifications are NOT included in this output -- there's no reason for them to be
         if username:
             try:
                 res = CustomUser.objects.get(username=username)
@@ -107,8 +108,16 @@ class UserInfoView(APIView):
         else:
             user = self.request.user.id  # type: ignore
             res = generics.get_object_or_404(CustomUser, id=user)
+
+            # this only gets comments, nothing else
+            notifications_count = Comment.objects.filter(
+                user=user, is_read=False
+            ).count()
             serializer = CustomUserSerializer(res)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+            return Response(
+                data={**serializer.data, "notifications": notifications_count},
+                status=status.HTTP_200_OK,
+            )
 
 
 class ChangeProfilePictureView(APIView):

@@ -25,9 +25,6 @@ class CustomTestCase(TestCase):
         self.factory = APIRequestFactory()
 
 
-# Models
-
-
 class CustomUserTestCase(CustomTestCase):
     def test_can_make_blog_post(self):
         BlogPost.objects.create(
@@ -84,13 +81,10 @@ class LogoutUserTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.data["success"])
 
 
-class UserInfoTestCase(CustomTestCase):
+class UserInfoViewTestCase(CustomTestCase):
 
     def test_does_request_return_correct_output(self):
-        # request = self.factory.get("/accounts/user-info/")
-        # force_authenticate(request)
-        # result = UserInfoView.as_view()(request, username="bobby")  # type: ignore
-        result = self.client.get(reverse_lazy("user_info") + "bobby/")
+        result = self.client.get(reverse_lazy("user_info_by_username", args=["bobby"]))
         expected_result = {
             "approved_ai_usage": False,
             "username": "bobby",
@@ -114,7 +108,9 @@ class UserInfoTestCase(CustomTestCase):
         # temp client for logging in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        request = temp_client.get(reverse_lazy("user_info") + "thewrongusername/")
+        request = temp_client.get(
+            reverse_lazy("user_info_by_username", args=["thewrongusername"])
+        )
         expected_result = "Not found."
         result = request.data
 
@@ -135,6 +131,38 @@ class UserInfoTestCase(CustomTestCase):
             "technical_info": "",
             "approved_ai_usage": False,
             "flagged": False,
+            "notifications": 0,
+        }
+
+        # remove date joined and profile picture for testing purposes
+        result.data.pop("date_joined")
+        result.data.pop("profile_picture")
+
+        self.assertEqual(expected_result, result.data)
+
+    def test_do_notifications_count(self):
+        blog_post = BlogPost.objects.create(
+            user=self.user,
+            title="My awesome blog post",
+            content="Here's something about my blog post",
+        )
+        blog_post.save()
+        comment = Comment.objects.create(
+            user=self.user, post=blog_post, content="Hello world", is_read=False
+        )
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        result = temp_client.get(reverse_lazy("user_info"))
+        expected_result = {
+            "username": "bobby",
+            "email": "bobbyjoe@gmail.com",
+            "first_name": "Bobby",
+            "last_name": "Joe",
+            "about_me": "I am Bobby Joe, destroyer of worlds.",
+            "technical_info": "",
+            "approved_ai_usage": False,
+            "flagged": False,
+            "notifications": 1,
         }
 
         # remove date joined and profile picture for testing purposes

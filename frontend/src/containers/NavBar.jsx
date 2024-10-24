@@ -1,11 +1,10 @@
 import "../styles/NavBar.css";
 import { Link, Outlet, useLoaderData } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { doesPathExist, isAdmin } from "../features/helpers";
+import { doesPathExist } from "../features/helpers";
 import Logo from "/public/shortlogo.svg";
 import {
   Add,
-  AdminPanelSettings,
   ExpandLess,
   ExpandMore,
   Notifications,
