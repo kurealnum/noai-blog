@@ -1,9 +1,4 @@
-import {
-  render,
-  waitForElementToBeRemoved,
-  screen,
-  waitFor,
-} from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { beforeEach, describe, expect, it } from "vitest";
 import Homepage from "../../src/containers/Homepage";
@@ -12,6 +7,7 @@ import userEvent from "@testing-library/user-event";
 import { getUserInfo } from "../../src/features/helpers";
 import server from "../setup";
 import { HttpResponse, http } from "msw";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 describe("Homepage", () => {
   beforeEach(() => {
@@ -28,10 +24,15 @@ describe("Homepage", () => {
     server.use(
       http.get("/api/accounts/user-info/", () => HttpResponse.json(userInfo)),
     );
+    const queryClient = new QueryClient();
     const routes = [
       {
         path: "/homepage/:username",
-        element: <Homepage />,
+        element: (
+          <QueryClientProvider client={queryClient}>
+            <Homepage />
+          </QueryClientProvider>
+        ),
         id: "root",
         loader: () => getUserInfo(),
       },

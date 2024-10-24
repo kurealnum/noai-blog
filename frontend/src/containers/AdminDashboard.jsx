@@ -1,4 +1,4 @@
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import {
   getFlaggedComments,
   getFlaggedPosts,
@@ -33,9 +33,7 @@ function AdminDashboard() {
     })
   ) {
     <CircularProgress />;
-  }
-
-  if (
+  } else if (
     flaggedQueries.every((query) => {
       return query.isError;
     })
@@ -47,16 +45,14 @@ function AdminDashboard() {
         })}
       </div>
     );
-  }
-
-  if (
+  } else if (
     flaggedQueries.every((query) => {
       return query.isSuccess;
     })
   ) {
     return (
       <div className="flex-row-spacing">
-        <section id="flagged-posts">
+        <ul id="flagged-posts">
           {flaggedQueries[0].data.map((content, index) => (
             <BlogPostThumbnail
               content={content}
@@ -65,8 +61,8 @@ function AdminDashboard() {
               refetch={flaggedQueries[0].refetch}
             />
           ))}
-        </section>
-        <section id="flagged-comments">
+        </ul>
+        <ul id="flagged-comments">
           {flaggedQueries[1].data.map((content, index) => (
             <Comment
               content={content}
@@ -75,8 +71,8 @@ function AdminDashboard() {
               refetch={flaggedQueries[1].refetch}
             />
           ))}
-        </section>
-        <section id="flagged-users">
+        </ul>
+        <ul id="flagged-users">
           {flaggedQueries[2].data.map((content, index) => (
             <Profile
               content={{ user: content }}
@@ -85,7 +81,7 @@ function AdminDashboard() {
               refetch={flaggedQueries[2].refetch}
             />
           ))}
-        </section>
+        </ul>
       </div>
     );
   }

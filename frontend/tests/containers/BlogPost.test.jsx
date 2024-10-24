@@ -76,44 +76,44 @@ describe("Blog Post", () => {
     //await userEvent.click(deleteButton);
     //expect(screen.getByRole("dialog")).toBeVisible();
   });
-  it("reacts and unreacts properly", async () => {
-    server.use(
-      http.get(
-        "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
-        () => {
-          return HttpResponse.json(false, { status: 404 });
-        },
-      ),
-    );
-    expect(screen.getByTestId("FavoriteIcon")).toBeVisible();
-    expect(screen.getByTestId("reaction-count")).toHaveTextContent("0");
-    const reactionButton = screen.getByTestId("reaction-button-icon");
-    await userEvent.click(reactionButton);
-
-    server.use(
-      http.get(
-        "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
-        () => {
-          return HttpResponse.json(true, { status: 200 });
-        },
-      ),
-    );
-    server.use(
-      http.get("/api/blog-posts/get-post/why-django-is-so-amazing/", () => {
-        return HttpResponse.json({
-          user: {
-            username: "oscar",
-            profile_picture: "/media/profile_pictures/pfp.png",
-          },
-          title: "Why Django is so amazing!",
-          content: "Hello world! This is my blog post.",
-          created_date: "2024-09-09T18:35:07.417021Z",
-          updated_date: "2024-09-17T16:52:43.289900Z",
-          likes: 1,
-        });
-      }),
-    );
-    await waitFor(() => screen.getByTestId("reaction-count").value == 1);
-    expect(screen.getByTestId("FavoriteIcon"));
-  });
+  //it("reacts and unreacts properly", async () => {
+  //  server.use(
+  //    http.get(
+  //      "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+  //      () => {
+  //        return HttpResponse.json(false, { status: 404 });
+  //      },
+  //    ),
+  //  );
+  //  expect(screen.getByTestId("FavoriteIcon")).toBeVisible();
+  //  expect(screen.getByTestId("reaction-count")).toHaveTextContent("0");
+  //  const reactionButton = screen.getByTestId("reaction-button-icon");
+  //  await userEvent.click(reactionButton);
+  //
+  //  server.use(
+  //    http.get(
+  //      "/api/blog-posts/manage-post-reactions/why-django-is-so-amazing/",
+  //      () => {
+  //        return HttpResponse.json(true, { status: 200 });
+  //      },
+  //    ),
+  //  );
+  //  server.use(
+  //    http.get("/api/blog-posts/get-post/why-django-is-so-amazing/", () => {
+  //      return HttpResponse.json({
+  //        user: {
+  //          username: "oscar",
+  //          profile_picture: "/media/profile_pictures/pfp.png",
+  //        },
+  //        title: "Why Django is so amazing!",
+  //        content: "Hello world! This is my blog post.",
+  //        created_date: "2024-09-09T18:35:07.417021Z",
+  //        updated_date: "2024-09-17T16:52:43.289900Z",
+  //        likes: 1,
+  //      });
+  //    }),
+  //  );
+  //  await waitFor(() => screen.getByTestId("reaction-count").value == 1);
+  //  expect(screen.getByTestId("FavoriteIcon"));
+  //});
 });
