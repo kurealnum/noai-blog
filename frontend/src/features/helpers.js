@@ -677,6 +677,23 @@ async function adminDeleteComment(id) {
   );
   return response.ok;
 }
+
+async function adminDeleteUser(username) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    method: "DELETE",
+    credentials: "include",
+  };
+
+  const response = await fetch(
+    "/api/blog-posts/admin/manage-user/" + username + "/",
+    config,
+  );
+  return response.ok;
+}
 // END OF ADMIN FUNCTIONS
 
 function isMod() {
@@ -700,6 +717,7 @@ function isAuthenticated() {
 }
 
 export {
+  adminDeleteUser,
   adminDeleteComment,
   adminDeletePost,
   toggleListicle,

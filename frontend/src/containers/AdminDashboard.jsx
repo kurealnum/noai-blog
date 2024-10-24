@@ -81,7 +81,8 @@ function AdminDashboard() {
             <Profile
               content={{ user: content }}
               key={index}
-              showFlagButton={true}
+              isAdminDashboard={true}
+              refetch={flaggedQueries[2].refetch}
             />
           ))}
         </section>

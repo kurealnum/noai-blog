@@ -159,13 +159,14 @@ function Comment({
           </p>
         )}
         <div className="edit-buttons">
-          {isAuthenticated() ? (
+          {isAuthenticated() && !isAdminDashboard ? (
             <button onClick={() => setEditReplyOpen(true)}>
               <Reply />
             </button>
           ) : null}
           {userData != undefined &&
-          userData["username"] == content["user"]["username"] ? (
+          userData["username"] == content["user"]["username"] &&
+          !isAdminDashboard ? (
             <div className="edit-buttons right-align">
               <button
                 onClick={() => setOpen(true)}
@@ -209,8 +210,8 @@ function Comment({
                 onClose={() => setOpen(false)}
               >
                 <h1>
-                  This will delete SOMEONE ELSE'S POST FOREVER as well as ALL OF
-                  THE COMMENTS!!! Are you sure?
+                  This will delete SOMEONE ELSE'S COMMENT FOREVER!!! Are you
+                  sure?
                 </h1>
                 <button
                   onClick={() => adminDeleteDialogHelper()}

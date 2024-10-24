@@ -135,7 +135,7 @@ class BlogPostListView(APIView):
 
 # This view returns replies to *comments* that a user has made
 class CommentReplyListView(generics.ListAPIView):
-    permission_classes = (AllowAny,)
+    permission_classes = (IsAuthenticated,)
     serializer_class = CommentSerializer
 
     def get_queryset(self):
@@ -416,8 +416,8 @@ class AdminGetAllFlaggedCommentsView(APIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request):
-        queryset = Comment.objects.filter(flagged=True)
-        serializer = CommentSerializer(queryset, many=True)
+        queryset = Comment.objects.filter(flagged=True).select_related("user")
+        serializer = CommentAndUserSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 

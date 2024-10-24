@@ -26,6 +26,10 @@ input {
   color: var(--light-text);
 }
 
+[data-testid="DeleteIcon"] {
+  color: var(--accent) !important;
+}
+
 .flex-row-spacing {
   display: flex;
   flex-direction: row;
