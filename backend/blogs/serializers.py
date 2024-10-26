@@ -32,10 +32,42 @@ class FeedCustomUserSerializer(serializers.ModelSerializer):
         fields = ("username",)
 
 
+class FollowerSerializer(serializers.ModelSerializer):
+    class Meta:  # type: ignore
+        model = Follower
+        fields = "__all__"
+
+
+class ReactionSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = PostReaction
+        fields = "__all__"
+
+
 class SingleBlogPostUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
         fields = ("username", "profile_picture", "approved_ai_usage")
+
+
+class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = BlogPost
+        fields = ("user", "title", "content")
+
+
+class BlogPostSerializer(serializers.Serializer):
+    user = FeedCustomUserSerializer()
+    title = serializers.CharField(max_length=100)
+    content = serializers.CharField(
+        max_length=101
+    )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
+    created_date = serializers.DateTimeField(required=False)
+    updated_date = serializers.DateTimeField(required=False)
+    flagged = serializers.BooleanField(required=False)
+    is_listicle = serializers.BooleanField(required=False)
+    likes = serializers.IntegerField(default=-1, required=False)
+    score = serializers.IntegerField(default=-1, required=False)
 
 
 class CommentAndUserSerializer(serializers.Serializer):
@@ -48,64 +80,10 @@ class CommentAndUserSerializer(serializers.Serializer):
     flagged = serializers.BooleanField()
 
 
-class FeedBlogPostSerializer(serializers.Serializer):
-    user = FeedCustomUserSerializer()
-    score = serializers.IntegerField()
-    title = serializers.CharField(max_length=100)
-    content = serializers.CharField(max_length=101)  # see blog post serializer
-    created_date = serializers.DateTimeField()
-    updated_date = serializers.DateTimeField()
-    flagged = serializers.BooleanField()
-
-
-# for get requests
-class SingleBlogPostSerializer(serializers.Serializer):
-    user = SingleBlogPostUserSerializer()
-    title = serializers.CharField(max_length=100)
-    content = serializers.CharField(
-        max_length=101
-    )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
-    created_date = serializers.DateTimeField()
-    updated_date = serializers.DateTimeField()
-    likes = serializers.IntegerField()
-    flagged = serializers.BooleanField()
-
-
-# for post, patch, etc.
-class PostSingleBlogPostSerializer(serializers.ModelSerializer):
-    class Meta:  # type:ignore
-        model = BlogPost
-        fields = ("user", "title", "content")
-
-
-class BlogPostSerializer(serializers.Serializer):
-    user = FeedCustomUserSerializer()
-    title = serializers.CharField(max_length=100)
-    content = serializers.CharField(
-        max_length=101
-    )  # length of 101 so frontend can easily check to see if it needs to add a "..." to the end
-    created_date = serializers.DateTimeField()
-    updated_date = serializers.DateTimeField()
-    flagged = serializers.BooleanField()
-    is_listicle = serializers.BooleanField()
-
-
 class GetFollowerSerializer(serializers.ModelSerializer):
     user = SingleBlogPostUserSerializer()
     follower = SingleBlogPostUserSerializer()
 
     class Meta:  # type: ignore
         model = Follower
-        fields = "__all__"
-
-
-class FollowerSerializer(serializers.ModelSerializer):
-    class Meta:  # type: ignore
-        model = Follower
-        fields = "__all__"
-
-
-class ReactionSerializer(serializers.ModelSerializer):
-    class Meta:  # type:ignore
-        model = PostReaction
         fields = "__all__"

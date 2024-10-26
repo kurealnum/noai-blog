@@ -18,6 +18,7 @@ class BlogPost(models.Model):
     slug_field = models.SlugField(null=True, unique=True)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
+    thumbnail = models.ImageField(upload_to="blog_thumbnails/", blank=True)
 
     def get_absolute_url(self):
         return reverse(

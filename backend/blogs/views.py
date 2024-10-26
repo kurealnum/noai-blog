@@ -20,12 +20,10 @@ from blogs.serializers import (
     BlogPostSerializer,
     CommentAndUserSerializer,
     CommentSerializer,
-    FeedBlogPostSerializer,
+    CreateOrUpdateBlogPostSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
-    PostSingleBlogPostSerializer,
     ReactionSerializer,
-    SingleBlogPostSerializer,
 )
 
 
@@ -53,7 +51,7 @@ class BlogPostView(APIView):
                 .annotate(likes=Count("postreaction"))
                 .get(user__username=username, slug_field=slug)
             )
-            serializer = SingleBlogPostSerializer(res)
+            serializer = BlogPostSerializer(res)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         except BlogPost.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
@@ -71,7 +69,7 @@ class BlogPostView(APIView):
             "content": content,
         }
 
-        serializer = PostSingleBlogPostSerializer(data=serializer_data)
+        serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer_data, status=status.HTTP_201_CREATED)
@@ -93,7 +91,7 @@ class BlogPostView(APIView):
         }
 
         instance = generics.get_object_or_404(BlogPost, user=user, slug_field=slug)
-        serializer = PostSingleBlogPostSerializer(
+        serializer = CreateOrUpdateBlogPostSerializer(
             data=serializer_data, instance=instance
         )
         if serializer.is_valid():
@@ -279,7 +277,7 @@ class FeedListView(APIView):
                 ),
             )
 
-        serializer = FeedBlogPostSerializer(all_posts, many=True)
+        serializer = BlogPostSerializer(all_posts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

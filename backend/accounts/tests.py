@@ -484,21 +484,21 @@ class NotificationViewTestCase(CustomTestCase):
 
         # these should be included in the get request
         Comment.objects.create(
-            user=self.user,
+            user=self.altuser,
             post=self.post,
             content="Hello world",
             is_read=True,
             reply_to=self.original_comment,
         )
         Comment.objects.create(
-            user=self.user,
+            user=self.altuser,
             post=self.post,
             content="Hello world",
             is_read=False,
             reply_to=self.original_comment,
         )
         Comment.objects.create(
-            user=self.user,
+            user=self.altuser,
             post=self.alt_post,
             content="I am the other unread comment",
             is_read=False,
@@ -519,7 +519,7 @@ class NotificationViewTestCase(CustomTestCase):
         request = temp_client.get(reverse_lazy("notifications"))
         expected_result = "Hello world"
         expected_read = False
-        expected_length = 4
+        expected_length = 3
 
         self.assertEqual(expected_result, request.data[1]["content"])
         self.assertEqual(expected_read, request.data[1]["is_read"])
