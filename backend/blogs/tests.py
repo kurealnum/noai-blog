@@ -1,8 +1,10 @@
+from io import BytesIO
 import json
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment
 
@@ -190,6 +192,7 @@ class BlogPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request["content"])
 
     def test_does_create_properly(self):
+        img = SimpleUploadedFile("test.jpg", b"file data")
         # temp client to log in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
@@ -197,6 +200,7 @@ class BlogPostViewTestCase(CustomTestCase):
             "title": "My blog post",
             "content": "Here's my awesome blog post ##",
             "likes": 0,
+            "thumbnail": img,
         }
         request = temp_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
@@ -219,11 +223,13 @@ class BlogPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_status, request.status_code)
 
     def test_does_edit_properly(self):
+        img = SimpleUploadedFile("test.jpg", b"file data")
         # create a separate object to edit
         to_edit = BlogPost.objects.create(
             user=self.user,
             title="my unique blog post",
             content="Here's something about my blog post",
+            thumbnail=img,
         )
         to_edit.save()
 
@@ -233,6 +239,7 @@ class BlogPostViewTestCase(CustomTestCase):
             "slug": to_edit.slug_field,
             "title": "An edited title",
             "content": "Some new content",
+            "thumbnail": img,
         }
         request = temp_client.put(reverse_lazy("edit_post"), data=data)
         expected_result = "An edited title"

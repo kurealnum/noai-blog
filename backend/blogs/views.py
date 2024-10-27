@@ -8,6 +8,7 @@ from django.db.models import (
 )
 from django.http.response import Http404
 from rest_framework import generics, status
+from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -38,6 +39,8 @@ class CommentListUserView(generics.ListAPIView):
 
 # this is the view for a *single* blog post
 class BlogPostView(APIView):
+    parser_classes = (MultiPartParser, FormParser)
+
     def get_permissions(self):
         permissions = super().get_permissions()
         if self.request.method.lower() != "get":  # type: ignore
@@ -63,10 +66,12 @@ class BlogPostView(APIView):
         user = self.request.user.id  # type: ignore
         title = data["title"]
         content = data["content"]
+        thumbnail = data["thumbnail"]
         serializer_data = {
             "user": user,
             "title": title,
             "content": content,
+            "thumbnail": thumbnail,
         }
 
         serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
@@ -84,10 +89,12 @@ class BlogPostView(APIView):
         title = data["title"]
         content = data["content"]
         slug = data["slug"]
+        thumbnail = data["thumbnail"]
         serializer_data = {
             "user": user,
             "title": title,
             "content": content,
+            "thumbnail": thumbnail,
         }
 
         instance = generics.get_object_or_404(BlogPost, user=user, slug_field=slug)

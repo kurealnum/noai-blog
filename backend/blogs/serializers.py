@@ -68,6 +68,7 @@ class BlogPostSerializer(serializers.Serializer):
     is_listicle = serializers.BooleanField(required=False)
     likes = serializers.IntegerField(default=-1, required=False)
     score = serializers.IntegerField(default=-1, required=False)
+    thumbnail = serializers.ImageField(default=None, required=False)
 
 
 class CommentAndUserSerializer(serializers.Serializer):
