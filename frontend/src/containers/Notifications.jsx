@@ -24,7 +24,7 @@ function Notifications() {
 
   if (isSuccess) {
     return (
-      <div className="default-page">
+      <div className="default-page" id="notifications">
         <ul className="list">
           {data.map((content, index) => (
             <Comment

@@ -115,6 +115,9 @@ function BlogPost() {
 
     return (
       <div id="blog-post">
+        <div className="blogpost-thumbnail-wrapper">
+          <img src={data["thumbnail"]} className="blogpost-thumbnail"></img>
+        </div>
         <h1>{data.title}</h1>
         <div className="info-bar">
           <div className="info-bar-box">

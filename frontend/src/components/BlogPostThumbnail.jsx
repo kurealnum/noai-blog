@@ -33,7 +33,16 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
   });
 
   return (
-    <li className="blog-post">
+    <Link
+      to={
+        "/post/" +
+        content["user"]["username"] +
+        "/" +
+        slugify(content["title"]) +
+        "/"
+      }
+      className="blog-post"
+    >
       <FlagButton
         type={"post"}
         content={{
@@ -42,26 +51,12 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
         }}
         isFlaggedParam={content["flagged"]}
       />
-      <Link
-        to={
-          "/post/" +
-          content["user"]["username"] +
-          "/" +
-          slugify(content["title"]) +
-          "/"
-        }
-      >
-        <h2>{content["title"]}</h2>
-      </Link>
+      <img src={content["thumbnail"]} className="blogpost-thumbnail"></img>
+      <h2>{content["title"]}</h2>
       <div className="info">
         <p>{"By " + content["user"]["username"]}</p>
         <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
       </div>
-      <p className="hint" data-testid="post-content">
-        {content["content"].length > 100
-          ? content["content"].slice(0, 101) + "..."
-          : content["content"]}
-      </p>
       {isAdminDashboard && isAdmin() ? (
         <div className="flex-row-spacing">
           <button onClick={() => toggleListicleMutation.mutate()}>
@@ -88,7 +83,7 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
           </Dialog>
         </div>
       ) : null}
-    </li>
+    </Link>
   );
 }
 

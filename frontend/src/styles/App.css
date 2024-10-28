@@ -26,7 +26,12 @@ input {
   color: var(--light-text);
 }
 
-.unread-notification {
+.blogpost-thumbnail {
+  height: 45%;
+  width: 90%;
+}
+
+#notifications .unread-notification {
   border: var(--light-text) 2px solid !important;
 }
 
@@ -398,12 +403,16 @@ textarea {
 .comment-thumbnail {
   width: 85vw;
   background: var(--background);
-  padding: 5px 10px;
+  padding: 10px;
   border: var(--light-border-color) 1px solid;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.blog-post h2 {
+  margin-top: 20px;
 }
 
 .link-comment {
@@ -465,6 +474,7 @@ h3 {
   font-weight: 200;
   width: 100%;
   justify-content: space-around;
+  max-width: 300px;
 }
 
 .info p {
@@ -741,6 +751,20 @@ ul {
   margin-top: 40px;
 }
 
+#blog-post .blogpost-thumbnail {
+  margin: 0 auto;
+  margin-top: 20px;
+  width: 520px;
+  height: 260px;
+}
+
+.blogpost-thumbnail-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
 @media (min-width: 600px) {
   #create-post,
   #create-post form {
@@ -754,6 +778,11 @@ ul {
 @media (min-width: 800px) {
   #blog-post {
     max-width: 800px;
+  }
+
+  .blogpost-thumbnail {
+    height: 200px;
+    width: 400px;
   }
   .feed-advertisement {
     width: 450px;
@@ -823,10 +852,13 @@ ul {
     width: 80%;
   }
 
-  .blog-post,
   .comment,
   .comment-thumbnail {
     width: 450px;
+  }
+
+  .blog-post {
+    width: min-content;
   }
 
   .comment-reply {

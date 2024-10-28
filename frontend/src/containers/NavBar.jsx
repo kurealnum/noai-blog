@@ -18,7 +18,7 @@ function NavBar() {
   const [exists, setExists] = useState(false);
   const [open, setOpen] = useState(false);
   const [isNewNotification, setIsNewNotification] = useState(
-    userData["notifications"] > 0,
+    userData != null ? userData["notifications"] > 0 : false,
   );
 
   const [anchorEl, setAnchorEl] = useState(null);
