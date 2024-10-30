@@ -192,7 +192,11 @@ class BlogPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request["content"])
 
     def test_does_create_properly(self):
-        img = SimpleUploadedFile("test.jpg", b"file data")
+        img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        img.name = "myimage.gif"
         # temp client to log in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
@@ -233,13 +237,20 @@ class BlogPostViewTestCase(CustomTestCase):
         )
         to_edit.save()
 
+        # i have no idea why we have to use SimpleUploadedFile for some things and BytesIO for others
+        new_img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        new_img.name = "myimage.gif"
+
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
             "slug": to_edit.slug_field,
             "title": "An edited title",
             "content": "Some new content",
-            "thumbnail": img,
+            "thumbnail": new_img,
         }
         request = temp_client.put(reverse_lazy("edit_post"), data=data)
         expected_result = "An edited title"
@@ -501,7 +512,10 @@ class ReactionViewTestCase(CustomTestCase):
     def test_does_succesfully_create(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="jonny")
-        data = {"slug": self.blog_post.slug_field}
+        data = {
+            "slug": self.blog_post.slug_field,
+            "username": self.blog_post.user.username,
+        }
         request = temp_client.post(reverse_lazy("manage_post_reactions"), data=data)
         expected_result = 201
 

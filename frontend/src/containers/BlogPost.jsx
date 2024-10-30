@@ -63,7 +63,7 @@ function BlogPost() {
   }, [slug]);
 
   function createReactionHelper() {
-    createReaction(slug).then((res) => {
+    createReaction(slug, username).then((res) => {
       if (res) {
         setDoesReactionExist(true);
         refetch();

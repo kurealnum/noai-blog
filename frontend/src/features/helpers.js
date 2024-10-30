@@ -341,7 +341,7 @@ async function isFollowingUser(username) {
   return response.ok;
 }
 
-async function createReaction(slug) {
+async function createReaction(slug, username) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -349,7 +349,7 @@ async function createReaction(slug) {
     },
     credentials: "include",
     method: "POST",
-    body: JSON.stringify({ slug: slug }),
+    body: JSON.stringify({ slug: slug, username: username }),
   };
   const response = await fetch(
     "/api/blog-posts/manage-post-reactions/",
