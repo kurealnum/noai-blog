@@ -1,5 +1,6 @@
 /* v8 ignore start */
 // this is an "abstract" of the algorithm that renderedComments and renderedCommentsHelper uses
+// it is likely not up to date
 
 const data = [
   { id: 1, replyto: null, content: "content" },

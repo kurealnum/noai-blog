@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register } from "../features/helpers";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -74,7 +74,7 @@ function Register() {
           </button>
         </div>
         <div className="item">
-          <label htmlFor="first_name">First name</label>
+          <label htmlFor="first_name">First name (optional)</label>
           <input
             id="first_name"
             name="first_name"
@@ -83,7 +83,7 @@ function Register() {
           ></input>
         </div>
         <div className="item">
-          <label htmlFor="last_name">Last name</label>
+          <label htmlFor="last_name">Last name (optional)</label>
           <input
             id="last_name"
             name="last_name"
@@ -121,6 +121,12 @@ function Register() {
         <button data-testid="save" id="save" type="submit">
           Register
         </button>
+        <p>
+          Or{" "}
+          <Link to="/login" className="accent-highlight">
+            login
+          </Link>
+        </p>
       </form>
       <Snackbar
         open={isError}

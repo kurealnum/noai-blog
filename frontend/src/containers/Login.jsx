@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { login } from "../features/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 
@@ -54,6 +54,12 @@ function Login() {
         <button type="submit" data-testid="login">
           Login
         </button>
+        <p>
+          Or{" "}
+          <Link to="/register" className="accent-highlight">
+            register
+          </Link>
+        </p>
       </form>
       <ErrorMessage
         isError={isError}

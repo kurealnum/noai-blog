@@ -31,8 +31,8 @@ describe("Register", () => {
     const username = screen.getByLabelText("Username");
     const email = screen.getByLabelText("Email");
     const password = screen.getByLabelText("Password");
-    const firstName = screen.getByLabelText("First name");
-    const lastName = screen.getByLabelText("Last name");
+    const firstName = screen.getByLabelText("First name (optional)");
+    const lastName = screen.getByLabelText("Last name (optional)");
     const aboutMe = screen.getByLabelText("About me");
     const technicalInfo = screen.getByLabelText("Technical Info");
 
