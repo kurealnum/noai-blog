@@ -27,12 +27,28 @@ input {
 }
 
 .blogpost-thumbnail {
-  height: 45%;
-  width: 90%;
+  height: 54%;
+  width: 96%;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.EasyMDEContainer {
+  width: 85vw;
+  max-width: 900px;
 }
 
 #notifications .unread-notification {
   border: var(--light-text) 2px solid !important;
+}
+
+#dashboard .blog-post {
+  width: 90%;
 }
 
 [data-testid="NotificationsActiveIcon"],
@@ -755,7 +771,7 @@ ul {
   margin: 0 auto;
   margin-top: 20px;
   width: 520px;
-  height: 260px;
+  height: 292px;
 }
 
 .blogpost-thumbnail-wrapper {
@@ -781,7 +797,7 @@ ul {
   }
 
   .blogpost-thumbnail {
-    height: 200px;
+    height: 225px;
     width: 400px;
   }
   .feed-advertisement {

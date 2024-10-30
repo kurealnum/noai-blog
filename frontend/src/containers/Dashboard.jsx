@@ -1,11 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import {
-  deletePost,
-  getBlogPosts,
-  getComments,
-  limitLength,
-} from "../features/helpers";
+import { getBlogPosts, getComments, limitLength } from "../features/helpers";
 import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -22,17 +17,6 @@ function Dashboard() {
       setComments(res);
     });
   }, []);
-
-  function deleteHelper(slug, index) {
-    deletePost(slug).then((res) => {
-      if (res) {
-        const newPosts = posts.slice(0, index).concat(posts.slice(index + 1));
-        setPosts(newPosts);
-        return res;
-      }
-      return res;
-    });
-  }
 
   function editHelper(slug) {
     navigate("/edit-post/" + slug);
@@ -81,8 +65,9 @@ function Dashboard() {
                 username={content.user.username}
                 createdDate={content.created_date}
                 content={content.content}
-                deleteHelper={deleteHelper}
                 editHelper={editHelper}
+                posts={posts}
+                setPosts={setPosts}
                 index={index}
               />
             ))

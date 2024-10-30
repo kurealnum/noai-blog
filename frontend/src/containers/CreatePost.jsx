@@ -58,11 +58,12 @@ function CreatePost() {
     setNewBlogPost({ ...newBlogPost, content: content });
   }
 
-  function setFormHelper(e, isImage) {
-    if (isImage) {
-      setThumbnail({ [e.target.name]: e.target.files[0] });
-    }
+  function setFormHelper(e) {
     setNewBlogPost({ ...newBlogPost, [e.target.name]: e.target.value });
+  }
+
+  function setThumbnailHelper(e) {
+    setThumbnail({ [e.target.name]: e.target.files[0] });
   }
 
   if (createPostMutation.isPending) {
@@ -80,6 +81,7 @@ function CreatePost() {
     <div id="create-post">
       <form
         aria-label="Image and title input"
+        className="post-form"
         encType="multipart/form-data"
         method="POST"
         onSubmit={(e) => handleSave(e)}
@@ -92,7 +94,7 @@ function CreatePost() {
           name="thumbnail"
           type="file"
           accept="image/png, image/jpeg"
-          onChange={(e) => setFormHelper(e, true)}
+          onChange={(e) => setThumbnailHelper(e, true)}
         />
         <label htmlFor="title" hidden>
           Title

@@ -25,6 +25,7 @@ function EditPost() {
   const userData = useRouteLoaderData("root");
   const { slug } = useParams();
   const [newBlogPost, setNewBlogPost] = useState({});
+  const [thumbnail, setThumbnail] = useState({});
 
   useEffect(() => {
     getBlogPost({ username: userData["username"], slug: slug }).then((res) =>
@@ -49,8 +50,9 @@ function EditPost() {
     };
   }, []);
 
-  function handleSave() {
-    editPostMutation.mutate(newBlogPost);
+  function handleSave(e) {
+    e.preventDefault();
+    editPostMutation.mutate({ newBlogPost, thumbnail });
   }
 
   function setContentHelper(content) {
@@ -59,6 +61,10 @@ function EditPost() {
 
   function setTitleHelper(e) {
     setNewBlogPost({ ...newBlogPost, [e.target.name]: e.target.value });
+  }
+
+  function setThumbnailHelper(e) {
+    setThumbnail({ [e.target.name]: e.target.files[0] });
   }
 
   if (editPostMutation.isPending) {
@@ -74,7 +80,23 @@ function EditPost() {
   }
   return (
     <div id="create-post">
-      <form aria-label="Title input">
+      <form
+        className="post-form"
+        aria-label="Image and title input"
+        encType="multipart/form-data"
+        method="POST"
+        onSubmit={(e) => handleSave(e)}
+      >
+        <label htmlFor="thumbnail" hidden>
+          Thumbnail
+        </label>
+        <input
+          id="thumbnail"
+          name="thumbnail"
+          type="file"
+          accept="image/png, image/jpeg"
+          onChange={(e) => setThumbnailHelper(e, true)}
+        />
         <label htmlFor="title" hidden>
           Title
         </label>
@@ -84,19 +106,19 @@ function EditPost() {
           onChange={(e) => setTitleHelper(e)}
           defaultValue={newBlogPost["title"]}
         />
+        <SimpleMdeReact
+          options={customRendererOptions}
+          onChange={setContentHelper}
+          value={newBlogPost["content"]}
+        />
+        <button
+          data-testid="submit-button"
+          className="save-button"
+          type="submit"
+        >
+          Save
+        </button>
       </form>
-      <SimpleMdeReact
-        options={customRendererOptions}
-        onChange={setContentHelper}
-        value={newBlogPost["content"]}
-      />
-      <button
-        data-testid="submit-button"
-        className="save-button"
-        onClick={() => handleSave()}
-      >
-        Save
-      </button>
       {editPostMutation.isError ? (
         <div id="error-page">
           <h1>There was an error!</h1>

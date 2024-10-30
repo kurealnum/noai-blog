@@ -1,5 +1,5 @@
 import { Delete, Edit } from "@mui/icons-material";
-import { slugify } from "../features/helpers";
+import { deletePost, slugify } from "../features/helpers";
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -9,16 +9,22 @@ function DashboardBlogPostThumbnail({
   username,
   createdDate,
   content,
-  deleteHelper,
   editHelper,
   index,
+  posts,
+  setPosts,
 }) {
   const [open, setOpen] = useState(false);
+
   function dialogHelper() {
-    const res = deleteHelper(slugify(title), index);
-    if (res) {
+    deletePost(slugify(title)).then((res) => {
+      if (res) {
+        const newPosts = posts.slice(0, index).concat(posts.slice(index + 1));
+        setPosts(newPosts);
+        setOpen(false);
+      }
       setOpen(false);
-    }
+    });
   }
 
   function handleClose() {

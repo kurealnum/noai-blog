@@ -418,15 +418,21 @@ async function deletePost(slug) {
   return response.ok;
 }
 
-async function editPost(blogPost) {
+async function editPost({ newBlogPost, thumbnail }) {
+  let data = new FormData();
+  data.append("thumbnail", thumbnail["thumbnail"]);
+  data.append("content", newBlogPost["content"]);
+  data.append("title", newBlogPost["title"]);
+  data.append("slug", slugify(newBlogPost["title"]));
+  data.append("user", "hubot");
+
   const config = {
     headers: {
-      "Content-Type": "application/json",
       "X-CSRFToken": getCookie("csrftoken"),
     },
-    credentials: "include",
     method: "PUT",
-    body: JSON.stringify(blogPost),
+    credentials: "include",
+    body: data,
   };
   const response = await fetch("/api/blog-posts/edit-post/", config);
   return response.ok;
