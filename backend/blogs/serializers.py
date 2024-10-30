@@ -53,7 +53,7 @@ class SingleBlogPostUserSerializer(serializers.ModelSerializer):
 class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = BlogPost
-        fields = ("user", "title", "content")
+        fields = ("user", "title", "content", "thumbnail")
 
 
 class BlogPostSerializer(serializers.Serializer):

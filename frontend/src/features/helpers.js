@@ -251,15 +251,20 @@ async function getFeed(index) {
   return await response.json();
 }
 
-async function createPost(newPost) {
+async function createPost({ newBlogPost, thumbnail }) {
+  let data = new FormData();
+  data.append("thumbnail", thumbnail["thumbnail"]);
+  data.append("content", newBlogPost["content"]);
+  data.append("title", newBlogPost["title"]);
+  data.append("user", "hubot");
+
   const config = {
     headers: {
-      "Content-Type": "application/json",
       "X-CSRFToken": getCookie("csrftoken"),
     },
     method: "POST",
     credentials: "include",
-    body: JSON.stringify(newPost),
+    body: data,
   };
   const response = await fetch("/api/blog-posts/create-post/", config);
 
