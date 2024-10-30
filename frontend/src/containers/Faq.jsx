@@ -35,6 +35,11 @@ function Faq() {
         </a>
         specifically asking what you’d like to see changed.
       </p>
+      <h2>How big should my thumbnails be on byeAI?</h2>
+      <p>
+        16:9. If you're interested in creating highly detailed thumbnails,
+        considering using a free tool like Canva or Gimp.
+      </p>
     </div>
   );
 }
