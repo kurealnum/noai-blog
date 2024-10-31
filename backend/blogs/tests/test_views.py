@@ -6,7 +6,7 @@ from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from .models import BlogPost, CommentReaction, Follower, PostReaction, Comment
+from ..models import BlogPost, CommentReaction, Follower, PostReaction, Comment
 
 
 class CustomTestCase(TestCase):

@@ -5,7 +5,7 @@ from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from accounts.views import LinksView
-from .models import CustomUser, Link
+from ..models import CustomUser, Link
 from blogs.models import BlogPost, Comment
 from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
 
