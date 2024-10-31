@@ -188,7 +188,7 @@ class ChangeProfilePictureTestCase(CustomTestCase):
             format="multipart",
         )
 
-        expected_result = 201
+        expected_result = 204
         self.assertEqual(expected_result, result.status_code)
 
     def test_bad_request(self):
@@ -273,7 +273,7 @@ class LinksTestCase(CustomTestCase):
             reverse_lazy("links"), data, content_type="application/json"
         )
 
-        expected_result = 201
+        expected_result = 204
         self.assertEqual(expected_result, result.status_code)
 
     def test_put_request_with_invalid_data(self):
@@ -349,7 +349,7 @@ class LinksTestCase(CustomTestCase):
             reverse_lazy("links"), data, content_type="application/json"
         )
 
-        expected_result = 201
+        expected_result = 204
         self.assertEqual(expected_result, result.status_code)
 
     def test_delete_request_when_object_exists(self):

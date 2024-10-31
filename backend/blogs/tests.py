@@ -133,7 +133,7 @@ class CommentListViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         request = temp_client.delete(reverse_lazy("delete_comment", args=[id]))
-        expected_result = 200
+        expected_result = 204
         self.assertEqual(expected_result, request.status_code)
 
     # should only update content
@@ -223,7 +223,7 @@ class BlogPostViewTestCase(CustomTestCase):
         temp_client.login(username="bobby", password="TerriblePassword123")
         data = {"slug": to_delete.slug_field}
         request = temp_client.delete(reverse_lazy("create_post"), data=data)
-        expected_status = 200
+        expected_status = 204
         self.assertEqual(expected_status, request.status_code)
 
     def test_does_edit_properly(self):
@@ -440,7 +440,7 @@ class FollowerViewTestCase(CustomTestCase):
             reverse_lazy("manage_followers"),
             data={"followee": self.altuser.username},
         )
-        expected_result = 200
+        expected_result = 201
         self.assertEqual(expected_result, request.status_code)
 
     # testing the deletion of self.follower (django tests run sequentially, so this should be fine!!!)
@@ -451,7 +451,7 @@ class FollowerViewTestCase(CustomTestCase):
             reverse_lazy("manage_followers"),
             data={"followee": self.altuser.username},
         )
-        expected_result = 200
+        expected_result = 204
         self.assertEqual(expected_result, request.status_code)
 
 
@@ -526,7 +526,7 @@ class ReactionViewTestCase(CustomTestCase):
         temp_client.login(password="TerriblePassword123", username="bobby")
         data = {"slug": self.blog_post.slug_field}
         request = temp_client.delete(reverse_lazy("manage_post_reactions"), data=data)
-        expected_result = 200
+        expected_result = 204
         self.assertEqual(expected_result, request.status_code)
 
 

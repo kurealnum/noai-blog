@@ -72,7 +72,7 @@ class CheckAuthenticatedView(APIView):
                         "is_admin": False,
                         "is_superuser": False,
                     },
-                    status=403,
+                    status=401,
                 )
         except Exception:
             return Response(
@@ -134,7 +134,7 @@ class ChangeProfilePictureView(APIView):
         )
         if serializer.is_valid():
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
@@ -169,7 +169,7 @@ class LinksView(APIView):
                     return Response(
                         serializer.errors, status=status.HTTP_400_BAD_REQUEST
                     )
-        return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def delete(self, request):
         id = request.data["id"]
@@ -187,7 +187,7 @@ class LinksView(APIView):
         new_link = LinkSerializer(data=data)
         if new_link.is_valid():
             new_link.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data=new_link.data, status=status.HTTP_201_CREATED)
 
         return Response(data=new_link.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -225,7 +225,7 @@ class RegisterView(APIView):
         serializer.is_valid()
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(status=status.HTTP_201_CREATED)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
 

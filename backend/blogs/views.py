@@ -114,7 +114,7 @@ class BlogPostView(APIView):
             BlogPost, user=user, slug_field=data["slug"]
         )
         to_delete.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # this is the view for *multiple* blog posts
@@ -207,7 +207,7 @@ class CommentListView(APIView):
         user = self.request.user
         comment = generics.get_object_or_404(Comment, user=user, pk=id)
         comment.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # This view returns replies to *posts* that a user has made
@@ -296,7 +296,7 @@ class FollowerView(APIView):
         user = self.request.user.id  # type: ignore
         data = Follower.objects.filter(user=user).select_related("user", "follower")
         serializer = GetFollowerSerializer(data, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # this is the equivalent of following someone
     def post(self, request):
@@ -309,7 +309,7 @@ class FollowerView(APIView):
         serializer = FollowerSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     # this is the equivalent of unfollowing someone
@@ -319,7 +319,7 @@ class FollowerView(APIView):
         follower = self.request.user
         to_delete = Follower.objects.filter(user=followee, follower=follower)
         to_delete.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Literally a copy and paste of the above `FollowerView`, but for getting the people that you're following instead
@@ -336,14 +336,14 @@ class FollowingView(APIView):
             except Follower.DoesNotExist:
                 return Http404
             serializer = GetFollowerSerializer(data)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user.id  # type: ignore
             data = Follower.objects.filter(follower=user).select_related(
                 "user", "follower"
             )
             serializer = GetFollowerSerializer(data, many=True)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 # both methods takes in user (self.request.user) and the post slug (its unique)
@@ -378,7 +378,7 @@ class ReactionView(APIView):
         blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         reaction.delete()
-        return Response(status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ModeratorModifyPostView(APIView):
@@ -417,7 +417,7 @@ class AdminGetAllFlaggedPostsView(APIView):
     def get(self, request):
         queryset = BlogPost.objects.filter(flagged=True)
         serializer = BlogPostSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminGetAllFlaggedCommentsView(APIView):
@@ -426,7 +426,7 @@ class AdminGetAllFlaggedCommentsView(APIView):
     def get(self, request):
         queryset = Comment.objects.filter(flagged=True).select_related("user")
         serializer = CommentAndUserSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminGetAllFlaggedUsersView(APIView):
@@ -435,7 +435,7 @@ class AdminGetAllFlaggedUsersView(APIView):
     def get(self, request):
         queryset = CustomUser.objects.filter(flagged=True)
         serializer = CustomUserSerializer(queryset, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class AdminManageListicleView(APIView):
