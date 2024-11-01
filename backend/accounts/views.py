@@ -110,9 +110,13 @@ class UserInfoView(APIView):
             res = generics.get_object_or_404(CustomUser, id=user)
 
             # this only gets comments, nothing else
-            notifications_count = Comment.objects.filter(
-                Q(post__user=user) | Q(reply_to__user=user), is_read=False
-            ).count()
+            notifications_count = (
+                Comment.objects.filter(
+                    Q(post__user=user) | Q(reply_to__user=user), is_read=False
+                )
+                .exclude(user__username=self.request.user.username)  # type: ignore
+                .count()
+            )
             serializer = CustomUserSerializer(res)
             return Response(
                 data={**serializer.data, "notifications": notifications_count},
@@ -235,9 +239,11 @@ class NotificationView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request):
-        user = self.request.user.id  # type: ignore
+        user = self.request.user  # type: ignore
         unread_comments = (
-            Comment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
+            Comment.objects.filter(
+                Q(reply_to__user=user) | Q(post__user=user), is_read=False
+            )
             .select_related("user", "post", "post__user")
             .order_by("-created_date")
             .exclude(user__username=self.request.user.username)  # type: ignore
@@ -264,6 +270,12 @@ class NotificationCountView(APIView):
 
     def get(self, request):
         user = self.request.user.id  # type: ignore
-        unread_comments = Comment.objects.filter(user=user, is_read=False).count()
+        unread_comments = (
+            Comment.objects.filter(
+                Q(reply_to__user=user) | Q(post__user=user), is_read=False
+            ).exclude(
+                user__username=self.request.user.username  # type: ignore
+            )
+        ).count()
 
         return Response(data={"count": unread_comments}, status=status.HTTP_200_OK)

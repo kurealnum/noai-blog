@@ -51,6 +51,21 @@ input {
   width: 90%;
 }
 
+.general-mui-alert {
+  border: var(--light-border-color) 1px solid;
+}
+
+.general-mui-alert .MuiAlert-icon svg {
+  color: var(--tertiary);
+}
+
+.general-mui-alert .MuiAlert-action {
+  padding: 0;
+  margin-left: 20px;
+  justify-content: center;
+  align-items: center;
+}
+
 [data-testid="NotificationsActiveIcon"],
 [data-testid="DeleteIcon"] {
   color: var(--accent) !important;

@@ -23,6 +23,9 @@ function Notifications() {
   }
 
   if (isSuccess) {
+    if (data.length === 0) {
+      return <h1>No notifications!</h1>;
+    }
     return (
       <div className="default-page" id="notifications">
         <ul className="list">

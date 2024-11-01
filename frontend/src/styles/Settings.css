@@ -59,6 +59,12 @@
 
 .link-item p {
   margin: 0;
+  width: min-content;
+}
+
+.links-list {
+  width: 95%;
+  margin: 0 auto;
 }
 
 #settings textarea {

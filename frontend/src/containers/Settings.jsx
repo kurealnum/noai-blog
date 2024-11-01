@@ -80,6 +80,7 @@ function Settings() {
           getLinks().then((res) => {
             setNewLinks(res);
             setIsSaved(true);
+            setIsModalOpen(false);
           });
         }
       });
@@ -130,6 +131,12 @@ function Settings() {
           method="POST"
           onSubmit={(e) => formSubmitHelper(e)}
         >
+          <a
+            className="accent-highlight"
+            href={"/manage-password/change-password/"}
+          >
+            Change password
+          </a>
           <div className="item">
             <label htmlFor="username">Username</label>
             <input
@@ -203,8 +210,10 @@ function Settings() {
             ></input>
           </div>
           <h2>Links</h2>
-          <p>All links must be HTTPS</p>
-          <ul>
+          <i>
+            <p>All links must be HTTPS</p>
+          </i>
+          <ul className="links-list">
             {newLinks.map((content, index) => (
               <li className="item link-item" key={content["name"] + index}>
                 <label htmlFor="name" hidden>
@@ -264,6 +273,7 @@ function Settings() {
                 id="save"
                 onClick={() => addNewLinksHelper()}
                 data-testid="link-save"
+                type="submit"
               >
                 Save
               </button>
@@ -273,30 +283,36 @@ function Settings() {
           <button data-testid="form-save" id="save" type="submit">
             Save
           </button>
-          <Snackbar
-            open={isError}
-            autoHideDuration={5000}
-            onClose={handleCloseError}
-          >
-            <Alert onClose={handleCloseError} severity="error" variant="filled">
-              Something went wrong!
-            </Alert>
-          </Snackbar>
-          <Snackbar
-            open={isSaved}
-            autoHideDuration={5000}
-            onClose={handleCloseSuccess}
-          >
-            <Alert
-              data-testid="saved-alert"
-              onClose={handleCloseSuccess}
-              severity="success"
-              variant="filled"
-            >
-              Your changes were successfully saved!
-            </Alert>
-          </Snackbar>
         </form>
+        <Snackbar
+          open={isError}
+          autoHideDuration={5000}
+          onClose={handleCloseError}
+        >
+          <Alert
+            onClose={handleCloseError}
+            severity="error"
+            variant="filled"
+            className="general-mui-alert"
+          >
+            Something went wrong!
+          </Alert>
+        </Snackbar>
+        <Snackbar
+          open={isSaved}
+          autoHideDuration={5000}
+          onClose={handleCloseSuccess}
+        >
+          <Alert
+            className="general-mui-alert"
+            data-testid="saved-alert"
+            onClose={handleCloseSuccess}
+            severity="success"
+            variant="filled"
+          >
+            Your changes were successfully saved!
+          </Alert>
+        </Snackbar>
         <Outlet />
         <div className="filler"></div>
       </div>
