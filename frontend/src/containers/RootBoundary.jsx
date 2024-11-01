@@ -1,4 +1,4 @@
-import { useRouteError } from "react-router-dom";
+import { Link, useRouteError } from "react-router-dom";
 
 function RootBoundary() {
   const error = useRouteError();
@@ -7,7 +7,9 @@ function RootBoundary() {
       <h1>HTTP {error.status}</h1>
       <p>{error.data}</p>
       <p>{error.message}</p>
-      <a href="/">Go home</a>
+      <Link to={"/feed"}>
+        <i>Go home</i>
+      </Link>
     </div>
   );
 }

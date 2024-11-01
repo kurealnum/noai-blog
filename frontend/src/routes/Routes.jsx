@@ -1,5 +1,5 @@
 /* v8 ignore start */
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, json } from "react-router-dom";
 import Login from "../containers/Login";
 import Dashboard from "../containers/Dashboard";
 import Logout from "../containers/Logout";
@@ -172,6 +172,12 @@ const router = createBrowserRouter([
             <BlogPost />
           </Page>
         ),
+      },
+      {
+        path: "*",
+        loader: () => {
+          throw json("Page not found!", { status: 404 });
+        },
       },
     ],
   },
