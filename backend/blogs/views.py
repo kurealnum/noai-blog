@@ -22,6 +22,7 @@ from blogs.serializers import (
     CommentAndUserSerializer,
     CommentSerializer,
     CreateOrUpdateBlogPostSerializer,
+    CreateOrUpdateCommentSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
     ReactionSerializer,
@@ -67,6 +68,8 @@ class BlogPostView(APIView):
         title = data["title"]
         content = data["content"]
         thumbnail = data["thumbnail"]
+        if thumbnail == "undefined":
+            thumbnail = None
         serializer_data = {
             "user": user,
             "title": title,
@@ -175,6 +178,9 @@ class CommentListView(APIView):
         else:
             reply_to = data["reply_to"]
 
+        if reply_to == "":
+            reply_to = None
+
         new_comment = {
             "user": self.request.user.id,  # type:ignore
             "post": generics.get_object_or_404(
@@ -184,7 +190,7 @@ class CommentListView(APIView):
             "is_read": False,
             "reply_to": reply_to,
         }
-        serializer = CommentSerializer(data=new_comment)
+        serializer = CreateOrUpdateCommentSerializer(data=new_comment)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)

@@ -99,6 +99,7 @@ input {
   width: 90%;
   margin: 0 auto;
   margin-bottom: 60px;
+  max-width: 650px;
 }
 
 .create-comment-form textarea {

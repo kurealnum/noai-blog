@@ -75,6 +75,12 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class CreateOrUpdateCommentSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = Comment
+        fields = "__all__"
+
+
 class CommentAndUserSerializer(serializers.Serializer):
     user = SingleBlogPostUserSerializer()
     reply_to = CommentSerializer()
