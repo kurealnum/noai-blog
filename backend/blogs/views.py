@@ -34,7 +34,7 @@ class CommentListUserView(generics.ListAPIView):
 
     def get_queryset(self):  # type: ignore
         user = self.request.user.id  # type: ignore
-        return Comment.objects.filter(user=user)
+        return Comment.objects.filter(user=user).select_related("post")
 
 
 # this is the view for a *single* blog post

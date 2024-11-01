@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import { getBlogPosts, getComments, limitLength } from "../features/helpers";
+import {
+  getBlogPosts,
+  getComments,
+  limitLength,
+  slugify,
+} from "../features/helpers";
 import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -42,9 +47,17 @@ function Dashboard() {
           ) : (
             comments.map((content, index) => (
               <li className="comment" key={index}>
-                <p data-testid="comment-content">
+                <Link
+                  to={
+                    "/post/" +
+                    content["post"]["user"]["username"] +
+                    "/" +
+                    slugify(content["post"]["title"])
+                  }
+                  data-testid="comment-content"
+                >
                   {limitLength(content["content"])}
-                </p>
+                </Link>
               </li>
             ))
           )}

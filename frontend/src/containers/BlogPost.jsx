@@ -7,6 +7,7 @@ import {
   getReaction,
   createComment,
   slugify,
+  isAuthenticated,
 } from "../features/helpers";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -171,13 +172,15 @@ function BlogPost() {
         ></div>
         <div>
           <h2>Comments</h2>
-          <form
-            onSubmit={(e) => createCommentHelper(e)}
-            className="create-comment-form"
-          >
-            <textarea></textarea>
-            <button type="submit">Comment</button>
-          </form>
+          {isAuthenticated() ? (
+            <form
+              onSubmit={(e) => createCommentHelper(e)}
+              className="create-comment-form"
+            >
+              <textarea></textarea>
+              <button type="submit">Comment</button>
+            </form>
+          ) : null}
           {getCommentsByPostQuery.isSuccess ? (
             <Comments
               raw={getCommentsByPostQuery.data}

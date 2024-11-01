@@ -442,6 +442,10 @@ textarea {
   align-items: center;
 }
 
+.comment a {
+  color: var(--light-text);
+}
+
 .blog-post h2 {
   margin-top: 20px;
 }

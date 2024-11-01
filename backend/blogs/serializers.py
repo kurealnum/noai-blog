@@ -20,12 +20,6 @@ class NotificationCommentSerializer(serializers.Serializer):
     is_read = serializers.BooleanField()
 
 
-class CommentSerializer(serializers.ModelSerializer):
-    class Meta:  # type:ignore
-        model = Comment
-        fields = "__all__"
-
-
 class FeedCustomUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
@@ -69,6 +63,14 @@ class BlogPostSerializer(serializers.Serializer):
     likes = serializers.IntegerField(default=-1, required=False)
     score = serializers.IntegerField(default=-1, required=False)
     thumbnail = serializers.ImageField(default=None, required=False)
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    post = BlogPostSerializer(required=False)
+
+    class Meta:  # type:ignore
+        model = Comment
+        fields = "__all__"
 
 
 class CommentAndUserSerializer(serializers.Serializer):
