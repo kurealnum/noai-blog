@@ -11,7 +11,6 @@ import {
   IS_SUPERUSER_TRUE,
 } from "../features/types";
 import { CircularProgress } from "@mui/material";
-import store from "../features/authStore/store";
 import { Navigate } from "react-router-dom";
 import {
   isAdmin,
@@ -20,7 +19,7 @@ import {
   isSuperuser,
 } from "../features/helpers";
 
-const blogName = "NoAI Blog - ";
+const blogName = "byeAI | ";
 
 function Page({ children, title, type }) {
   const dispatch = useDispatch();
