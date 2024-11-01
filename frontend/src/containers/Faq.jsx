@@ -40,6 +40,11 @@ function Faq() {
         16:9. If you're interested in creating highly detailed thumbnails,
         considering using a free tool like Canva or Gimp.
       </p>
+      <h2>Can I make a blog post without including a thumbnail on byeAI?</h2>
+      <p>
+        Yes, however we strongly encourage you to include a thumbnail, even if
+        it's just the logo of your favorite framework.
+      </p>
     </div>
   );
 }

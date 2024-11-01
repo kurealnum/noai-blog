@@ -90,6 +90,8 @@ class BlogPostView(APIView):
         content = data["content"]
         slug = data["slug"]
         thumbnail = data["thumbnail"]
+        if thumbnail == "undefined":
+            thumbnail = None
         serializer_data = {
             "user": user,
             "title": title,
