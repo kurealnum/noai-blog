@@ -137,7 +137,7 @@ class CommentListViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.status_code)
 
     # should only update content
-    def test_does_put_work_properly(self):
+    def test_does_patch_work_properly(self):
         new_comment = Comment.objects.create(
             user=self.user, post=self.blog_post, content="Comment"
         )

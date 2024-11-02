@@ -36,20 +36,22 @@ function Login() {
         </div>
         <div className="item">
           <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type={isVisible ? "text" : "password"}
-            onChange={(e) => onFormChange(e)}
-            maxLength={128}
-          ></input>
-          <button
-            id="toggle-visibility"
-            type="button"
-            onClick={() => setIsVisible(!isVisible)}
-          >
-            {isVisible ? <Visibility /> : <VisibilityOff />}
-          </button>
+          <div className="password">
+            <input
+              id="password"
+              name="password"
+              type={isVisible ? "text" : "password"}
+              onChange={(e) => onFormChange(e)}
+              maxLength={128}
+            ></input>
+            <button
+              id="toggle-visibility"
+              type="button"
+              onClick={() => setIsVisible(!isVisible)}
+            >
+              {isVisible ? <Visibility /> : <VisibilityOff />}
+            </button>
+          </div>
         </div>
         <button type="submit" data-testid="login">
           Login

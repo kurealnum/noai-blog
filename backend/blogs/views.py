@@ -202,7 +202,7 @@ class CommentListView(APIView):
         data = request.data
         user = self.request.user
         comment = generics.get_object_or_404(Comment, pk=id, user=user)
-        serializer = CommentSerializer(
+        serializer = CreateOrUpdateCommentSerializer(
             instance=comment, data={"content": data["content"], "user": user.id}  # type: ignore
         )
         if serializer.is_valid():
@@ -432,8 +432,8 @@ class AdminGetAllFlaggedCommentsView(APIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request):
-        queryset = Comment.objects.filter(flagged=True).select_related("user")
-        serializer = CommentAndUserSerializer(queryset, many=True)
+        queryset = Comment.objects.filter(flagged=True).select_related("user", "post")
+        serializer = CommentSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

@@ -35,9 +35,14 @@ function Register() {
   }
 
   return (
-    <div id="register" className="custom-form">
+    <>
       <h1 data-testid="register">Register</h1>
-      <form onSubmit={(e) => onFormSubmit(e)} aria-label="Register">
+      <form
+        onSubmit={(e) => onFormSubmit(e)}
+        aria-label="Register"
+        className="custom-form"
+        id="register"
+      >
         <div className="item">
           <label htmlFor="username">Username</label>
           <input
@@ -58,20 +63,22 @@ function Register() {
         </div>
         <div className="item">
           <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type={isVisible ? "text" : "password"}
-            onChange={(e) => setNewUserDataHelper(e)}
-            maxLength={128}
-          ></input>
-          <button
-            id="toggle-visibility"
-            type="button"
-            onClick={() => setIsVisible(!isVisible)}
-          >
-            {isVisible ? <Visibility /> : <VisibilityOff />}
-          </button>
+          <div className="password">
+            <input
+              id="password"
+              name="password"
+              type={isVisible ? "text" : "password"}
+              onChange={(e) => setNewUserDataHelper(e)}
+              maxLength={128}
+            ></input>
+            <button
+              id="toggle-visibility"
+              type="button"
+              onClick={() => setIsVisible(!isVisible)}
+            >
+              {isVisible ? <Visibility /> : <VisibilityOff />}
+            </button>
+          </div>
         </div>
         <div className="item">
           <label htmlFor="first_name">First name (optional)</label>
@@ -137,7 +144,7 @@ function Register() {
           Something went wrong!
         </Alert>
       </Snackbar>
-    </div>
+    </>
   );
 }
 

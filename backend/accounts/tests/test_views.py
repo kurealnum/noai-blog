@@ -147,8 +147,15 @@ class UserInfoViewTestCase(CustomTestCase):
             content="Here's something about my blog post",
         )
         blog_post.save()
-        comment = Comment.objects.create(
-            user=self.user, post=blog_post, content="Hello world", is_read=False
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        Comment.objects.create(
+            user=self.altuser, post=blog_post, content="Hello world", is_read=False
         )
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
@@ -529,16 +536,23 @@ class NotificationViewTestCase(CustomTestCase):
 class NotificationCountViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
         self.post = BlogPost.objects.create(
             user=self.user, title="My blog post", content="My weird blog post"
         )
 
         # unread comments
         Comment.objects.create(
-            user=self.user, post=self.post, content="Hello world", is_read=False
+            user=self.altuser, post=self.post, content="Hello world", is_read=False
         )
         Comment.objects.create(
-            user=self.user,
+            user=self.altuser,
             post=self.post,
             content="I am the other unread comment",
             is_read=False,
@@ -546,7 +560,7 @@ class NotificationCountViewTestCase(CustomTestCase):
 
         # read comments
         Comment.objects.create(
-            user=self.user, post=self.post, content="Hello world", is_read=True
+            user=self.altuser, post=self.post, content="Hello world", is_read=True
         )
 
     # should only return unread comments
