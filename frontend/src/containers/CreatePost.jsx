@@ -86,20 +86,27 @@ function CreatePost() {
         method="POST"
         onSubmit={(e) => handleSave(e)}
       >
-        <label htmlFor="thumbnail" hidden>
-          Thumbnail
-        </label>
-        <input
-          id="thumbnail"
-          name="thumbnail"
-          type="file"
-          accept="image/png, image/jpeg"
-          onChange={(e) => setThumbnailHelper(e, true)}
-        />
-        <label htmlFor="title" hidden>
-          Title
-        </label>
-        <input id="title" name="title" onChange={(e) => setFormHelper(e)} />
+        <div className="flex-row-spacing">
+          <label className="file-input-label" htmlFor="thumbnail" hidden>
+            Thumbnail
+          </label>
+          <input
+            id="thumbnail"
+            name="thumbnail"
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={(e) => setThumbnailHelper(e, true)}
+          />
+          <label htmlFor="title" hidden>
+            Title
+          </label>
+          <input
+            id="title"
+            name="title"
+            onChange={(e) => setFormHelper(e)}
+            defaultValue={"My amazing post"}
+          />
+        </div>
         <SimpleMdeReact
           options={customRendererOptions}
           onChange={setContentHelper}

@@ -39,6 +39,10 @@ input {
 }
 
 .EasyMDEContainer {
+  width: 100%;
+}
+
+.post-form .flex-row-spacing {
   width: 85vw;
   max-width: 900px;
 }
@@ -76,6 +80,7 @@ input {
   flex-direction: row;
   align-items: center;
   gap: 20px;
+  flex-wrap: wrap;
 }
 
 .vertical-margin-50 {
@@ -238,14 +243,20 @@ button {
   display: none;
 }
 
-#title {
-  border-radius: 10px;
-  border: 1px var(--primary) solid;
-  padding: 4px;
+.post-form #title {
+  outline: none;
+  border: none;
+  border-bottom: var(--light-border-color) solid 1px;
+  background: none;
+  padding-bottom: 4px;
   font-size: var(--subheader-font-size);
-  width: 95%;
-  margin: 0 auto;
   display: block;
+  width: 100%;
+  max-width: 900px;
+}
+
+.post-form #thumbnail {
+  width: 100%;
 }
 
 .save-button {
@@ -787,11 +798,50 @@ ul {
   margin-top: 40px;
 }
 
+#simplemde-editor-2-wrapper {
+  width: 85vw;
+  max-width: 900px;
+}
+
 #blog-post .blogpost-thumbnail {
   margin: 0 auto;
   margin-top: 20px;
   width: 520px;
   height: 292px;
+}
+
+button {
+  cursor: pointer;
+}
+
+input[type="file"] {
+  padding: 4px;
+  border-radius: 10px;
+  border: var(--light-border-color) solid 1px;
+}
+
+input[type="file"]::file-selector-button {
+  background: none;
+  color: var(--accent);
+  border: none;
+  font-style: italic;
+}
+
+.editor-toolbar {
+  background: var(--page-background);
+}
+
+.editor-toolbar button:hover {
+  background: none !important;
+  border-color: var(--light-border-color) !important;
+}
+
+.editor-preview {
+  background: var(--page-background) !important;
+}
+
+.active {
+  background: none !important;
 }
 
 .blogpost-thumbnail-wrapper {
@@ -801,17 +851,17 @@ ul {
   justify-content: center;
 }
 
-@media (min-width: 600px) {
-  #create-post,
-  #create-post form {
-    width: 85%;
-  }
-  #simplemde-editor-2-wrapper {
-    width: 100%;
-  }
+.flex-space-between {
+  justify-content: space-between;
 }
 
 @media (min-width: 800px) {
+  .post-form #title {
+    width: 65%;
+  }
+  .post-form #thumbnail {
+    width: 30%;
+  }
   #blog-post {
     max-width: 800px;
   }
@@ -839,10 +889,6 @@ ul {
     height: min-content;
   }
 
-  #simplemde-editor-2-wrapper,
-  #create-post form {
-    max-width: 85%;
-  }
   textarea {
     width: 320px;
   }

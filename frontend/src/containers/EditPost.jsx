@@ -87,25 +87,27 @@ function EditPost() {
         method="POST"
         onSubmit={(e) => handleSave(e)}
       >
-        <label htmlFor="thumbnail" hidden>
-          Thumbnail
-        </label>
-        <input
-          id="thumbnail"
-          name="thumbnail"
-          type="file"
-          accept="image/png, image/jpeg"
-          onChange={(e) => setThumbnailHelper(e, true)}
-        />
-        <label htmlFor="title" hidden>
-          Title
-        </label>
-        <input
-          id="title"
-          name="title"
-          onChange={(e) => setTitleHelper(e)}
-          defaultValue={newBlogPost["title"]}
-        />
+        <div className="flex-row-spacing">
+          <label htmlFor="thumbnail" hidden>
+            Thumbnail
+          </label>
+          <input
+            id="thumbnail"
+            name="thumbnail"
+            type="file"
+            accept="image/png, image/jpeg"
+            onChange={(e) => setThumbnailHelper(e, true)}
+          />
+          <label htmlFor="title" hidden>
+            Title
+          </label>
+          <input
+            id="title"
+            name="title"
+            onChange={(e) => setTitleHelper(e)}
+            defaultValue={newBlogPost["title"]}
+          />
+        </div>
         <SimpleMdeReact
           options={customRendererOptions}
           onChange={setContentHelper}
