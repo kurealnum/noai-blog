@@ -398,7 +398,7 @@ a {
 .profile {
   gap: 14px;
   color: var(--light-text);
-  padding: 10px 22px;
+  padding: 6px 12px;
   border: var(--light-border-color) solid 1px;
   border-radius: 10px;
   width: min-content;
