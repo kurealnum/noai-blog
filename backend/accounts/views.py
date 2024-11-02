@@ -241,9 +241,7 @@ class NotificationView(APIView):
     def get(self, request):
         user = self.request.user  # type: ignore
         unread_comments = (
-            Comment.objects.filter(
-                Q(reply_to__user=user) | Q(post__user=user), is_read=False
-            )
+            Comment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
             .select_related("user", "post", "post__user")
             .order_by("-created_date")
             .exclude(user__username=self.request.user.username)  # type: ignore

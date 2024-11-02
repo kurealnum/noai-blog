@@ -21,7 +21,10 @@ function Comment({
   refetch,
   isAdminDashboard,
 }) {
-  const { slug } = useParams();
+  let { slug } = useParams();
+  if (!slug) {
+    slug = content["post"]["slug_field"];
+  }
   const [isProfilePicture, setIsProfilePicture] = useState(true);
   const [editInputOpen, setEditInputOpen] = useState(false);
   const [editReplyOpen, setEditReplyOpen] = useState(false);
@@ -163,77 +166,79 @@ function Comment({
             {content["content"]}
           </p>
         )}
-        <div className="edit-buttons">
-          {isAuthenticated() && !isAdminDashboard ? (
-            <button onClick={() => setEditReplyOpen(true)}>
-              <Reply />
-            </button>
-          ) : null}
-          {userData != undefined &&
-          userData["username"] == content["user"]["username"] &&
-          !isAdminDashboard ? (
-            <div className="edit-buttons right-align">
-              <button
-                onClick={() => setOpen(true)}
-                data-testid={"delete-comment" + content["id"]}
-              >
-                <Delete />
+        {isNotification ? null : (
+          <div className="edit-buttons">
+            {isAuthenticated() && !isAdminDashboard ? (
+              <button onClick={() => setEditReplyOpen(true)}>
+                <Reply />
               </button>
-              <Dialog
-                open={open}
-                className="delete-post-confirm"
-                onClose={handleClose}
-              >
-                <h1>This will delete your comment forever! Are you sure?</h1>
+            ) : null}
+            {userData != undefined &&
+            userData["username"] == content["user"]["username"] &&
+            !isAdminDashboard ? (
+              <div className="edit-buttons right-align">
                 <button
-                  data-id={content.id}
-                  onClick={(e) => deleteDialogHelper(e)}
-                  className="accent-border"
+                  onClick={() => setOpen(true)}
+                  data-testid={"delete-comment" + content["id"]}
                 >
-                  Yes, I am sure
+                  <Delete />
                 </button>
-                <button onClick={handleClose} className="tertiary-border">
-                  No, I'm not
-                </button>
-              </Dialog>
-              <button
-                onClick={() => setEditInputOpen(true)}
-                data-testid={"delete-comment" + content["id"]}
-              >
-                <Edit />
-              </button>
-            </div>
-          ) : null}
-          {isAdminDashboard && isAdmin() ? (
-            <div className="flex-row-spacing">
-              <button onClick={() => setOpen(true)}>
-                <Delete />
-              </button>
-              <Dialog
-                open={open}
-                className="delete-post-confirm"
-                onClose={() => setOpen(false)}
-              >
-                <h1>
-                  This will delete SOMEONE ELSE'S COMMENT FOREVER!!! Are you
-                  sure?
-                </h1>
+                <Dialog
+                  open={open}
+                  className="delete-post-confirm"
+                  onClose={handleClose}
+                >
+                  <h1>This will delete your comment forever! Are you sure?</h1>
+                  <button
+                    data-id={content.id}
+                    onClick={(e) => deleteDialogHelper(e)}
+                    className="accent-border"
+                  >
+                    Yes, I am sure
+                  </button>
+                  <button onClick={handleClose} className="tertiary-border">
+                    No, I'm not
+                  </button>
+                </Dialog>
                 <button
-                  onClick={() => adminDeleteDialogHelper()}
-                  className="accent-border"
+                  onClick={() => setEditInputOpen(true)}
+                  data-testid={"delete-comment" + content["id"]}
                 >
-                  Yes, I am sure
+                  <Edit />
                 </button>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="tertiary-border"
+              </div>
+            ) : null}
+            {isAdminDashboard && isAdmin() ? (
+              <div className="flex-row-spacing">
+                <button onClick={() => setOpen(true)}>
+                  <Delete />
+                </button>
+                <Dialog
+                  open={open}
+                  className="delete-post-confirm"
+                  onClose={() => setOpen(false)}
                 >
-                  No, I'm not
-                </button>
-              </Dialog>
-            </div>
-          ) : null}
-        </div>
+                  <h1>
+                    This will delete SOMEONE ELSE'S COMMENT FOREVER!!! Are you
+                    sure?
+                  </h1>
+                  <button
+                    onClick={() => adminDeleteDialogHelper()}
+                    className="accent-border"
+                  >
+                    Yes, I am sure
+                  </button>
+                  <button
+                    onClick={() => setOpen(false)}
+                    className="tertiary-border"
+                  >
+                    No, I'm not
+                  </button>
+                </Dialog>
+              </div>
+            ) : null}
+          </div>
+        )}
       </li>
       {editReplyOpen ? (
         <form
@@ -267,6 +272,13 @@ function Comment({
     </>
   );
 
+  if (isNotification) {
+    return (
+      <Link to={"/post/" + content["post"]["user"]["username"] + "/" + slug}>
+        {mainComment}
+      </Link>
+    );
+  }
   return <>{mainComment}</>;
 }
 

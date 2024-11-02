@@ -452,6 +452,7 @@ textarea {
   display: flex;
   flex-direction: column;
   align-items: center;
+  color: var(--light-text);
 }
 
 .comment a {
@@ -935,7 +936,9 @@ input[type="file"]::file-selector-button {
   }
 
   .comment,
-  .comment-thumbnail {
+  .comment-thumbnail,
+  .edit-comment-form,
+  .reply-comment-form {
     width: 450px;
   }
 
@@ -980,7 +983,10 @@ input[type="file"]::file-selector-button {
   #login {
     width: 600px;
   }
-  .comment {
+  .comment,
+  .comment-thumbnail,
+  .edit-comment-form,
+  .reply-comment-form {
     width: 550px;
   }
   .comment-reply {
