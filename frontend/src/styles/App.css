@@ -21,6 +21,7 @@ input {
   --light-border-color: rgba(255, 255, 255, 0.4);
   --landing-page-header: 40px;
   --light-svg-color: rgba(255, 255, 255, 0.85);
+  --button-font-size: 18px;
   font-family: "Raleway", "Times New Roman", Times, serif;
   background: var(--page-background);
   color: var(--light-text);
@@ -169,23 +170,20 @@ body {
 }
 
 .custom-form {
+  width: 80vw;
+  max-width: 670px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   gap: 20px;
   background: var(--background);
   border: 2px var(--light-border-color) solid;
   border-radius: 10px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 0 auto;
   margin-top: 30px;
   padding: 10px;
   height: min-content;
   overflow: auto;
-}
-
-.custom-form textarea {
-  border: 1px var(--light-border-color) solid;
 }
 
 .custom-form form {
@@ -196,16 +194,39 @@ body {
 }
 
 .custom-form label {
-  margin-right: 10px;
-  font-size: var(--text-size);
+  margin-right: auto;
+  font-size: var(--link-font-size);
   text-wrap: nowrap;
+  margin-bottom: 8px;
+  font-style: italic;
+  font-weight: 300;
 }
 
 .custom-form input {
   border-radius: 10px;
-  border: 1px var(--light-border-color) solid;
-  padding: 4px;
+  border: none;
+  padding: 6px;
   color: var(--light-text);
+  width: 95%;
+  margin-right: auto;
+}
+
+.custom-form .item.link-item {
+  flex-direction: row;
+  margin-bottom: 5px;
+}
+
+.custom-form .link-item button {
+  border: none;
+  background: none;
+  width: min-content;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.custom-form .link-item p {
+  width: min-content;
+  margin: 0px 10px;
 }
 
 .custom-form button {
@@ -214,7 +235,7 @@ body {
   background: var(--tertiary);
   border: 0px;
   border-radius: 10px;
-  font-size: var(--subtext-font-size);
+  font-size: var(--button-font-size);
 }
 
 button {
@@ -229,9 +250,10 @@ button {
 
 .custom-form .item {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   align-items: center;
   color: var(--light-text);
+  width: 100%;
 }
 
 .username-box a {
@@ -439,6 +461,41 @@ textarea {
   padding: 4px;
   background: var(--page-background);
   color: var(--light-text);
+}
+
+.links-list {
+  width: 100%;
+}
+
+.modal {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 90vw;
+  max-width: 320px;
+  height: 90vh;
+  max-height: 300px;
+  background: var(--primary);
+  padding: 10px;
+  border-radius: 10px;
+  border: var(--light-border-color) 2px solid;
+}
+
+.custom-form textarea {
+  margin-right: auto;
+  width: 95%;
+  border: none;
+}
+
+.custom-form h2 {
+  font-weight: 500;
+}
+
+.custom-form input[type="file"] {
+  border: none;
 }
 
 .blog-post,
@@ -759,6 +816,7 @@ ul {
   padding-top: 30px;
   padding-bottom: 30px;
   align-self: center;
+  align-items: center;
 }
 
 #toggle-visibility {

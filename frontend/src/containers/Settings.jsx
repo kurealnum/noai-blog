@@ -3,7 +3,6 @@ import { Outlet, useRouteLoaderData } from "react-router-dom";
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
-import "../styles/Settings.css";
 import ErrorMessage from "../components/ErrorMessage";
 import {
   getLinks,
@@ -131,12 +130,7 @@ function Settings() {
           method="POST"
           onSubmit={(e) => formSubmitHelper(e)}
         >
-          <a
-            className="accent-highlight"
-            href={"/manage-password/change-password/"}
-          >
-            Change password
-          </a>
+          <h2>User information</h2>
           <div className="item">
             <label htmlFor="username">Username</label>
             <input
@@ -157,8 +151,15 @@ function Settings() {
               maxLength={200}
             ></input>
           </div>
+          <a
+            className="accent-highlight"
+            href={"/manage-password/change-password/"}
+          >
+            Change password
+          </a>
+          <h2>Personalization</h2>
           <div className="item">
-            <label htmlFor="first_name">First name</label>
+            <label htmlFor="first_name">First name (optional)</label>
             <input
               id="first_name"
               name="first_name"
@@ -168,7 +169,7 @@ function Settings() {
             ></input>
           </div>
           <div className="item">
-            <label htmlFor="last_name">Last name</label>
+            <label htmlFor="last_name">Last name (optional)</label>
             <input
               id="last_name"
               name="last_name"
@@ -211,7 +212,7 @@ function Settings() {
           </div>
           <h2>Links</h2>
           <i>
-            <p>All links must be HTTPS</p>
+            <p>All links must be HTTPS. Maximum of 5 links.</p>
           </i>
           <ul className="links-list">
             {newLinks.map((content, index) => (
@@ -254,7 +255,7 @@ function Settings() {
             Add link
           </button>
           <Modal open={isModalOpen} onClose={handleClose}>
-            <div id="modal">
+            <div className="modal custom-form">
               <label htmlFor="name">New Name</label>
               <input
                 id="name"
