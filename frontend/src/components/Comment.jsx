@@ -138,7 +138,7 @@ function Comment({
           />
         </div>
         {editInputOpen ? (
-          <form onSubmit={(e) => editHelper(e)} className="edit-comment-form">
+          <form onSubmit={(e) => editHelper(e)} className={"edit-comment-form"}>
             <textarea />
             <div className="edit-buttons">
               <button

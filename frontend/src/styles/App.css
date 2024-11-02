@@ -1058,9 +1058,11 @@ input[type="file"]::file-selector-button {
   }
   .comment,
   .comment-thumbnail,
-  .edit-comment-form,
   .reply-comment-form {
     width: 550px;
+  }
+  .edit-comment-form {
+    width: 100%;
   }
   .comment-reply {
     width: 500px;
