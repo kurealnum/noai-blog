@@ -27,8 +27,8 @@ input {
 }
 
 .blogpost-thumbnail {
-  height: 54%;
-  width: 96%;
+  height: 162px;
+  width: 288px;
 }
 
 .post-form {
@@ -455,6 +455,10 @@ textarea {
   color: var(--light-text);
 }
 
+.blog-post {
+  width: min-content;
+}
+
 .comment a {
   color: var(--light-text);
 }
@@ -551,11 +555,11 @@ p {
 }
 
 .feed-advertisement {
-  height: 100px;
+  height: 288px;
+  width: 264px;
   border-radius: 10px;
   border: var(--accent) 2px solid;
   background: var(--primary);
-  width: 85vw;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -567,7 +571,7 @@ p {
   font-style: italic;
 }
 
-#feed,
+.feed,
 #create-post,
 #error-page {
   display: flex;
@@ -575,6 +579,19 @@ p {
   align-items: center;
   margin: 30px auto;
   gap: 20px;
+}
+
+.flex-vertical {
+  display: flex;
+  flex-direction: column;
+}
+
+.feed {
+  width: 90%;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1300px;
 }
 
 .hint {
@@ -674,6 +691,7 @@ p {
 }
 
 .paginator {
+  margin: 30px auto;
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -867,13 +885,6 @@ input[type="file"]::file-selector-button {
     max-width: 800px;
   }
 
-  .blogpost-thumbnail {
-    height: 225px;
-    width: 400px;
-  }
-  .feed-advertisement {
-    width: 450px;
-  }
   .text-based-page {
     width: 60vw;
     max-width: 800px;
@@ -940,10 +951,6 @@ input[type="file"]::file-selector-button {
   .edit-comment-form,
   .reply-comment-form {
     width: 450px;
-  }
-
-  .blog-post {
-    width: min-content;
   }
 
   .comment-reply {

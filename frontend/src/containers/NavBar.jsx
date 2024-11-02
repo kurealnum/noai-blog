@@ -42,9 +42,9 @@ function NavBar() {
       <nav>
         <div className="nav-left">
           {userData == null ? (
-            <a id="log-in-button" href="/login">
+            <Link id="log-in-button" to="/login">
               Log in
-            </a>
+            </Link>
           ) : (
             <button
               className="nav-username-box"

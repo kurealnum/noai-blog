@@ -33,16 +33,7 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
   });
 
   return (
-    <Link
-      to={
-        "/post/" +
-        content["user"]["username"] +
-        "/" +
-        slugify(content["title"]) +
-        "/"
-      }
-      className="blog-post"
-    >
+    <li className="blog-post">
       <FlagButton
         type={"post"}
         content={{
@@ -51,39 +42,52 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
         }}
         isFlaggedParam={content["flagged"]}
       />
-      <img src={content["thumbnail"]} className="blogpost-thumbnail"></img>
-      <h2>{content["title"]}</h2>
-      <div className="info">
-        <p>{"By " + content["user"]["username"]}</p>
-        <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
-      </div>
-      {isAdminDashboard && isAdmin() ? (
-        <div className="flex-row-spacing">
-          <button onClick={() => toggleListicleMutation.mutate()}>
-            {content["is_listicle"] ? <PlaylistRemove /> : <PlaylistAdd />}
-          </button>
-          <button onClick={() => setOpen(true)}>
-            <Delete />
-          </button>
-          <Dialog
-            open={open}
-            className="delete-post-confirm"
-            onClose={() => setOpen(false)}
-          >
-            <h1>
-              This will delete SOMEONE ELSE'S POST FOREVER as well as ALL OF THE
-              COMMENTS!!! Are you sure?
-            </h1>
-            <button onClick={() => dialogHelper()} className="accent-border">
-              Yes, I am sure
-            </button>
-            <button onClick={() => setOpen(false)} className="tertiary-border">
-              No, I'm not
-            </button>
-          </Dialog>
+      <Link
+        to={
+          "/post/" +
+          content["user"]["username"] +
+          "/" +
+          slugify(content["title"]) +
+          "/"
+        }
+      >
+        <img src={content["thumbnail"]} className="blogpost-thumbnail"></img>
+        <h2>{content["title"]}</h2>
+        <div className="info">
+          <p>{"By " + content["user"]["username"]}</p>
+          <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
         </div>
-      ) : null}
-    </Link>
+        {isAdminDashboard && isAdmin() ? (
+          <div className="flex-row-spacing">
+            <button onClick={() => toggleListicleMutation.mutate()}>
+              {content["is_listicle"] ? <PlaylistRemove /> : <PlaylistAdd />}
+            </button>
+            <button onClick={() => setOpen(true)}>
+              <Delete />
+            </button>
+            <Dialog
+              open={open}
+              className="delete-post-confirm"
+              onClose={() => setOpen(false)}
+            >
+              <h1>
+                This will delete SOMEONE ELSE'S POST FOREVER as well as ALL OF
+                THE COMMENTS!!! Are you sure?
+              </h1>
+              <button onClick={() => dialogHelper()} className="accent-border">
+                Yes, I am sure
+              </button>
+              <button
+                onClick={() => setOpen(false)}
+                className="tertiary-border"
+              >
+                No, I'm not
+              </button>
+            </Dialog>
+          </div>
+        ) : null}
+      </Link>
+    </li>
   );
 }
 

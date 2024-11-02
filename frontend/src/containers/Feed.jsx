@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 
 function Feed() {
   // the amount of advertisements to show every x posts: advertise ratio of 5 = 1 ad every 5 posts
-  const advertiseRatio = 7;
+  const advertiseRatio = 18;
   const [page, setPage] = useState(1);
   const { data, isLoading } = useQuery({
     queryKey: ["getFeed", page],
@@ -28,38 +28,42 @@ function Feed() {
 
   if (!data || data.length === 0) {
     return (
-      <div id="feed">
-        <h1>There were no posts to be shown!</h1>
+      <>
+        <ul className="feed">
+          <h1>There were no posts to be shown!</h1>
+        </ul>
         <Paginator
           formSubmitHelper={formSubmitHelper}
           page={page}
           setPage={setPage}
         />
-      </div>
+      </>
     );
   }
   return (
-    <div id="feed">
-      {data.map((content, index) => (
-        <>
-          <BlogPostThumbnail key={index} content={content} />
-          {(index + 1) % advertiseRatio == 0 ? (
-            <div
-              className="feed-advertisement"
-              key={"feed-advertisement" + index}
-            >
-              <a
-                href="mailto: thenoaiblog@gmail.com"
+    <>
+      <ul className="feed">
+        {data.map((content, index) => (
+          <>
+            <BlogPostThumbnail key={index} content={content} />
+            {(index + 1) % advertiseRatio == 0 ? (
+              <div
+                className="feed-advertisement"
                 key={"feed-advertisement" + index}
               >
-                Contact us about advertisements!
-              </a>
-            </div>
-          ) : null}
-        </>
-      ))}
+                <a
+                  href="mailto: thenoaiblog@gmail.com"
+                  key={"feed-advertisement" + index}
+                >
+                  Contact us about advertisements!
+                </a>
+              </div>
+            ) : null}
+          </>
+        ))}
+      </ul>
       <Paginator formSubmitHelper={formSubmitHelper} page={page} />
-    </div>
+    </>
   );
 }
 
