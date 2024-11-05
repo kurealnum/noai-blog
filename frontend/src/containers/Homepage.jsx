@@ -14,6 +14,7 @@ import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { Alert, Snackbar } from "@mui/material";
 import Profile from "../components/Profile";
 import FlagButton from "../components/FlagButton";
+import { sanitize } from "dompurify";
 
 function Homepage() {
   const { username } = useParams();
@@ -106,10 +107,10 @@ function Homepage() {
       dateModified: userInfo["updated_date"],
       mainEntity: {
         "@type": "Person",
-        name: userInfo["first_name"] + " " + userInfo["last_name"],
-        alternateName: userInfo["username"],
-        description: userInfo["about_me"],
-        image: userInfo["profile_picture"],
+        name: sanitize(userInfo["first_name"] + " " + userInfo["last_name"]),
+        alternateName: sanitize(userInfo["username"]),
+        description: sanitize(userInfo["about_me"]),
+        image: sanitize(userInfo["profile_picture"]),
       },
     };
 

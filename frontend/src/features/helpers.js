@@ -1,5 +1,18 @@
 import store from "./authStore/store";
 
+function sanitize(string) {
+  const map = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "/": "&#x2F;",
+  };
+  const reg = /[&<>"'/]/gi;
+  return string.replace(reg, (match) => map[match]);
+}
+
 const getCookie = (name) => {
   let cookieValue = null;
   if (document.cookie && document.cookie !== "") {
@@ -774,6 +787,7 @@ export {
   getFeed,
   createPost,
   doesPathExist,
+  sanitize,
 };
 
 export default getCookie;

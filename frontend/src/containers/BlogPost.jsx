@@ -14,7 +14,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
-import DOMPurify from "dompurify";
+import DOMPurify, { sanitize } from "dompurify";
 import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
@@ -117,15 +117,15 @@ function BlogPost() {
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "NewsArticle",
-      headline: data["title"],
+      headline: sanitize(data["title"]),
       image: [data["thumbnail"]],
-      datePublished: data["created_date"],
-      dateModified: data["updated_date"],
+      datePublished: sanitize(data["created_date"]),
+      dateModified: sanitize(data["updated_date"]),
       author: [
         {
           "@type": "Person",
-          name: data["user"]["username"],
-          url: "/homepage/" + data["user"]["username"],
+          name: sanitize(data["user"]["username"]),
+          url: "/homepage/" + sanitize(data["user"]["username"]),
         },
       ],
     };
