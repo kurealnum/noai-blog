@@ -52,7 +52,7 @@ const router = createBrowserRouter([
       {
         path: "faq",
         element: (
-          <Page type={"public"}>
+          <Page type={"public"} title={"FAQ"}>
             <Faq />
           </Page>
         ),

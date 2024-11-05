@@ -80,8 +80,11 @@ function Faq() {
         <h2>How does byeAI detect AI generated content?</h2>
         <p>
           We have a standardized system in place that helps take care of AI
-          generated/assisted posts. You can read more about this in our
-          <Link to="/guidelines">guidelines</Link>.
+          generated/assisted posts. You can read more about this in our{" "}
+          <Link className="tertiary-accent" to="/guidelines">
+            guidelines
+          </Link>
+          .
         </p>
         <h2>What kind of content can I find on byeAI?</h2>
         <p>
@@ -99,7 +102,7 @@ function Faq() {
         </p>
         <h2>Can I nominate something to be added to the FAQ/guidelines?</h2>
         <p>
-          Probably. Please send an email to
+          Probably. Please send an email to{" "}
           <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
             thenoaiblog@gmail.com
           </a>

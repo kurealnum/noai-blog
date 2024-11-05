@@ -116,7 +116,7 @@ function BlogPost() {
 
     const structuredData = {
       "@context": "https://schema.org",
-      "@type:": "NewsArticle",
+      "@type": "NewsArticle",
       headline: data["title"],
       image: [data["thumbnail"]],
       datePublished: data["created_date"],

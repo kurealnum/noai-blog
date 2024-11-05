@@ -14,6 +14,10 @@ function Guidelines() {
         <Link className="tertiary-accent" to="/about-us">
           here
         </Link>
+        . And if you're looking for the FAQ, click{" "}
+        <Link to="/faq" className="tertiary-accent">
+          here
+        </Link>
         .)
       </p>
       <h2>Contact Information</h2>
