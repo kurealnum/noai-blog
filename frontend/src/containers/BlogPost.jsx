@@ -14,7 +14,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import "../styles/BlogPost.css";
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
-import DOMPurify, { sanitize } from "dompurify";
+import DOMPurify from "dompurify";
 import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
@@ -112,20 +112,20 @@ function BlogPost() {
   }
 
   if (isSuccess) {
-    document.title = "NoAI Blog" + " - " + data["title"];
+    document.title = document.title + " - " + data["title"];
 
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "NewsArticle",
-      headline: sanitize(data["title"]),
+      headline: DOMPurify.sanitize(data["title"]),
       image: [data["thumbnail"]],
-      datePublished: sanitize(data["created_date"]),
-      dateModified: sanitize(data["updated_date"]),
+      datePublished: DOMPurify.sanitize(data["created_date"]),
+      dateModified: DOMPurify.sanitize(data["updated_date"]),
       author: [
         {
           "@type": "Person",
-          name: sanitize(data["user"]["username"]),
-          url: "/homepage/" + sanitize(data["user"]["username"]),
+          name: DOMPurify.sanitize(data["user"]["username"]),
+          url: "/homepage/" + DOMPurify.sanitize(data["user"]["username"]),
         },
       ],
     };
