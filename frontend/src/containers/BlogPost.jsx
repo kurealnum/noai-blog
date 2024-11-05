@@ -114,83 +114,105 @@ function BlogPost() {
   if (isSuccess) {
     document.title = "NoAI Blog" + " - " + data["title"];
 
-    return (
-      <div id="blog-post">
-        <div className="blogpost-thumbnail-wrapper">
-          <img src={data["thumbnail"]} className="blogpost-thumbnail"></img>
-        </div>
-        <h1>{data.title}</h1>
-        <div className="info-bar">
-          <div className="info-bar-box">
-            <Profile content={data} />
-          </div>
-          <button
-            className="reaction-button"
-            data-testid="reaction-button-icon"
-            onClick={
-              doesReactionExist
-                ? () => deleteReactionHelper()
-                : () => createReactionHelper()
-            }
-          >
-            <div className="likes">
-              <span data-testid="reaction-count">
-                {data["likes"] == null ? 0 : data["likes"]}
-              </span>
-              {doesReactionExist ? <Favorite /> : <FavoriteBorderIcon />}
-            </div>
-          </button>
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type:": "NewsArticle",
+      headline: data["title"],
+      image: [data["thumbnail"]],
+      datePublished: data["created_date"],
+      dateModified: data["updated_date"],
+      author: [
+        {
+          "@type": "Person",
+          name: data["user"]["username"],
+          url: "/homepage/" + data["user"]["username"],
+        },
+      ],
+    };
 
-          <div id="member-since">
-            <CalendarMonthIcon />
-            <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
+    return (
+      <>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+        ></script>
+        <div id="blog-post">
+          <div className="blogpost-thumbnail-wrapper">
+            <img src={data["thumbnail"]} className="blogpost-thumbnail"></img>
           </div>
-          <button
-            className="reaction-button"
-            onClick={() => setIsLeftAligned(!isLeftAligned)}
-          >
-            {isLeftAligned ? <FormatAlignCenter /> : <FormatAlignLeft />}
-          </button>
-          <FlagButton
-            type={"post"}
-            isFlaggedParam={data["flagged"]}
-            content={{
-              username: data["user"]["username"],
-              slug: slugify(data["title"]),
-            }}
-          />
-        </div>
-        <div
-          className={
-            isLeftAligned
-              ? "blog-post-content-align-left"
-              : "blog-post-content-align-right"
-          }
-          dangerouslySetInnerHTML={{
-            __html: DOMPurify.sanitize(marked.parse(data["content"])),
-          }}
-        ></div>
-        <div>
-          <h2>Comments</h2>
-          {isAuthenticated() ? (
-            <form
-              onSubmit={(e) => createCommentHelper(e)}
-              className="create-comment-form"
+          <h1>{data.title}</h1>
+          <div className="info-bar">
+            <div className="info-bar-box">
+              <Profile content={data} />
+            </div>
+            <button
+              className="reaction-button"
+              data-testid="reaction-button-icon"
+              onClick={
+                doesReactionExist
+                  ? () => deleteReactionHelper()
+                  : () => createReactionHelper()
+              }
             >
-              <textarea></textarea>
-              <button type="submit">Comment</button>
-            </form>
-          ) : null}
-          {getCommentsByPostQuery.isSuccess ? (
-            <Comments
-              raw={getCommentsByPostQuery.data}
-              refetch={getCommentsByPostQuery.refetch}
+              <div className="likes">
+                <span data-testid="reaction-count">
+                  {data["likes"] == null ? 0 : data["likes"]}
+                </span>
+                {doesReactionExist ? <Favorite /> : <FavoriteBorderIcon />}
+              </div>
+            </button>
+
+            <div id="member-since">
+              <CalendarMonthIcon />
+              <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
+            </div>
+            <button
+              className="reaction-button"
+              onClick={() => setIsLeftAligned(!isLeftAligned)}
+            >
+              {isLeftAligned ? <FormatAlignCenter /> : <FormatAlignLeft />}
+            </button>
+            <FlagButton
+              type={"post"}
+              isFlaggedParam={data["flagged"]}
+              content={{
+                username: data["user"]["username"],
+                slug: slugify(data["title"]),
+              }}
             />
-          ) : (
-            <h3>There was an error fetching the comments!</h3>
-          )}
+          </div>
+          <div
+            className={
+              isLeftAligned
+                ? "blog-post-content-align-left"
+                : "blog-post-content-align-right"
+            }
+            dangerouslySetInnerHTML={{
+              __html: DOMPurify.sanitize(marked.parse(data["content"])),
+            }}
+          ></div>
+          <div>
+            <h2>Comments</h2>
+            {isAuthenticated() ? (
+              <form
+                onSubmit={(e) => createCommentHelper(e)}
+                className="create-comment-form"
+              >
+                <textarea></textarea>
+                <button type="submit">Comment</button>
+              </form>
+            ) : null}
+            {getCommentsByPostQuery.isSuccess ? (
+              <Comments
+                raw={getCommentsByPostQuery.data}
+                refetch={getCommentsByPostQuery.refetch}
+              />
+            ) : (
+              <h3>There was an error fetching the comments!</h3>
+            )}
+          </div>
         </div>
-      </div>
+      </>
     );
   }
 }
