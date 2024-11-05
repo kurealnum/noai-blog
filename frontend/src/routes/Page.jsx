@@ -54,16 +54,14 @@ function Page({ children, title, type }) {
     return <CircularProgress />;
   }
 
-  if (type === "public") {
-    return children;
-  } else if (type == "private" && isAuthenticated()) {
-    return children;
-  } else if (type == "moderator" && isMod()) {
-    return children;
-  } else if (type == "admin" && isAdmin()) {
-    return children;
-  } else if (type == "superuser" && isSuperuser()) {
-    return children;
+  if (
+    type === "public" ||
+    (type === "private" && isAuthenticated()) ||
+    (type === "moderator" && isMod()) ||
+    (type === "admin" && isAdmin()) ||
+    (type === "superuser" && isSuperuser())
+  ) {
+    return <main>{children}</main>;
   } else {
     return <Navigate to="/login" replace={true} />;
   }

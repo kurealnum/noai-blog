@@ -55,7 +55,11 @@ function NavBar() {
               data-testid="open-dropdown"
             >
               {exists ? (
-                <img id="pfp" src={userData["profile_picture"]}></img>
+                <img
+                  alt="Profile Picture"
+                  id="pfp"
+                  src={userData["profile_picture"]}
+                ></img>
               ) : null}
               {open ? <ExpandLess /> : <ExpandMore />}{" "}
               <Popper anchorEl={anchorEl} open={open} transition>

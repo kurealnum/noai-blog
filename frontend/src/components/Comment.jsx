@@ -92,6 +92,7 @@ function Comment({
                 <>
                   {content["user"]["profile_picture"] != null ? (
                     <img
+                      alt="Profile Picture"
                       className="pfp"
                       src={content["user"]["profile_picture"]}
                       onError={() => setIsProfilePicture(false)}
@@ -108,6 +109,7 @@ function Comment({
                   <>
                     {content["user"]["profile_picture"] != null ? (
                       <img
+                        alt="Profile Picture"
                         className="pfp"
                         src={content["user"]["profile_picture"]}
                         onError={() => setIsProfilePicture(false)}

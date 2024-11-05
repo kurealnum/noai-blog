@@ -51,7 +51,11 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
           "/"
         }
       >
-        <img src={content["thumbnail"]} className="blogpost-thumbnail"></img>
+        <img
+          alt="thumbnail"
+          src={content["thumbnail"]}
+          className="blogpost-thumbnail"
+        ></img>
         <h2>{content["title"]}</h2>
         <div className="info">
           <p>{"By " + content["user"]["username"]}</p>

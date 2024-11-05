@@ -130,130 +130,137 @@ function Settings() {
           method="POST"
           onSubmit={(e) => formSubmitHelper(e)}
         >
-          <h2>User information</h2>
-          <div className="item">
-            <label htmlFor="username">Username</label>
-            <input
-              name="username"
-              id="username"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["username"]}
-              maxLength={150}
-            ></input>
-          </div>
-          <div className="item">
-            <label htmlFor="email">Email</label>
-            <input
-              id="email"
-              name="email"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["email"]}
-              maxLength={200}
-            ></input>
-          </div>
-          <a
-            className="accent-highlight"
-            href={"/manage-password/change-password/"}
-          >
-            Change password
-          </a>
-          <h2>Personalization</h2>
-          <div className="item">
-            <label htmlFor="first_name">First name (optional)</label>
-            <input
-              id="first_name"
-              name="first_name"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["first_name"]}
-              maxLength={50}
-            ></input>
-          </div>
-          <div className="item">
-            <label htmlFor="last_name">Last name (optional)</label>
-            <input
-              id="last_name"
-              name="last_name"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["last_name"]}
-              maxLength={50}
-            ></input>
-          </div>
-          <div className="item">
-            <label htmlFor="about_me">About me</label>
-            <textarea
-              id="about_me"
-              name="about_me"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["about_me"]}
-              maxLength={250}
-            ></textarea>
-          </div>
-          <div className="item">
-            <label htmlFor="technical_info">Technical Info</label>
-            <textarea
-              id="technical_info"
-              name="technical_info"
-              onChange={(e) => setNewUserDataHelper(e)}
-              value={newUserData["technical_info"]}
-              maxLength={150}
-            ></textarea>
-          </div>
-          <div className="item">
-            <label htmlFor="profile_picture">
-              Profile Picture (PNG or JPEG)
-            </label>
-            <input
-              id="profile_picture"
-              name="profile_picture"
-              onChange={(e) => setProfilePictureHelper(e)}
-              type="file"
-              accept="image/png, image/jpeg"
-            ></input>
-          </div>
-          <h2>Links</h2>
-          <i>
-            <p>All links must be HTTPS. Maximum of 5 links.</p>
-          </i>
-          <ul className="links-list">
-            {newLinks.map((content, index) => (
-              <li className="item link-item" key={content["name"] + index}>
-                <label htmlFor="name" hidden>
-                  Name
-                </label>
-                <input
-                  id="name"
-                  defaultValue={content["name"]}
-                  name="name"
-                  onChange={(e) => setNewLinksHelper(e, index)}
-                ></input>
-                <p> - </p>
-                <label htmlFor="link" hidden>
-                  Link
-                </label>
-                <input
-                  id="link"
-                  name="link"
-                  defaultValue={content["link"]}
-                  onChange={(e) => setNewLinksHelper(e, index)}
-                ></input>
-                <button
-                  type="button"
-                  onClick={() => removeNewLinksHelper(index)}
-                  data-testid="delete-button"
-                >
-                  <DeleteIcon />
-                </button>
-              </li>
-            ))}
-          </ul>
-          <button
-            id="save"
-            type="button"
-            onClick={handleOpen}
-            data-testid="modal-open"
-          >
-            Add link
-          </button>
+          <fieldset>
+            <legend>User information</legend>
+            <div className="item">
+              <label htmlFor="username">Username</label>
+              <input
+                name="username"
+                id="username"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["username"]}
+                maxLength={150}
+              ></input>
+            </div>
+            <div className="item">
+              <label htmlFor="email">Email</label>
+              <input
+                id="email"
+                name="email"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["email"]}
+                maxLength={200}
+              ></input>
+            </div>
+            <a
+              className="accent-highlight"
+              href={"/manage-password/change-password/"}
+            >
+              Change password
+            </a>
+          </fieldset>
+          <fieldset>
+            <legend>Personalization</legend>
+            <div className="item">
+              <label htmlFor="first_name">First name (optional)</label>
+              <input
+                id="first_name"
+                name="first_name"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["first_name"]}
+                maxLength={50}
+              ></input>
+            </div>
+            <div className="item">
+              <label htmlFor="last_name">Last name (optional)</label>
+              <input
+                id="last_name"
+                name="last_name"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["last_name"]}
+                maxLength={50}
+              ></input>
+            </div>
+            <div className="item">
+              <label htmlFor="about_me">About me</label>
+              <textarea
+                id="about_me"
+                name="about_me"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["about_me"]}
+                maxLength={250}
+              ></textarea>
+            </div>
+            <div className="item">
+              <label htmlFor="technical_info">Technical Info</label>
+              <textarea
+                id="technical_info"
+                name="technical_info"
+                onChange={(e) => setNewUserDataHelper(e)}
+                value={newUserData["technical_info"]}
+                maxLength={150}
+              ></textarea>
+            </div>
+            <div className="item">
+              <label htmlFor="profile_picture">
+                Profile Picture (PNG or JPEG)
+              </label>
+              <input
+                id="profile_picture"
+                name="profile_picture"
+                onChange={(e) => setProfilePictureHelper(e)}
+                type="file"
+                accept="image/png, image/jpeg"
+              ></input>
+            </div>
+          </fieldset>
+          <fieldset>
+            <legend>Links</legend>
+
+            <i>
+              <p>All links must be HTTPS. Maximum of 5 links.</p>
+            </i>
+            <ul className="links-list">
+              {newLinks.map((content, index) => (
+                <li className="item link-item" key={content["name"] + index}>
+                  <label htmlFor="name" hidden>
+                    Name
+                  </label>
+                  <input
+                    id="name"
+                    defaultValue={content["name"]}
+                    name="name"
+                    onChange={(e) => setNewLinksHelper(e, index)}
+                  ></input>
+                  <p> - </p>
+                  <label htmlFor="link" hidden>
+                    Link
+                  </label>
+                  <input
+                    id="link"
+                    name="link"
+                    defaultValue={content["link"]}
+                    onChange={(e) => setNewLinksHelper(e, index)}
+                  ></input>
+                  <button
+                    type="button"
+                    onClick={() => removeNewLinksHelper(index)}
+                    data-testid="delete-button"
+                  >
+                    <DeleteIcon />
+                  </button>
+                </li>
+              ))}
+            </ul>
+            <button
+              id="save"
+              type="button"
+              onClick={handleOpen}
+              data-testid="modal-open"
+            >
+              Add link
+            </button>
+          </fieldset>
           <Modal open={isModalOpen} onClose={handleClose}>
             <div className="modal custom-form">
               <label htmlFor="name">New Name</label>
