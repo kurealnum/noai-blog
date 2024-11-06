@@ -227,7 +227,11 @@ class BlogPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_status, request.status_code)
 
     def test_does_edit_properly(self):
-        img = SimpleUploadedFile("test.jpg", b"file data")
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
         # create a separate object to edit
         to_edit = BlogPost.objects.create(
             user=self.user,
@@ -247,10 +251,10 @@ class BlogPostViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
-            "slug": to_edit.slug_field,
             "title": "An edited title",
             "content": "Some new content",
             "thumbnail": new_img,
+            "original_slug": to_edit.slug_field,
         }
         request = temp_client.put(reverse_lazy("edit_post"), data=data)
         expected_result = "An edited title"
