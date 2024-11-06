@@ -91,10 +91,12 @@ class BlogPostView(APIView):
         user = self.request.user.id  # type: ignore
         title = data["title"]
         content = data["content"]
-        slug = data["slug"]
         thumbnail = data["thumbnail"]
+        original_slug = data["original_slug"]
+
         if thumbnail == "undefined":
             thumbnail = None
+
         serializer_data = {
             "user": user,
             "title": title,
@@ -102,7 +104,9 @@ class BlogPostView(APIView):
             "thumbnail": thumbnail,
         }
 
-        instance = generics.get_object_or_404(BlogPost, user=user, slug_field=slug)
+        instance = generics.get_object_or_404(
+            BlogPost, user=user, slug_field=original_slug
+        )
         serializer = CreateOrUpdateBlogPostSerializer(
             data=serializer_data, instance=instance
         )

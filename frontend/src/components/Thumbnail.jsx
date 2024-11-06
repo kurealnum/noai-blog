@@ -20,7 +20,7 @@ function Thumbnail({ url }) {
       <img
         alt="thumbnail"
         src={NoThumbnailImage}
-        className="blogpost-thumbnail"
+        className="blogpost-thumbnail no-thumbnail"
       ></img>
     );
   }

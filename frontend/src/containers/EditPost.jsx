@@ -52,7 +52,7 @@ function EditPost() {
 
   function handleSave(e) {
     e.preventDefault();
-    editPostMutation.mutate({ newBlogPost, thumbnail });
+    editPostMutation.mutate({ newBlogPost, thumbnail, originalSlug: slug });
   }
 
   function setContentHelper(content) {
