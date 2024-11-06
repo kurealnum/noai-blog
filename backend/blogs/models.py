@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.template.defaultfilters import slugify
 from accounts.models import CustomUser
+from django_resized import ResizedImageField
 
 
 def get_sentinel_user():
@@ -18,7 +19,15 @@ class BlogPost(models.Model):
     slug_field = models.SlugField(null=True, unique=True)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
-    thumbnail = models.ImageField(upload_to="blog_thumbnails/", blank=True)
+    thumbnail = ResizedImageField(
+        size=[520, 292],
+        upload_to="blog_thumbnails/",
+        blank=True,
+        scale=1,
+        quality=100,
+        keep_meta=False,
+        force_format="JPEG",
+    )
 
     def get_absolute_url(self):
         return reverse(
