@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Delete, PlaylistAdd, PlaylistRemove } from "@mui/icons-material";
 import { Dialog } from "@mui/material";
 import { useState } from "react";
+import Thumbnail from "./Thumbnail";
 
 function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
   const [open, setOpen] = useState(false);
@@ -51,11 +52,7 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
           "/"
         }
       >
-        <img
-          alt="thumbnail"
-          src={content["thumbnail"]}
-          className="blogpost-thumbnail"
-        ></img>
+        <Thumbnail url={content["thumbnail"]} />
         <h2>{content["title"]}</h2>
         <div className="info">
           <p>{"By " + content["user"]["username"]}</p>

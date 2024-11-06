@@ -28,6 +28,7 @@ import {
 import Comments from "./Comments";
 import Profile from "../components/Profile";
 import FlagButton from "../components/FlagButton";
+import Thumbnail from "../components/Thumbnail";
 
 const marked = new Marked(
   markedHighlight({
@@ -138,11 +139,7 @@ function BlogPost() {
         ></script>
         <div id="blog-post">
           <div className="blogpost-thumbnail-wrapper">
-            <img
-              alt="thumbnail"
-              src={data["thumbnail"]}
-              className="blogpost-thumbnail"
-            ></img>
+            <Thumbnail src={data["thumbnail"]} />
           </div>
           <h1>{data.title}</h1>
           <div className="info-bar">
