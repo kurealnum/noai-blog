@@ -10,6 +10,7 @@ import {
   createLink,
   changeSettings,
 } from "../features/helpers";
+import { Close } from "@mui/icons-material";
 
 function Settings() {
   const userData = useRouteLoaderData("root");
@@ -249,26 +250,40 @@ function Settings() {
                 </li>
               ))}
             </ul>
-            <button type="button" onClick={handleOpen} data-testid="modal-open">
-              Add link
-            </button>
+            <div className="margin-wrapper">
+              <button
+                type="button"
+                onClick={handleOpen}
+                data-testid="modal-open"
+                className="special-button"
+              >
+                Add link
+              </button>
+            </div>
           </fieldset>
           <Modal open={isModalOpen} onClose={handleClose}>
             <div className="modal custom-form">
-              <label htmlFor="name">New Name</label>
-              <input
-                id="name"
-                name="name"
-                defaultValue="Name"
-                onChange={(e) => setSingleNewLinkHelper(e)}
-              ></input>
-              <label htmlFor="link">Link</label>
-              <input
-                id="link"
-                name="link"
-                defaultValue="Link"
-                onChange={(e) => setSingleNewLinkHelper(e)}
-              ></input>
+              <button className="icon-button" onClick={handleClose}>
+                <Close />
+              </button>
+              <div className="item">
+                <label htmlFor="name">New Name</label>
+                <input
+                  id="name"
+                  name="name"
+                  defaultValue="Name"
+                  onChange={(e) => setSingleNewLinkHelper(e)}
+                ></input>
+              </div>
+              <div className="item">
+                <label htmlFor="link">Link</label>
+                <input
+                  id="link"
+                  name="link"
+                  defaultValue="Link"
+                  onChange={(e) => setSingleNewLinkHelper(e)}
+                ></input>
+              </div>
               <button
                 id="save"
                 onClick={() => addNewLinksHelper()}

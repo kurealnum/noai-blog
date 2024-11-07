@@ -27,6 +27,19 @@ input {
   color: var(--light-text);
 }
 
+.custom-form .special-button {
+  min-width: 50px;
+  margin: 0 auto;
+}
+
+.margin-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
 fieldset {
   width: 95%;
   border: var(--light-border-color) solid 1px;
@@ -225,12 +238,18 @@ body {
   margin-bottom: 5px;
 }
 
-.custom-form .link-item button {
+.custom-form .link-item button,
+.custom-form .icon-button {
   border: none;
   background: none;
   width: min-content;
   padding: 0;
   margin-left: 10px;
+}
+
+.custom-form .icon-button {
+  margin: 0;
+  margin-left: auto;
 }
 
 .custom-form .link-item p {
@@ -242,14 +261,14 @@ body {
   color: var(--accent);
   padding: 5px 15px;
   background: var(--page-background);
-  border: var(--light-border-color) 1px solid;
+  border: none;
   border-radius: 10px;
   margin-top: 15px;
   margin-bottom: 5px;
 }
 
 .custom-form a {
-  color: inherit;
+  color: var(--accent);
 }
 
 .custom-form .password {
@@ -264,10 +283,12 @@ button {
   background: none;
 }
 
-.custom-form #save {
+.custom-form #save,
+button[type="submit"] {
   color: var(--light-text);
   width: 200px;
   margin: 20px auto;
+  border: var(--tertiary) solid 1px;
 }
 
 .custom-form .item {
@@ -504,6 +525,8 @@ textarea {
   padding: 10px;
   border-radius: 10px;
   border: var(--light-border-color) 2px solid;
+  gap: 10px;
+  height: auto;
 }
 
 .custom-form textarea {

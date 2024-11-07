@@ -29,7 +29,6 @@ function Login() {
         <div className="item">
           <label htmlFor="username">Username</label>
           <input
-            autoComplete="nickname"
             id="username"
             name="username"
             onChange={(e) => onFormChange(e)}
@@ -39,7 +38,6 @@ function Login() {
           <label htmlFor="password">Password</label>
           <div className="password">
             <input
-              autoComplete="current-password"
               id="password"
               name="password"
               type={isVisible ? "text" : "password"}
@@ -49,6 +47,7 @@ function Login() {
             <button
               id="toggle-visibility"
               type="button"
+              className="icon-button"
               onClick={() => setIsVisible(!isVisible)}
             >
               {isVisible ? <Visibility /> : <VisibilityOff />}

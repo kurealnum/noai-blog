@@ -74,6 +74,7 @@ function Register() {
             <button
               id="toggle-visibility"
               type="button"
+              className="icon-button"
               onClick={() => setIsVisible(!isVisible)}
             >
               {isVisible ? <Visibility /> : <VisibilityOff />}
