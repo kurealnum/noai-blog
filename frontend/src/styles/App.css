@@ -27,6 +27,13 @@ input {
   color: var(--light-text);
 }
 
+fieldset {
+  width: 95%;
+  border: var(--light-border-color) solid 1px;
+  margin: 0 auto;
+  margin-bottom: 40px;
+}
+
 .blogpost-thumbnail {
   height: 162px;
   width: 288px;
@@ -177,7 +184,7 @@ body {
   align-items: flex-start;
   gap: 20px;
   background: var(--background);
-  border: 2px var(--light-border-color) solid;
+  border: none;
   border-radius: 10px;
   margin: 0 auto;
   margin-top: 30px;
@@ -197,7 +204,8 @@ body {
   margin-right: auto;
   font-size: var(--link-font-size);
   text-wrap: nowrap;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
+  margin-top: 9px;
   font-style: italic;
   font-weight: 300;
 }
@@ -209,6 +217,7 @@ body {
   color: var(--light-text);
   width: 95%;
   margin-right: auto;
+  outline: none;
 }
 
 .custom-form .item.link-item {
@@ -230,12 +239,17 @@ body {
 }
 
 .custom-form button {
-  color: var(--light-text);
-  padding: 6px 50px;
-  background: var(--tertiary);
-  border: 0px;
+  color: var(--accent);
+  padding: 5px 15px;
+  background: var(--page-background);
+  border: var(--light-border-color) 1px solid;
   border-radius: 10px;
-  font-size: var(--button-font-size);
+  margin-top: 15px;
+  margin-bottom: 5px;
+}
+
+.custom-form a {
+  color: inherit;
 }
 
 .custom-form .password {
@@ -251,6 +265,7 @@ button {
 }
 
 .custom-form #save {
+  color: var(--light-text);
   width: 200px;
   margin: 20px auto;
 }
@@ -492,6 +507,7 @@ textarea {
 }
 
 .custom-form textarea {
+  outline: none;
   margin-right: auto;
   width: 95%;
   border: none;

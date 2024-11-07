@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django_resized import ResizedImageField
 
 
 class CustomUser(AbstractUser):
@@ -10,7 +11,17 @@ class CustomUser(AbstractUser):
     about_me = models.TextField(max_length=250)
     technical_info = models.TextField(max_length=150)
     password = models.CharField(max_length=100, unique=False)
-    profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
+    # profile_picture = models.ImageField(upload_to="profile_pictures/", blank=True)
+    profile_picture = ResizedImageField(
+        size=[64, 64],
+        upload_to="profile_pictures/",
+        blank=True,
+        scale=1,
+        quality=100,
+        keep_meta=False,
+        force_format="JPEG",
+        crop=["middle", "center"],
+    )
     approved_ai_usage = models.BooleanField(default=False)
     is_mod = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)

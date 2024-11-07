@@ -152,12 +152,9 @@ function Settings() {
                 maxLength={200}
               ></input>
             </div>
-            <a
-              className="accent-highlight"
-              href={"/manage-password/change-password/"}
-            >
-              Change password
-            </a>
+            <button className="form-button">
+              <a href={"/manage-password/change-password/"}>Change password</a>
+            </button>
           </fieldset>
           <fieldset>
             <legend>Personalization</legend>
@@ -252,12 +249,7 @@ function Settings() {
                 </li>
               ))}
             </ul>
-            <button
-              id="save"
-              type="button"
-              onClick={handleOpen}
-              data-testid="modal-open"
-            >
+            <button type="button" onClick={handleOpen} data-testid="modal-open">
               Add link
             </button>
           </fieldset>
