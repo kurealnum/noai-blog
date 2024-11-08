@@ -62,8 +62,10 @@ function Page({ children, title, type }) {
     (type === "superuser" && isSuperuser())
   ) {
     return <main>{children}</main>;
+  } else if (type == "public-only" && isAuthenticated()) {
+    return <Navigate to="/dashboard" />;
   } else {
-    return <Navigate to="/login" replace={true} />;
+    return <Navigate to="/login" />;
   }
 }
 

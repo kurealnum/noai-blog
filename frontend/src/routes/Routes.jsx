@@ -112,7 +112,7 @@ const router = createBrowserRouter([
       {
         path: "register",
         element: (
-          <Page title="Register" type={"public"}>
+          <Page title="Register" type={"public-only"}>
             <Register />
           </Page>
         ),
@@ -144,7 +144,7 @@ const router = createBrowserRouter([
       {
         path: "login",
         element: (
-          <Page title="Login" type="public">
+          <Page title="Login" type="public-only">
             <Login />
           </Page>
         ),
