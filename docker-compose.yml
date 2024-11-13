@@ -19,6 +19,8 @@ services:
 
     frontend:
         container_name: frontend
+        environment: 
+            - IS_FRONTEND_PROD=${IS_FRONTEND_PROD}
         build:
             context: ./frontend
             dockerfile: ./Dockerfile

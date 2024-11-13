@@ -97,6 +97,8 @@ EMAIL_PORT=587
 EMAIL_HOST_PASSWORD="ohnh obes bksi pvog"
 EMAIL_HOST_USER="thenoaiblog@gmail.com"
 EMAIL_USE_TLS=False
+
+IS_FRONTEND_PROD=false
 ```
 
 The email stuff is not currently in use.
