@@ -139,7 +139,7 @@ function BlogPost() {
         ></script>
         <div id="blog-post">
           <div className="blogpost-thumbnail-wrapper">
-            <Thumbnail src={data["thumbnail"]} />
+            <Thumbnail url={data["thumbnail"]} />
           </div>
           <h1>{data.title}</h1>
           <div className="info-bar">
