@@ -7,6 +7,7 @@
     "dev": "vite --host=0.0.0.0",
     "build": "vite build",
     "serve": "serve dist/ -l 6901",
+    "servehelp": "serve --help",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "vitest": "vitest run --coverage",
