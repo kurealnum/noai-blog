@@ -53,6 +53,7 @@ services:
             - SESSION_COOKIE_SECURE=${SESSION_COOKIE_SECURE}
             - CORS_EXPOSE_HEADERS=${CORS_EXPOSE_HEADERS}
             - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS}
+            - IS_BACKEND_PROD=${IS_BACKEND_PROD}
         container_name: backend
         build: 
             context: ./backend

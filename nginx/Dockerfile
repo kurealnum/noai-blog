@@ -1,4 +1,4 @@
-FROM nginx:latest as base
+FROM nginx:latest AS base
 
 # move config
 RUN rm /etc/nginx/nginx.conf

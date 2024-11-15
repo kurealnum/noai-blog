@@ -99,6 +99,12 @@ EMAIL_HOST_USER="thenoaiblog@gmail.com"
 EMAIL_USE_TLS=False
 
 IS_FRONTEND_PROD=false
+IS_BACKEND_PROD=false
+NGINX_TARGET="dev"
 ```
 
 The email stuff is not currently in use.
+
+NGINX_TARGET should either be "dev" or "prod". This determines which NGINX vhost configurations are copied.
+
+Yes, you do need to rebuild your docker container if you change any of the environment variables.
