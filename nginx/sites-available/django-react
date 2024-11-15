@@ -11,7 +11,7 @@ server
 	listen 80;
 	server_name 127.0.0.1 localhost;
 
-    location ~* \.(?:css|js|jpg|svg)$ {
+    location ~* \/(assets).*\.(?:css|js|jpg|svg)$ {
         expires 30d;
         add_header Cache-Control "public";
 		proxy_pass http://frontend_upstream;
