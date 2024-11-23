@@ -136,13 +136,34 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static & media files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 # this refers to the use of django-storages
 USE_STORAGES = environ.get("USE_STORAGES")
+STATIC_URL = environ.get("STATIC_URL")
+MEDIA_URL = "/media/"
 
-if USE_STORAGES != "True":
+if USE_STORAGES == "True":
+    AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = environ.get("AWS_S3_ENDPOINT_URL")
+    AWS_LOCATION = environ.get("AWS_LOCATION")
+    AWS_DEFAULT_ACL = environ.get("AWS_DEFAULT_ACL")
+
+    # static settings
+    STATICFILES_STORAGE = environ.get("STATICFILES_STORAGE")
+    STATIC_URL = "{}/{}/".format(AWS_S3_ENDPOINT_URL, "static")
+
+    DEFAULT_FILE_STORAGE = "backend.storage_backends.PublicMediaStorage"
+    MEDIA_URL = "{}/{}/".format(AWS_S3_ENDPOINT_URL, "media")
+
+    AWS_S3_OBJECT_PARAMETERS = {
+        "CacheControl": "max-age=86400",
+    }
+
+else:
     STORAGES = {
         "default": {
             "BACKEND": "django.core.files.storage.FileSystemStorage",
@@ -151,30 +172,11 @@ if USE_STORAGES != "True":
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
-else:
-    STATICFILES_STORAGE = environ.get("STATICFILES_STORAGE")
 
-AWS_S3_OBJECT_PARAMETERS = {
-    "CacheControl": "max-age=86400",
-}
-
-AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
-AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
-AWS_STORAGE_BUCKET_NAME = environ.get("AWS_STORAGE_BUCKET_NAME")
-AWS_S3_ENDPOINT_URL = environ.get("AWS_S3_ENDPOINT_URL")
-AWS_LOCATION = environ.get("AWS_LOCATION")
-AWS_DEFAULT_ACL = environ.get("AWS_DEFAULT_ACL")
-
-if AWS_S3_ENDPOINT_URL == "None" and AWS_LOCATION == "None":
     STATIC_ROOT = environ.get("STATIC_ROOT")
-else:
-    STATIC_ROOT = "{}/{}/".format(AWS_S3_ENDPOINT_URL, AWS_LOCATION)
-
-STATIC_URL = environ.get("STATIC_URL")
-
-# Media files
-MEDIA_ROOT = "/var/www/noaiblog/media/"
-MEDIA_URL = "/media/"
+    STATIC_URL = environ.get("STATIC_URL")
+    MEDIA_ROOT = "/var/www/noaiblog/media/"
+    MEDIA_URL = environ.get("MEDIA_URL")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
