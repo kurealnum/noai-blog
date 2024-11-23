@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "accounts",
     "blogs",
+    "storages",
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -137,8 +139,38 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = "collectedstatic/"
+# this refers to the use of django-storages
+USE_STORAGES = environ.get("USE_STORAGES")
+
+if USE_STORAGES != "True":
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+else:
+    STATICFILES_STORAGE = environ.get("STATICFILES_STORAGE")
+
+AWS_S3_OBJECT_PARAMETERS = {
+    "CacheControl": "max-age=86400",
+}
+
+AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
+AWS_STORAGE_BUCKET_NAME = environ.get("AWS_STORAGE_BUCKET_NAME")
+AWS_S3_ENDPOINT_URL = environ.get("AWS_S3_ENDPOINT_URL")
+AWS_LOCATION = environ.get("AWS_LOCATION")
+AWS_DEFAULT_ACL = environ.get("AWS_DEFAULT_ACL")
+
+if AWS_S3_ENDPOINT_URL == "None" and AWS_LOCATION == "None":
+    STATIC_ROOT = environ.get("STATIC_ROOT")
+else:
+    STATIC_ROOT = "{}/{}/".format(AWS_S3_ENDPOINT_URL, AWS_LOCATION)
+
+STATIC_URL = environ.get("STATIC_URL")
 
 # Media files
 MEDIA_ROOT = "/var/www/noaiblog/media/"

@@ -54,6 +54,16 @@ services:
             - CORS_EXPOSE_HEADERS=${CORS_EXPOSE_HEADERS}
             - CORS_ALLOW_CREDENTIALS=${CORS_ALLOW_CREDENTIALS}
             - IS_BACKEND_PROD=${IS_BACKEND_PROD}
+            - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+            - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+            - AWS_STORAGE_BUCKET_NAME=${AWS_STORAGE_BUCKET_NAME}
+            - AWS_S3_ENDPOINT_URL=${AWS_S3_ENDPOINT_URL}
+            - AWS_LOCATION=${AWS_LOCATION}
+            - AWS_DEFAULT_ACL=${AWS_DEFAULT_ACL}
+            - STATICFILES_STORAGE=${STATICFILES_STORAGE}
+            - STATIC_URL=${STATIC_URL}
+            - STATIC_ROOT=${STATIC_ROOT}
+            - USE_STORAGES=${USE_STORAGES}
         container_name: backend
         build: 
             context: ./backend
