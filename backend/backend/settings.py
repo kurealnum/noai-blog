@@ -151,6 +151,7 @@ if USE_STORAGES == "True":
     AWS_S3_ENDPOINT_URL = environ.get("AWS_S3_ENDPOINT_URL")
     AWS_LOCATION = environ.get("AWS_LOCATION")
     AWS_DEFAULT_ACL = environ.get("AWS_DEFAULT_ACL")
+    AWS_QUERYSTRING_AUTH = environ.get("AWS_QUERYSTRING_AUTH")
 
     # static settings
     STATICFILES_STORAGE = environ.get("STATICFILES_STORAGE")

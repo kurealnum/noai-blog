@@ -63,6 +63,7 @@ services:
             - STATIC_URL=${STATIC_URL}
             - STATIC_ROOT=${STATIC_ROOT}
             - USE_STORAGES=${USE_STORAGES}
+            - AWS_QUERYSTRING_AUTH=${AWS_QUERYSTRING_AUTH}
         container_name: backend
         build: 
             context: ./backend

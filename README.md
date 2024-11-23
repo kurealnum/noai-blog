@@ -71,7 +71,7 @@ Use this bit of markdown to test any Markdown renders:
 ## Env file setup
 
 ```
-DATABASE_NAME="noai-main"
+DATABASE_NAME="noai-migration-issue"
 DATABASE_USER="postgres"
 DATABASE_PASSWORD="afoi32)A013'a32]AOMNCVXO"
 DATABASE_PORT=5432
@@ -98,19 +98,23 @@ EMAIL_HOST_PASSWORD="ohnh obes bksi pvog"
 EMAIL_HOST_USER="thenoaiblog@gmail.com"
 EMAIL_USE_TLS=False
 
-IS_FRONTEND_PROD=false
-IS_BACKEND_PROD=false
-NGINX_TARGET="dev"
+IS_FRONTEND_PROD=true
+IS_BACKEND_PROD=true
+NGINX_TARGET="prod"
 
 USE_STORAGES=True
-AWS_ACCESS_KEY_ID="YourAccessKey"
-AWS_SECRET_ACCESS_KEY="YourSecretAccessKey"
-AWS_STORAGE_BUCKET_NAME="YourBucketName"
-AWS_S3_ENDPOINT_URL="YourURL"
-AWS_DEFAULT_ACL='YourACL'
-STATICFILES_STORAGE="YourStorage"
-STATIC_URL="static/"
+AWS_ACCESS_KEY_ID="accesskey"
+AWS_SECRET_ACCESS_KEY="secretaccesskey"
+AWS_STORAGE_BUCKET_NAME="byeai-main-spaces"
+AWS_S3_ENDPOINT_URL="https://byeai-main-spaces.nyc3.digitaloceanspaces.com"
+AWS_LOCATION='static'
+AWS_DEFAULT_ACL='public-read'
+AWS_QUERYSTRING_AUTH=False
+
+STATICFILES_STORAGE="backend.storage_backends.StaticStorage"
 STATIC_ROOT="collectedstatic/"
+STATIC_URL="static/"
+MEDIA_URL="media/"
 ```
 
 The email stuff is not currently in use.
