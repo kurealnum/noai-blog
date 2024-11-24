@@ -75,6 +75,7 @@ DATABASE_NAME="noai-migration-issue"
 DATABASE_USER="postgres"
 DATABASE_PASSWORD="afoi32)A013'a32]AOMNCVXO"
 DATABASE_PORT=5432
+DATABASE_HOST="postgres"
 
 DJANGO_SECRET_KEY="my-secret-key"
 DEBUG=True
