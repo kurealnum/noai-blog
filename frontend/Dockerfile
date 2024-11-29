@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 6901
 
-CMD [ "npm", "run", "dev" ]
+ENTRYPOINT [ "bash", "./entrypoint.sh" ]

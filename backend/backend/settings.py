@@ -54,7 +54,9 @@ INSTALLED_APPS = [
     "corsheaders",
     "accounts",
     "blogs",
+    "storages",
 ]
+
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -97,7 +99,7 @@ DATABASES = {
         "NAME": environ.get("DATABASE_NAME"),
         "USER": environ.get("DATABASE_USER"),
         "PASSWORD": environ.get("DATABASE_PASSWORD"),
-        "HOST": "postgres",
+        "HOST": environ.get("DATABASE_HOST"),
         "PORT": environ.get("DATABASE_PORT"),
     }
 }
@@ -134,15 +136,48 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Static & media files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
-STATIC_ROOT = "collectedstatic/"
-
-# Media files
-MEDIA_ROOT = "/var/www/noaiblog/media/"
+# this refers to the use of django-storages
+USE_STORAGES = environ.get("USE_STORAGES")
+STATIC_URL = environ.get("STATIC_URL")
 MEDIA_URL = "/media/"
+
+if USE_STORAGES == "True":
+    AWS_ACCESS_KEY_ID = environ.get("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = environ.get("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = environ.get("AWS_STORAGE_BUCKET_NAME")
+    AWS_S3_ENDPOINT_URL = environ.get("AWS_S3_ENDPOINT_URL")
+    AWS_LOCATION = environ.get("AWS_LOCATION")
+    AWS_DEFAULT_ACL = environ.get("AWS_DEFAULT_ACL")
+    AWS_QUERYSTRING_AUTH = environ.get("AWS_QUERYSTRING_AUTH")
+
+    # static settings
+    STATICFILES_STORAGE = environ.get("STATICFILES_STORAGE")
+    STATIC_URL = "{}/{}/".format(AWS_S3_ENDPOINT_URL, "static")
+
+    DEFAULT_FILE_STORAGE = "backend.storage_backends.PublicMediaStorage"
+    MEDIA_URL = "{}/{}/".format(AWS_S3_ENDPOINT_URL, "media")
+
+    AWS_S3_OBJECT_PARAMETERS = {
+        "CacheControl": "max-age=86400",
+    }
+
+else:
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
+    STATIC_ROOT = environ.get("STATIC_ROOT")
+    STATIC_URL = environ.get("STATIC_URL")
+    MEDIA_ROOT = "/var/www/noaiblog/media/"
+    MEDIA_URL = environ.get("MEDIA_URL")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

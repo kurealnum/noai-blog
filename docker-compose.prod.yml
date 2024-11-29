@@ -1,22 +1,4 @@
 services:
-    postgres:
-        image: postgres:latest
-        container_name: postgres
-        environment: 
-            - POSTGRES_DB=${DATABASE_NAME}
-            - POSTGRES_USER=${DATABASE_USER}
-            - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
-        expose:
-            - '5432:5432'
-        volumes:
-            - pg_data:/var/lib/postgresql/data
-        healthcheck:
-            test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER} -d ${DATABASE_NAME}"]
-            interval: 1s
-            retries: 3 
-            start_period: 3s
-            timeout: 3s
-
     frontend:
         container_name: frontend
         environment: 
@@ -71,9 +53,6 @@ services:
             dockerfile: ./Dockerfile
         expose:
             - "6900:6900"
-        depends_on:
-            postgres:
-                condition: service_healthy
         develop:
             watch:
                 - action: sync
@@ -91,6 +70,3 @@ services:
             - "1337:80"
         depends_on:
             - "backend"
-
-volumes:
-    pg_data:
