@@ -5,6 +5,10 @@ class StaticStorage(S3Boto3Storage):
     location = "static"
     default_acl = "public-read"
 
+    @property
+    def querystring_auth(self):
+        return False
+
 
 class PublicMediaStorage(S3Boto3Storage):
     location = "media"

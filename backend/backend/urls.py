@@ -24,7 +24,10 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 API_URL = "api/"
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(
+        "a-beautiful-fruit-tree-swaying-in-the-wind-fb520ad7a6e0e3f11a860efbcef3e66c/",
+        admin.site.urls,
+    ),
     path(API_URL + "accounts/", include("accounts.urls")),
     path(API_URL + "blog-posts/", include("blogs.urls")),
     path("manage-password/", include("password_management.urls")),

@@ -36,6 +36,8 @@ Technologies that I would like to/need to use:
 
 ## Important Notes
 
+When running the project in production, the admin panel is **not** located at /admin/. It is instead located at /a-beautiful-fruit-tree-swaying-in-the-wind-fb520ad7a6e0e3f11a860efbcef3e66c/.
+
 `#language-field` (CSS) is a honeypot field for the register page.
 
 For the love of all that is holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
