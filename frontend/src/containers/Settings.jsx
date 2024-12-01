@@ -308,7 +308,7 @@ function Settings() {
             onClose={handleCloseError}
             severity="error"
             variant="filled"
-            className="general-mui-alert"
+            className="error-mui-alert"
           >
             Something went wrong!
           </Alert>

@@ -27,6 +27,14 @@ input {
   color: var(--light-text);
 }
 
+.error-mui-alert .MuiAlert-icon svg {
+  color: var(--accent);
+}
+
+.error-mui-alert {
+  border: var(--light-border-color) 1px solid;
+}
+
 .custom-form .special-button {
   min-width: 50px;
   margin: 0 auto;
@@ -59,7 +67,8 @@ fieldset {
   gap: 15px;
 }
 
-.EasyMDEContainer {
+.EasyMDEContainer,
+.simplemde-wrapper {
   width: 100%;
 }
 

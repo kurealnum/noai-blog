@@ -39,6 +39,37 @@ DEBUG = environ.get("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = json.loads(environ.get("ALLOWED_HOSTS", "[]"))  # type: ignore
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "filters": {
+        "require_debug_false": {
+            "()": "django.utils.log.RequireDebugFalse",
+        },
+        "require_debug_true": {
+            "()": "django.utils.log.RequireDebugTrue",
+        },
+    },
+    "handlers": {
+        "file": {
+            "level": "INFO",
+            "filters": ["require_debug_false"],
+            "maxBytes": 1024 * 1024 * 15,
+            "backupCount": 10,
+            "filename": "main.log",
+            "class": "logging.handlers.RotatingFileHandler",
+        },
+        "console": {
+            "level": "INFO",
+            "filters": ["require_debug_true"],
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django": {"handlers": ["file", "console"], "level": "INFO", "propagate": True}
+    },
+}
+
 
 # Application definition
 AUTH_USER_MODEL = "accounts.CustomUser"

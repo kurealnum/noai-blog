@@ -119,11 +119,13 @@ function EditPost() {
             defaultValue={newBlogPost["title"]}
           />
         </div>
-        <SimpleMdeReact
-          options={customRendererOptions}
-          onChange={setContentHelper}
-          value={newBlogPost["content"]}
-        />
+        <div className="simplemde-wrapper">
+          <SimpleMdeReact
+            options={customRendererOptions}
+            onChange={setContentHelper}
+            value={newBlogPost["content"]}
+          />
+        </div>
         <button
           data-testid="submit-button"
           className="save-button"

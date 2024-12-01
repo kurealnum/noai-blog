@@ -118,11 +118,13 @@ function CreatePost() {
             defaultValue={"My amazing post"}
           />
         </div>
-        <SimpleMdeReact
-          options={customRendererOptions}
-          onChange={setContentHelper}
-          value={autosavedValue}
-        />
+        <div className="simplemde-wrapper">
+          <SimpleMdeReact
+            options={customRendererOptions}
+            onChange={setContentHelper}
+            value={autosavedValue}
+          />
+        </div>
         <button
           data-testid="submit-button"
           className="save-button"
