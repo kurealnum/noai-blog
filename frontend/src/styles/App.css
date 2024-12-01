@@ -766,8 +766,8 @@ p {
 }
 
 #landing-page a {
-  border: none;
-  background: var(--tertiary);
+  border: var(--primary) solid 2px;
+  background: var(--page-background);
 }
 
 .info-box:last-of-type {
@@ -802,6 +802,7 @@ p {
   flex-direction: row;
   gap: 20px;
   align-items: center;
+  width: min-content;
 }
 
 .paginator input {

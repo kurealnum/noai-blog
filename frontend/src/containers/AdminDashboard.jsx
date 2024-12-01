@@ -32,7 +32,16 @@ function AdminDashboard() {
       return query.isLoading;
     })
   ) {
-    <CircularProgress />;
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        left: "0",
+        right: "0",
+        top: "0",
+        bottom: "0",
+        margin: "auto",
+      }}
+    />;
   } else if (
     flaggedQueries.every((query) => {
       return query.isError;
