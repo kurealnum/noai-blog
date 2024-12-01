@@ -1,7 +1,6 @@
 import "../styles/NavBar.css";
 import { Link, Outlet, useLoaderData } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { doesPathExist } from "../features/helpers";
+import { useState } from "react";
 import Logo from "/public/shortlogo.svg";
 import {
   Add,
@@ -15,7 +14,7 @@ import { Fade, Popper } from "@mui/material";
 
 function NavBar() {
   const userData = useLoaderData();
-  const [exists, setExists] = useState(false);
+  const [exists, setExists] = useState(true);
   const [open, setOpen] = useState(false);
   const [isNewNotification, setIsNewNotification] = useState(
     userData != null ? userData["notifications"] > 0 : false,
@@ -26,16 +25,6 @@ function NavBar() {
     setAnchorEl(event.currentTarget);
     setOpen((previousOpen) => !previousOpen);
   };
-
-  useEffect(() => {
-    if (userData != null) {
-      doesPathExist(userData["profile_picture"]).then((res) => {
-        if (res) {
-          setExists(true);
-        }
-      });
-    }
-  }, [userData]);
 
   return (
     <>
@@ -59,6 +48,7 @@ function NavBar() {
                   alt="Profile Picture"
                   id="pfp"
                   src={userData["profile_picture"]}
+                  onError={() => setExists(false)}
                 ></img>
               ) : null}
               {open ? <ExpandLess /> : <ExpandMore />}{" "}
