@@ -14,7 +14,7 @@ import { Fade, Popper } from "@mui/material";
 
 function NavBar() {
   const userData = useLoaderData();
-  const [exists, setExists] = useState(true);
+  const [exists, setExists] = useState(userData["profile_picture"] != null);
   const [open, setOpen] = useState(false);
   const [isNewNotification, setIsNewNotification] = useState(
     userData != null ? userData["notifications"] > 0 : false,
@@ -30,7 +30,7 @@ function NavBar() {
     <>
       <nav>
         <div className="nav-left">
-          {userData == null ? (
+          {Object.keys(userData).length === 0 ? (
             <Link id="log-in-button" to="/login">
               Log in
             </Link>

@@ -25,7 +25,7 @@ async function getUserInfo() {
   if (response.ok) {
     return await response.json();
   }
-  return null;
+  return {};
 }
 
 function slugify(str) {
