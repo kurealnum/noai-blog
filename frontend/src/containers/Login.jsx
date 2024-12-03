@@ -3,24 +3,43 @@ import { login } from "../features/auth";
 import { Link, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { CircularProgress } from "@mui/material";
 
 function Login() {
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const onFormChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   function onFormSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
     login(formData).then((isAuth) => {
       if (isAuth) {
         navigate("/login-redirect");
       } else {
         setIsError(true);
       }
+      setIsLoading(false);
     });
+  }
+
+  if (isLoading) {
+    return (
+      <CircularProgress
+        sx={{
+          position: "absolute",
+          left: "0",
+          right: "0",
+          top: "0",
+          bottom: "0",
+          margin: "auto",
+        }}
+      />
+    );
   }
 
   return (
