@@ -431,7 +431,7 @@ class LinksTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.status_code)
 
 
-class RegisterTestCase(CustomTestCase):
+class AccountManagementTestCase(CustomTestCase):
     def test_register_with_valid_data(self):
         img = BytesIO(
             b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
@@ -465,6 +465,26 @@ class RegisterTestCase(CustomTestCase):
         request = self.client.post(reverse_lazy("register"), data)
         expected_response = 400
         self.assertEqual(request.status_code, expected_response)
+
+    def test_delete(self):
+        auth_client = APIClient()
+        user = CustomUser.objects.create(
+            email="bobbyjoe@gmail.com",
+            first_name="Bobby",
+            last_name="Joe",
+            about_me="I am Bobby Joe, destroyer of worlds.",
+            username="deleteme",
+        )
+        user.set_password("TerriblePassword123")
+        user.save()
+        auth_client.login(username=user.username, password="TerriblePassword123")
+        request = auth_client.delete(reverse_lazy("delete_account"))
+
+        expected_status = 204
+        self.assertEqual(request.status_code, expected_status)
+
+        with self.assertRaises(CustomUser.DoesNotExist):
+            CustomUser.objects.get(username=user.username)
 
 
 class NotificationViewTestCase(CustomTestCase):

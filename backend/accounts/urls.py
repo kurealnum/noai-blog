@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     NotificationCountView,
     NotificationView,
-    RegisterView,
+    AccountManagementView,
     UserInfoView,
     LoginUserView,
     CheckAuthenticatedView,
@@ -37,7 +37,8 @@ urlpatterns = [
         ChangeProfilePictureView.as_view(),
         name="change_profile_picture",
     ),
-    path("register/", RegisterView.as_view(), name="register"),
+    path("register/", AccountManagementView.as_view(), name="register"),
+    path("delete-account/", AccountManagementView.as_view(), name="delete_account"),
     path("notifications/", NotificationView.as_view(), name="notifications"),
     path(
         "notifications-count/",
