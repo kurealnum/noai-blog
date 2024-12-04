@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Outlet, useRouteLoaderData } from "react-router-dom";
+import { Outlet, useNavigate, useRouteLoaderData } from "react-router-dom";
 import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Modal from "@mui/material/Modal";
@@ -9,8 +9,10 @@ import {
   deleteLink,
   createLink,
   changeSettings,
+  deleteAccount,
 } from "../features/helpers";
-import { Close } from "@mui/icons-material";
+import { Close, LockOpen } from "@mui/icons-material";
+import ConfirmationModal from "../components/ConfirmationModal";
 
 function Settings() {
   const userData = useRouteLoaderData("root");
@@ -21,6 +23,10 @@ function Settings() {
   const [isSaved, setIsSaved] = useState(false);
   const [profilePicture, setProfilePicture] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isDeleteProfileModalOpen, setIsDeleteProfileModalOpen] =
+    useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+  const navigate = useNavigate();
 
   // modal error
   const [error, setError] = useState(false);
@@ -120,9 +126,17 @@ function Settings() {
     });
   }
 
+  function deleteAccountHelper() {
+    const res = deleteAccount(true);
+    if (res) {
+      navigate("/login");
+    }
+  }
+
   if (newUserData != null && newLinks != null) {
     return (
       <div className="filler-wrapper">
+        <h1>Settings</h1>
         <form
           className="custom-form"
           aria-label="Settings"
@@ -156,6 +170,36 @@ function Settings() {
             <button className="form-button">
               <a href={"/manage-password/change-password/"}>Change password</a>
             </button>
+          </fieldset>
+          <fieldset className="orange-border">
+            <legend>Danger zone</legend>
+            <div className="spacing-wrapper delete-wrapper">
+              {isDisabled ? (
+                <button disabled type="button">
+                  Delete Account
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => setIsDeleteProfileModalOpen(true)}
+                >
+                  Delete Account
+                </button>
+              )}
+              <button onClick={() => setIsDisabled(!isDisabled)} type="button">
+                <LockOpen />
+              </button>
+              {isDeleteProfileModalOpen ? (
+                <ConfirmationModal
+                  toCallFunction={deleteAccountHelper}
+                  message={
+                    "Are you sure you want to delete your profile? This will delete it forever (a really long time)!"
+                  }
+                  isOpen={isDeleteProfileModalOpen}
+                  toCallArgs={[]}
+                />
+              ) : null}
+            </div>
           </fieldset>
           <fieldset>
             <legend>Personalization</legend>

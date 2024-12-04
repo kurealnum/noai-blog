@@ -27,6 +27,29 @@ input {
   color: var(--light-text);
 }
 
+.spacing-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.delete-wrapper button {
+  height: 29px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.delete-wrapper svg {
+  width: 16px;
+}
+
+button:disabled {
+  color: var(--page-background) !important;
+}
+
 .error-mui-alert .MuiAlert-icon svg {
   color: var(--accent);
 }
