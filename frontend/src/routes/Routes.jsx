@@ -23,6 +23,7 @@ import EditPost from "../containers/EditPost";
 import Followers from "../containers/Followers";
 import Following from "../containers/Following";
 import AdminDashboard from "../containers/AdminDashboard";
+import "../styles/TextBasedPage.css";
 
 const router = createBrowserRouter([
   {

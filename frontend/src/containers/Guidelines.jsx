@@ -97,14 +97,14 @@ function Guidelines() {
       <p>So how do we deal with that leftover 10%? Good question.</p>
       <p>
         Before we begin, I (the author of these guidelines and the founder of
-        byeAI – Oscar) would like to make a personal note. I <i>always</i> air
+        byeAI – Oscar) would like to make a personal note. I <i>always</i> err
         on the side of caution, and even when all of the checks listed below
         prove to be positive, I, and anyone else moderating byeAI, will try to
         find a way to resolve the situation without immediately removing the
         content.
       </p>
       <p>
-        We’ll get back on topic now. Firstly, the suspected content will be
+        Getting back on topic now... Firstly, the suspected content will be
         tested with{" "}
         <a href="https://gptzero.me/" className="tertiary-accent">
           GPTZero
