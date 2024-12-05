@@ -25,7 +25,7 @@ async function getUserInfo() {
   if (response.ok) {
     return await response.json();
   }
-  return null;
+  return {};
 }
 
 function slugify(str) {
@@ -539,6 +539,42 @@ async function getNotificationCount() {
   return await response.json();
 }
 
+function isMod() {
+  const currentStore = store.getState().auth;
+  return currentStore.isMod || currentStore.isAdmin || currentStore.isSuperuser;
+}
+
+function isAdmin() {
+  const currentStore = store.getState().auth;
+  return currentStore.isAdmin || currentStore.isSuperuser;
+}
+
+function isSuperuser() {
+  const currentStore = store.getState().auth;
+  return currentStore.isSuperuser;
+}
+
+function isAuthenticated() {
+  const currentStore = store.getState().auth;
+  return currentStore.isAuthenticated;
+}
+
+// hasUserBeenWarned could just be passed as true, yes, but it's just there in case this function is called without (somehow) understanding that it will delete all of the users stuff
+async function deleteAccount(hasUserBeenWarned) {
+  if (hasUserBeenWarned === true) {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": getCookie("csrftoken"),
+      },
+      method: "DELETE",
+      credentials: "include",
+    };
+    const response = await fetch("/api/accounts/delete-account/", config);
+    return response.status;
+  }
+}
+
 // MODERATOR FUNCTIONS
 async function toggleFlagPost(username, slug) {
   const config = {
@@ -707,27 +743,8 @@ async function adminDeleteUser(username) {
 }
 // END OF ADMIN FUNCTIONS
 
-function isMod() {
-  const currentStore = store.getState().auth;
-  return currentStore.isMod || currentStore.isAdmin || currentStore.isSuperuser;
-}
-
-function isAdmin() {
-  const currentStore = store.getState().auth;
-  return currentStore.isAdmin || currentStore.isSuperuser;
-}
-
-function isSuperuser() {
-  const currentStore = store.getState().auth;
-  return currentStore.isSuperuser;
-}
-
-function isAuthenticated() {
-  const currentStore = store.getState().auth;
-  return currentStore.isAuthenticated;
-}
-
 export {
+  deleteAccount,
   adminDeleteUser,
   adminDeleteComment,
   adminDeletePost,

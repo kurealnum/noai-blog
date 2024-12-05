@@ -41,9 +41,13 @@ function Following() {
       <>
         <h1>Following</h1>
         <ul className="follow-list">
-          {getFollowingQuery.data.map((content, index) => (
-            <Profile content={content} key={index} />
-          ))}
+          {getFollowingQuery.data.length === 0 ? (
+            <h2>You aren't following anyone!</h2>
+          ) : (
+            getFollowingQuery.data.map((content, index) => (
+              <Profile content={content} key={index} />
+            ))
+          )}
         </ul>
       </>
     );

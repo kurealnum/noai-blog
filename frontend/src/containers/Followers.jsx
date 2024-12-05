@@ -40,13 +40,16 @@ function Followers() {
       <>
         <h1>Followers</h1>
         <ul className="follow-list">
-          {getFollowersQuery.data.map((content, index) => (
-            <Profile content={content} key={index} />
-          ))}
+          {getFollowersQuery.data.length === 0 ? (
+            <h2>You don't have any followers!</h2>
+          ) : (
+            getFollowersQuery.data.map((content, index) => (
+              <Profile content={content} key={index} />
+            ))
+          )}
         </ul>
       </>
     );
   }
 }
-
 export default Followers;

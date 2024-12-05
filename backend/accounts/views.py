@@ -220,9 +220,14 @@ class UpdateUserInfoView(generics.UpdateAPIView):
     queryset = CustomUser.objects.all()
 
 
-class RegisterView(APIView):
-    permission_classes = (AllowAny,)
+class AccountManagementView(APIView):
+    def get_permissions(self):
+        permissions = super().get_permissions()
+        if self.request.method.lower() != "post":  # type: ignore
+            permissions.append(IsAuthenticated())  # type: ignore
+        return permissions
 
+    # this is basically just the register view
     def post(self, request):
         data = request.data
         serializer = NewCustomUserSerializer(data=data)
@@ -232,6 +237,12 @@ class RegisterView(APIView):
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request):
+        username = request.user.username
+        user = generics.get_object_or_404(CustomUser, username=username)
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # this view gets all notifications and changes the new ones to is_read=True

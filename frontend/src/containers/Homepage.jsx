@@ -11,7 +11,7 @@ import {
   unfollowUser,
 } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
-import { Alert, Snackbar } from "@mui/material";
+import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import Profile from "../components/Profile";
 import FlagButton from "../components/FlagButton";
 import DOMPurify from "dompurify";
@@ -211,7 +211,18 @@ function Homepage() {
       </>
     );
   } else {
-    return <p>The user {username} does not exist!</p>;
+    return (
+      <CircularProgress
+        sx={{
+          position: "absolute",
+          left: "0",
+          right: "0",
+          top: "0",
+          bottom: "0",
+          margin: "auto",
+        }}
+      />
+    );
   }
 }
 
