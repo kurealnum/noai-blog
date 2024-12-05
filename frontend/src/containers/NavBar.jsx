@@ -67,6 +67,17 @@ function NavBar() {
                       <li>
                         <Link to="/settings">Settings</Link>
                       </li>
+                      <hr></hr>
+                      <li>
+                        <Link to="/faq">FAQ</Link>
+                      </li>
+                      <li>
+                        <Link to="/guidelines">Guidelines</Link>
+                      </li>
+                      <li>
+                        <Link to="/about-us">About Us</Link>
+                      </li>
+                      <hr></hr>
                       <li>
                         <Link to="/logout">Logout</Link>
                       </li>
@@ -101,7 +112,7 @@ function NavBar() {
             </li>
           </ul>
         </div>
-        <Link to="/guidelines">
+        <Link to="/about-us">
           <img id="logo" src={Logo} alt="Logo"></img>
         </Link>
       </nav>

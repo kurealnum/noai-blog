@@ -27,6 +27,11 @@ input {
   color: var(--light-text);
 }
 
+hr {
+  width: 100px;
+  margin: 0;
+}
+
 .spacing-wrapper {
   display: flex;
   flex-direction: row;
@@ -825,6 +830,10 @@ p {
   width: 90%;
 }
 
+.text-based-page p {
+  text-align: left;
+}
+
 .paginator {
   justify-content: center;
   margin: 0 auto;
@@ -947,15 +956,6 @@ ul {
 
 .username-box svg {
   color: var(--tertiary);
-}
-
-.text-based-page h1,
-.text-based-page h2 {
-  margin-top: 45px;
-}
-
-.text-based-page h3 {
-  margin-top: 40px;
 }
 
 #simplemde-editor-2-wrapper {

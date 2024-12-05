@@ -1,0 +1,19 @@
+.text-based-page h1,
+.text-based-page h2 {
+  margin-top: 45px;
+  margin-bottom: 0px;
+  font-weight: 700;
+}
+
+.text-based-page h3 {
+  margin-top: 40px;
+  font-weight: 600;
+}
+
+.text-based-page a {
+  margin-top: 16px;
+}
+
+.text-based-page .centered-text {
+  text-align: center;
+}
