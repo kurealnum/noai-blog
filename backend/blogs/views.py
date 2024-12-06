@@ -90,11 +90,27 @@ class BlogPostView(APIView):
         # blog post specific data
         user = self.request.user.id  # type: ignore
         title = data["title"]
+        title_slug = data["title_slug"]
         content = data["content"]
         thumbnail = data["thumbnail"]
         original_slug = data["original_slug"]
 
-        if thumbnail == "undefined":
+        try:
+            original_post = BlogPost.objects.get(
+                user=self.request.user, slug_field=title_slug
+            )
+        except BlogPost.DoesNotExist:
+            original_post = None
+
+        if title_slug != original_slug and original_post:
+            return Response(
+                data={"A post with this title already exists!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if thumbnail == "undefined" and original_post:
+            thumbnail = original_post.thumbnail
+        elif thumbnail == "undefined":
             thumbnail = None
 
         serializer_data = {

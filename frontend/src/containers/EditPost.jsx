@@ -81,6 +81,7 @@ function EditPost() {
       />
     );
   } else if (editPostMutation.isSuccess) {
+    console.log("success");
     return (
       <Navigate
         to={
