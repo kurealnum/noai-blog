@@ -453,6 +453,11 @@ img {
   text-align: center;
 }
 
+.blog-post-content-align-left img {
+  margin: 0;
+  margin-right: auto;
+}
+
 .blog-post-content-align-left p {
   text-align: left;
 }
