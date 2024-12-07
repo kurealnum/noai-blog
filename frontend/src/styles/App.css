@@ -98,7 +98,8 @@ fieldset {
 
 .EasyMDEContainer,
 .simplemde-wrapper {
-  width: 100%;
+  width: 85vw;
+  max-width: 900px;
 }
 
 .post-form .flex-row-spacing {
