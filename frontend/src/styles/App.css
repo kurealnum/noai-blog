@@ -111,6 +111,16 @@ fieldset {
   border: var(--light-text) 2px solid !important;
 }
 
+.text-box {
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: var(--light-border-color) solid 1px;
+}
+
+.text-box p {
+  margin: 0;
+}
+
 #dashboard .blog-post {
   width: 90%;
 }

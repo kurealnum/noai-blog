@@ -1,4 +1,9 @@
-import { useParams } from "react-router-dom";
+import {
+  Link,
+  useLoaderData,
+  useParams,
+  useRouteLoaderData,
+} from "react-router-dom";
 import {
   createReaction,
   getCommentsByPost,
@@ -21,6 +26,7 @@ import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
 import {
+  Edit,
   Favorite,
   FormatAlignCenter,
   FormatAlignLeft,
@@ -42,6 +48,7 @@ const marked = new Marked(
 
 function BlogPost() {
   const { username, slug } = useParams();
+  const userData = useRouteLoaderData("root");
   const [doesReactionExist, setDoesReactionExist] = useState(false);
   const [isLeftAligned, setIsLeftAligned] = useState(false);
 
@@ -191,6 +198,11 @@ function BlogPost() {
                 slug: slugify(data["title"]),
               }}
             />
+            {userData["username"] === username ? (
+              <Link className="text-box" to={"/edit-post/" + slug}>
+                <p>Edit</p>
+              </Link>
+            ) : null}
           </div>
           <div
             className={
