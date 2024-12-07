@@ -45,7 +45,7 @@ class SingleBlogPostUserSerializer(serializers.ModelSerializer):
 
 
 class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
-    thumbnail = serializers.ImageField(allow_null=True)
+    thumbnail = serializers.ImageField(allow_null=True, required=False)
 
     class Meta:  # type:ignore
         model = BlogPost

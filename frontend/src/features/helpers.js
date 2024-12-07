@@ -423,6 +423,7 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
   data.append("thumbnail", thumbnail["thumbnail"]);
   data.append("content", newBlogPost["content"]);
   data.append("title", newBlogPost["title"]);
+  data.append("title_slug", slugify(newBlogPost["title"]));
   data.append("original_slug", originalSlug);
   data.append("user", "hubot");
 
@@ -435,7 +436,13 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
     body: data,
   };
   const response = await fetch("/api/blog-posts/edit-post/", config);
-  return response.ok;
+  if (!response.ok) {
+    // only give the user one error message at a time
+    const errorMessages = await response.json();
+    const thrownErrorMessageKey = Object.keys(errorMessages)[0];
+    const thrownErrorMessage = errorMessages[thrownErrorMessageKey];
+    throw new Error(thrownErrorMessage);
+  }
 }
 
 async function getCommentsByPost(username, slug) {

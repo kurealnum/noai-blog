@@ -252,9 +252,38 @@ class BlogPostViewTestCase(CustomTestCase):
         temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
             "title": "An edited title",
+            "title_slug": to_edit.slug_field,
             "content": "Some new content",
             "thumbnail": new_img,
             "original_slug": to_edit.slug_field,
+        }
+        request = temp_client.put(reverse_lazy("edit_post"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_edit_work_with_no_img(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = BlogPost.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": to_edit.slug_field,
+            "content": "Some new content",
+            "original_slug": to_edit.slug_field,
+            "thumbnail": "undefined",
         }
         request = temp_client.put(reverse_lazy("edit_post"), data=data)
         expected_result = "An edited title"

@@ -93,11 +93,13 @@ fieldset {
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  max-width: 900px;
 }
 
 .EasyMDEContainer,
 .simplemde-wrapper {
-  width: 100%;
+  width: 85vw;
+  max-width: 900px;
 }
 
 .post-form .flex-row-spacing {
@@ -386,6 +388,12 @@ img {
   width: 90px;
 }
 
+#create-post img,
+#blog-post img {
+  max-width: 80vw;
+  width: auto;
+}
+
 .info-bar-box {
   display: flex;
   flex-direction: row;
@@ -444,6 +452,11 @@ img {
 
 .blog-post-content-align-center p {
   text-align: center;
+}
+
+.blog-post-content-align-left img {
+  margin: 0;
+  margin-right: auto;
 }
 
 .blog-post-content-align-left p {
@@ -985,10 +998,6 @@ input[type="file"]::file-selector-button {
   font-style: italic;
 }
 
-.editor-toolbar {
-  background: var(--page-background);
-}
-
 .editor-toolbar button:hover {
   background: none !important;
   border-color: var(--light-border-color) !important;
@@ -1013,7 +1022,16 @@ input[type="file"]::file-selector-button {
   justify-content: space-between;
 }
 
+p img {
+  display: flex;
+  margin: 0 auto;
+}
+
 @media (min-width: 800px) {
+  #create-post img,
+  #blog-post img {
+    max-width: 600px;
+  }
   .post-form #title {
     width: 65%;
   }
