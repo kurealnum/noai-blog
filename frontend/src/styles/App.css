@@ -387,6 +387,12 @@ img {
   width: 90px;
 }
 
+#create-post img,
+#blog-post img {
+  max-width: 80vw;
+  width: auto;
+}
+
 .info-bar-box {
   display: flex;
   flex-direction: row;
@@ -986,10 +992,6 @@ input[type="file"]::file-selector-button {
   font-style: italic;
 }
 
-.editor-toolbar {
-  background: var(--page-background);
-}
-
 .editor-toolbar button:hover {
   background: none !important;
   border-color: var(--light-border-color) !important;
@@ -1014,7 +1016,16 @@ input[type="file"]::file-selector-button {
   justify-content: space-between;
 }
 
+p img {
+  display: flex;
+  margin: 0 auto;
+}
+
 @media (min-width: 800px) {
+  #create-post img,
+  #blog-post img {
+    max-width: 600px;
+  }
   .post-form #title {
     width: 65%;
   }

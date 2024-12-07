@@ -50,10 +50,6 @@
   color: var(--light-text) !important;
 }
 
-.editor-toolbar {
-  border: none !important;
-}
-
 #member-since svg {
   color: var(--light-text);
 }
