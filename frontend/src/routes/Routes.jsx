@@ -29,7 +29,7 @@ const router = createBrowserRouter([
   {
     path: "",
     element: (
-      <Page title="Home" type={"public"}>
+      <Page title="An AI free community for content creation" type={"public"}>
         <Home />
       </Page>
     ),

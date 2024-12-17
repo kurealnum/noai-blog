@@ -12,11 +12,11 @@ def get_sentinel_user():
 
 class BlogPost(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100, unique=True)
+    title = models.CharField(max_length=101, unique=True)
     content = models.TextField(max_length=20000)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
-    slug_field = models.SlugField(null=True, unique=True)
+    slug_field = models.SlugField(null=True, unique=True, max_length=200)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
     thumbnail = ResizedImageField(
