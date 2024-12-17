@@ -1,6 +1,6 @@
 import SimpleMdeReact from "react-simplemde-editor";
 import { useState, useMemo, useEffect } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { editPost, getBlogPost, slugify } from "../features/helpers";
 import { CircularProgress } from "@mui/material";
 import { Navigate, useParams, useRouteLoaderData } from "react-router-dom";
@@ -22,18 +22,28 @@ const marked = new Marked(
 );
 
 function EditPost() {
+  // Init data
   const userData = useRouteLoaderData("root");
   const { slug } = useParams();
   const [newBlogPost, setNewBlogPost] = useState({});
   const [thumbnail, setThumbnail] = useState({});
 
-  useEffect(() => {
-    getBlogPost({ username: userData["username"], slug: slug }).then((res) =>
-      setNewBlogPost({ ...res, slug: slug }),
-    );
-  }, [slug, userData]);
-
+  // Querys/mutations
+  const toEditBlogPostQuery = useQuery({
+    queryFn: () => getBlogPost({ username: userData["username"], slug: slug }),
+    queryKey: [
+      "toEditBlogPost",
+      { username: userData["username"], slug: slug },
+    ],
+    retry: false,
+  });
   const editPostMutation = useMutation({ mutationFn: editPost });
+
+  useEffect(() => {
+    if (toEditBlogPostQuery.isSuccess) {
+      setNewBlogPost({ ...toEditBlogPostQuery.data, slug: slug });
+    }
+  }, [slug, toEditBlogPostQuery.data, toEditBlogPostQuery.isSuccess]);
 
   // autosave feature
   const delay = 1000;
@@ -67,6 +77,21 @@ function EditPost() {
     setThumbnail({ [e.target.name]: e.target.files[0] });
   }
 
+  if (toEditBlogPostQuery.isError) {
+    return <Navigate to={"/dashboard/"} />;
+  } else if (toEditBlogPostQuery.isPending) {
+    <CircularProgress
+      sx={{
+        position: "absolute",
+        left: "0",
+        right: "0",
+        top: "0",
+        bottom: "0",
+        margin: "auto",
+      }}
+    />;
+  }
+
   if (editPostMutation.isPending) {
     return (
       <CircularProgress
@@ -81,7 +106,6 @@ function EditPost() {
       />
     );
   } else if (editPostMutation.isSuccess) {
-    console.log("success");
     return (
       <Navigate
         to={
@@ -90,6 +114,7 @@ function EditPost() {
       />
     );
   }
+
   return (
     <div id="create-post">
       <form

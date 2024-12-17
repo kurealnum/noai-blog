@@ -29,7 +29,7 @@ const router = createBrowserRouter([
   {
     path: "",
     element: (
-      <Page title="Home" type={"public"}>
+      <Page title="An AI free community for content creation" type={"public"}>
         <Home />
       </Page>
     ),
@@ -41,7 +41,14 @@ const router = createBrowserRouter([
     loader: getUserInfo,
     errorElement: <RootBoundary />,
     children: [
-      { path: "/edit-post/:slug", element: <EditPost /> },
+      {
+        path: "/edit-post/:slug",
+        element: (
+          <Page type={"private"} title={"Edit Post"}>
+            <EditPost />
+          </Page>
+        ),
+      },
       {
         path: "admin-dashboard",
         element: (
