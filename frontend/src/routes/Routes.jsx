@@ -1,29 +1,31 @@
 /* v8 ignore start */
 import { createBrowserRouter, json } from "react-router-dom";
-import Login from "../containers/Login";
-import Dashboard from "../containers/Dashboard";
-import Logout from "../containers/Logout";
-import Feed from "../containers/Feed";
-import Register from "../containers/Register";
-import Home from "../containers/Home";
-import AboutUs from "../containers/AboutUs";
-import Guidelines from "../containers/Guidelines";
 import { getUserInfo } from "../features/helpers";
-import NavBar from "../containers/NavBar";
-import Settings from "../containers/Settings";
-import Homepage from "../containers/Homepage";
-import BlogPost from "../containers/BlogPost";
-import Page from "./Page";
-import RootBoundary from "../containers/RootBoundary";
-import CreatePost from "../containers/CreatePost";
-import LoginRedirect from "../containers/LoginRedirect";
-import Notifications from "../containers/Notifications";
-import Faq from "../containers/Faq";
-import EditPost from "../containers/EditPost";
-import Followers from "../containers/Followers";
-import Following from "../containers/Following";
-import AdminDashboard from "../containers/AdminDashboard";
+import Page from "./Page.jsx";
 import "../styles/TextBasedPage.css";
+import {
+  Login,
+  Dashboard,
+  Logout,
+  Feed,
+  Register,
+  Home,
+  AboutUs,
+  Guidelines,
+  NavBar,
+  Settings,
+  Homepage,
+  BlogPost,
+  RootBoundary,
+  CreatePost,
+  LoginRedirect,
+  Notifications,
+  EditPost,
+  Followers,
+  Following,
+  AdminDashboard,
+  Faq,
+} from "./LazyImports";
 
 const router = createBrowserRouter([
   {
