@@ -1,5 +1,5 @@
 // wrapper for setting titles
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { checkIfAuthenticatedOnServer } from "../reducers/auth";
 import { useDispatch } from "react-redux";
 import { checkAuthenticated } from "../features/authStore/authSlice";
@@ -72,7 +72,24 @@ function Page({ children, title, type }) {
     (type === "admin" && isAdmin()) ||
     (type === "superuser" && isSuperuser())
   ) {
-    return <main>{children}</main>;
+    return (
+      <Suspense
+        fallback={
+          <CircularProgress
+            sx={{
+              position: "absolute",
+              left: "0",
+              right: "0",
+              top: "0",
+              bottom: "0",
+              margin: "auto",
+            }}
+          />
+        }
+      >
+        {children}
+      </Suspense>
+    );
   } else if (type == "public-only" && isAuthenticated()) {
     return <Navigate to="/dashboard" />;
   } else {

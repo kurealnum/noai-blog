@@ -83,7 +83,8 @@ function Guidelines() {
         generated/AI assisted will result in a message to the author of the post
         asking for “proof” of creation (read more about this in{" "}
         <a href="#suspected-content" className="tertiary-accent">
-          this section
+          the section about handling content that is suspected to be AI
+          generated.
         </a>
         ).
       </p>
@@ -152,7 +153,8 @@ function Guidelines() {
         in a friendly email to the author asking for “proof” of creation (read
         more about this in{" "}
         <a href="#suspected-content" className="tertiary-accent">
-          this section
+          the section about handling content that is suspected to be AI
+          generated.
         </a>
         ).
       </p>
@@ -331,7 +333,7 @@ function Guidelines() {
         <li>
           It is overly political (see{" "}
           <a href="#keep-politics-out-of-it" className="tertiary-accent">
-            this section
+            this section about politics
           </a>
           ).
         </li>

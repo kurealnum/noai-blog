@@ -17,7 +17,7 @@ server
         try_files $uri $uri/ /index.html @frontend_rewrite;
 	}
 
-    location ~* /(assets\/|.*\.png|.*\.ico|.*\.svg|.*\.webmanifest) {
+    location ~* /(assets\/|.*\.png|.*\.ico|.*\.svg|.*\.webmanifest|robots.txt|sitemap\.xml) {
         expires 1d;
         add_header Cache-Control "public";
 		proxy_pass http://frontend_upstream;
