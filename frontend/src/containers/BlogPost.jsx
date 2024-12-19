@@ -56,14 +56,14 @@ function BlogPost() {
   });
 
   useEffect(() => {
-    getReaction(slug).then((res) => {
+    getReaction(slug, username).then((res) => {
       if (res) {
         setDoesReactionExist(true);
       } else {
         setDoesReactionExist(false);
       }
     });
-  }, [slug]);
+  }, [slug, username]);
 
   function createReactionHelper() {
     createReaction(slug, username).then((res) => {

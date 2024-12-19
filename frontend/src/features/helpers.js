@@ -375,7 +375,7 @@ async function deleteReaction(slug) {
   return response.ok;
 }
 
-async function getReaction(slug) {
+async function getReaction(slug, username) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -384,7 +384,7 @@ async function getReaction(slug) {
     method: "GET",
   };
   const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/" + slug + "/",
+    "/api/blog-posts/manage-post-reactions/" + username + "/" + slug + "/",
     config,
   );
   return response.ok;
