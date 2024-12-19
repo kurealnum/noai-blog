@@ -767,32 +767,20 @@ p {
 
 #landing-page {
   background-image: linear-gradient(
-    180deg,
-    hsl(200deg 7% 9%) 49%,
-    hsl(4deg 33% 15%) 69%,
-    hsl(5deg 43% 19%) 78%,
-    hsl(6deg 48% 22%) 84%,
-    hsl(6deg 51% 25%) 88%,
-    hsl(7deg 53% 28%) 91%,
-    hsl(7deg 55% 30%) 93%,
-    hsl(7deg 56% 32%) 95%,
-    hsl(7deg 57% 34%) 97%,
-    hsl(7deg 58% 36%) 98%,
-    hsl(8deg 58% 37%) 99%,
-    hsl(8deg 59% 39%) 99%,
-    hsl(8deg 59% 41%) 100%,
-    hsl(8deg 60% 42%) 100%,
-    hsl(8deg 60% 44%) 100%,
-    hsl(8deg 60% 45%) 101%,
-    hsl(8deg 60% 47%) 101%,
-    hsl(8deg 61% 48%) 101%,
-    hsl(8deg 61% 49%) 101%,
-    hsl(8deg 62% 51%) 101%,
-    hsl(8deg 66% 52%) 101%,
-    hsl(8deg 69% 53%) 101%,
-    hsl(8deg 73% 54%) 100%,
-    hsl(8deg 76% 55%) 100%,
-    hsl(8deg 80% 56%) 100%
+    45deg,
+    hsl(210deg 3% 13%) 0%,
+    hsl(212deg 3% 12%) 8%,
+    hsl(213deg 3% 12%) 17%,
+    hsl(215deg 3% 11%) 25%,
+    hsl(217deg 3% 11%) 33%,
+    hsl(219deg 3% 10%) 42%,
+    hsl(221deg 3% 9%) 50%,
+    hsl(224deg 3% 9%) 58%,
+    hsl(226deg 3% 8%) 67%,
+    hsl(229deg 3% 8%) 75%,
+    hsl(232deg 3% 7%) 83%,
+    hsl(236deg 3% 6%) 92%,
+    hsl(240deg 4% 5%) 100%
   );
   height: 100vh;
   width: 100vw;
@@ -824,8 +812,8 @@ p {
 }
 
 #landing-page a {
-  border: var(--primary) solid 2px;
   background: var(--page-background);
+  border: none;
 }
 
 .info-box:last-of-type {

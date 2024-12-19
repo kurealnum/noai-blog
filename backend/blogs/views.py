@@ -380,9 +380,12 @@ class FollowingView(APIView):
 class ReactionView(APIView):
     permission_classes = (IsAuthenticated,)
 
-    def get(self, request, slug):
+    def get(self, request, slug, username):
+        # here, user refers to the authenticated user making the request, and username refers to the username of the user that published the article
         user = self.request.user
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
+        blog_post = generics.get_object_or_404(
+            BlogPost, slug_field=slug, user__username=username
+        )
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         serializer = ReactionSerializer(reaction)
         return Response(data=serializer.data, status=status.HTTP_200_OK)

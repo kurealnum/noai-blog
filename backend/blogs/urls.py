@@ -68,7 +68,7 @@ urlpatterns = [
         name="manage_post_reactions",
     ),
     path(
-        "manage-post-reactions/<slug>/",
+        "manage-post-reactions/<username>/<slug>/",
         ReactionView.as_view(),
         name="manage_post_reactions",
     ),

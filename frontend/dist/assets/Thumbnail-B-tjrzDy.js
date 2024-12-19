@@ -1,1 +1,0 @@
-import{r as l,j as t}from"./index-YEr_JHM6.js";const i="/assets/nothumbnailbyeai-CASlN2g1.png";function m({url:s}){const[n,a]=l.useState(!0);return n?(s==null&&a(!1),t.jsx("img",{alt:"thumbnail",src:s,className:"blogpost-thumbnail",onError:()=>a(!1)})):t.jsx("img",{alt:"thumbnail",src:i,className:"blogpost-thumbnail no-thumbnail"})}export{m as T};
