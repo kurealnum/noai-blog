@@ -31,6 +31,9 @@ class CustomUser(AbstractUser):
         self.flagged = not self.flagged
         self.save()
 
+    def get_absolute_url(self):
+        return "/homepage/" + self.username + "/"
+
 
 class Link(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
