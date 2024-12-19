@@ -2,13 +2,13 @@
 button,
 input {
   --dark-text: #ffffff;
-  --background: #202122;
+  --background: #151718;
   --primary: #202122;
-  --secondary: #b6ccfe;
+  --secondary: #2775e0;
   --accent: #e94f37;
   --tertiary: #879e14;
   --light-text: #ffffff;
-  --page-background: #151718;
+  --page-background: #0d0d0e;
   --header-font-size: 32px;
   --subheader-font-size: 32px;
   --navbar-font-size: 20px;

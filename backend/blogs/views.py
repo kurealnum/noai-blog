@@ -405,7 +405,7 @@ class ReactionView(APIView):
     def delete(self, request):
         user = self.request.user
         slug = request.data["slug"]
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug, user=user)
+        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
         reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
         reaction.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

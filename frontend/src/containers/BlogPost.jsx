@@ -202,7 +202,7 @@ function BlogPost() {
             className={
               isLeftAligned
                 ? "blog-post-content-align-left"
-                : "blog-post-content-align-right"
+                : "blog-post-content-align-center"
             }
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(marked.parse(data["content"])),
