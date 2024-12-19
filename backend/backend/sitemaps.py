@@ -6,6 +6,7 @@ from blogs.models import BlogPost
 class StaticSitemap(Sitemap):
     changefreq = "weekly"
     priority = 0.9
+    protocol = "https"
 
     def items(self):
         return ["guidelines", "faq", "about-us", "login", "register"]
@@ -18,6 +19,7 @@ class StaticSitemap(Sitemap):
 class UserSitemap(Sitemap):
     changefreq = "daily"
     priority = 0.6
+    protocol = "https"
 
     def items(self):
         return CustomUser.objects.all().order_by("username")
@@ -26,6 +28,7 @@ class UserSitemap(Sitemap):
 class BlogPostSitemap(Sitemap):
     changefreq = "monthly"
     priority = 0.5
+    protocol = "https"
 
     def items(self):
         return BlogPost.objects.all().order_by("title")
