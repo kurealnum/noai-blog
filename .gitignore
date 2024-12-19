@@ -1,6 +1,7 @@
 # Custom
 node_modules/
 coverage/
+stats.html
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -29,6 +29,10 @@ class BlogPost(models.Model):
         force_format="JPEG",
     )
 
+    # the url for the frontend, basically
+    def get_sitemap_url(self):
+        return "/post/" + self.user.username + "/" + self.slug_field + "/"
+
     def get_absolute_url(self):
         return reverse(
             "get_post", kwargs={"username": self.user.username, "slug": self.slug_field}

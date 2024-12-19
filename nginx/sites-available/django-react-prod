@@ -17,7 +17,7 @@ server
         try_files $uri $uri/ /index.html @frontend_rewrite;
 	}
 
-    location ~* /(assets\/|.*\.png|.*\.ico|.*\.svg|.*\.webmanifest|robots.txt|sitemap\.xml) {
+    location ~* /(assets\/|.*\.png|.*\.ico|.*\.svg|.*\.webmanifest|robots.txt) {
         expires 1d;
         add_header Cache-Control "public";
 		proxy_pass http://frontend_upstream;
@@ -31,7 +31,7 @@ server
 		proxy_set_header X-Forwarded-Host $server_name;
     }
 
-	location ~* \/(api|a-beautiful-fruit-tree-swaying-in-the-wind-fb520ad7a6e0e3f11a860efbcef3e66c|static|accounts|media|manage-password)/
+	location ~* \/((api|a-beautiful-fruit-tree-swaying-in-the-wind-fb520ad7a6e0e3f11a860efbcef3e66c|static|accounts|media|manage-password)/)|(sitemap.xml)
 	{
 		proxy_pass http://backend_upstream;
 		proxy_http_version 1.1;
