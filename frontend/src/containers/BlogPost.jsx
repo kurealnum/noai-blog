@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLoaderData,
-  useParams,
-  useRouteLoaderData,
-} from "react-router-dom";
+import { Link, useParams, useRouteLoaderData } from "react-router-dom";
 import {
   createReaction,
   getCommentsByPost,
@@ -26,7 +21,6 @@ import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
 import { useEffect, useState } from "react";
 import {
-  Edit,
   Favorite,
   FormatAlignCenter,
   FormatAlignLeft,
