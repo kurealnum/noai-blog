@@ -18,11 +18,7 @@ function Home() {
         <h2>Absolutely no AI generated content.</h2>
         <p>
           Not even AI assisted content is allowed. Check out how we moderate
-          this{" "}
-          <Link to="/guidelines" className="tertiary-accent">
-            in our guidelines
-          </Link>
-          .
+          this <Link to="/guidelines">in our guidelines</Link>.
         </p>
       </div>
       <div className="info-box">

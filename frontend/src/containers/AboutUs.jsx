@@ -23,10 +23,7 @@ function AboutUs() {
         mid-August of 2024, I’ve been chugging along, one AI-free commit at a
         time. I hope you enjoy this project! If you’d like to give any feedback,
         please feel free to reach out. You can find contact information on the{" "}
-        <Link to="/guidelines" className="tertiary-accent">
-          guidelines
-        </Link>{" "}
-        page.
+        <Link to="/guidelines">guidelines</Link> page.
       </p>
     </div>
   );

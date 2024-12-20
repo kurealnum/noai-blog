@@ -516,8 +516,10 @@ img {
   gap: 10px;
 }
 
+a:visited,
 a {
   text-decoration: none;
+  color: var(--secondary);
 }
 
 .profile {
@@ -822,7 +824,7 @@ p {
   flex-direction: row;
   align-items: center;
   gap: 5px;
-  color: var(--light-text);
+  color: var(--light-text) !important;
   padding: 10px 15px;
   border: var(--tertiary) solid 1px;
   border-radius: 10px;

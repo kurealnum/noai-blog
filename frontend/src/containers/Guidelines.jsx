@@ -11,29 +11,19 @@ function Guidelines() {
       </p>
       <p>
         (If you're looking for the about us section, click{" "}
-        <Link className="tertiary-accent" to="/about-us">
-          here
-        </Link>
-        . And if you're looking for the FAQ, click{" "}
-        <Link to="/faq" className="tertiary-accent">
-          here
-        </Link>
+        <Link to="/about-us">here</Link>. And if you're looking for the FAQ,
+        click <Link to="/faq">here</Link>
         .)
       </p>
       <h2>Contact Information</h2>
       <p>
         Please use{" "}
-        <a
-          className="tertiary-accent"
-          href="https://form.jotform.com/242828369788175"
-        >
+        <a href="https://form.jotform.com/242828369788175">
           this anonymous form
         </a>{" "}
         to submit an incident report. Alternatively, for more general requests,
         you can send an email to{" "}
-        <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
-          thenoaiblog@gmail.com
-        </a>
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>
       </p>
       <h2>The basics</h2>
       <p>
@@ -82,7 +72,7 @@ function Guidelines() {
         assisted will be removed, but content that is only suspected to be AI
         generated/AI assisted will result in a message to the author of the post
         asking for “proof” of creation (read more about this in{" "}
-        <a href="#suspected-content" className="tertiary-accent">
+        <a href="#suspected-content">
           the section about handling content that is suspected to be AI
           generated.
         </a>
@@ -106,13 +96,10 @@ function Guidelines() {
       </p>
       <p>
         Getting back on topic now... Firstly, the suspected content will be
-        tested with{" "}
-        <a href="https://gptzero.me/" className="tertiary-accent">
-          GPTZero
-        </a>{" "}
-        or a similar tool. byeAI understands that tools like this can be
-        inaccurate on occasion, and thus we won’t derive the likelihood that a
-        piece of content is AI generated based solely off of this.
+        tested with <a href="https://gptzero.me/">GPTZero</a> or a similar tool.
+        byeAI understands that tools like this can be inaccurate on occasion,
+        and thus we won’t derive the likelihood that a piece of content is AI
+        generated based solely off of this.
       </p>
       <p>
         Secondly, we attempt to replicate a blog post using AI. We do this by
@@ -152,7 +139,7 @@ function Guidelines() {
         post that is suspected to be AI generated/AI assisted will only result
         in a friendly email to the author asking for “proof” of creation (read
         more about this in{" "}
-        <a href="#suspected-content" className="tertiary-accent">
+        <a href="#suspected-content">
           the section about handling content that is suspected to be AI
           generated.
         </a>
@@ -182,10 +169,8 @@ function Guidelines() {
       </p>
       <p>
         Firstly, please ensure that the email was sent from{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>
-        . If it was not, the email may be a phishing attempt. Please fill out an
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>. If it
+        was not, the email may be a phishing attempt. Please fill out an
         incident report.
       </p>
       <p>
@@ -239,19 +224,15 @@ function Guidelines() {
       </h3>
       <p>
         Please contact{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>
-        . We would be happy to make accommodations for you – these
-        accommodations would likely be “immunity” from AI checks, and a little
-        sticker on your profile that says you’re approved to use AI. Optionally,
-        you may remain anonymous (until we have to approve your content for AI
-        usage, of course) by submitting a question through the incident report.
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>. We
+        would be happy to make accommodations for you – these accommodations
+        would likely be “immunity” from AI checks, and a little sticker on your
+        profile that says you’re approved to use AI. Optionally, you may remain
+        anonymous (until we have to approve your content for AI usage, of
+        course) by submitting a question through the incident report.
       </p>
       <h2>No listicles</h2>
-      <a href="#what-is-a-listicle" className="tertiary-accent">
-        But what is a listicle?
-      </a>
+      <a href="#what-is-a-listicle">But what is a listicle?</a>
       <p>
         This is not a strict rule. byeAI understands that some content is simply
         presented best in the format of a listicle, and we don’t want to
@@ -273,10 +254,7 @@ function Guidelines() {
         <li>
           Pick a side. Either stay as far away from list-based content as
           possible, or go full force into it. For clarity, check out{" "}
-          <a
-            href="https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje"
-            className="tertiary-accent"
-          >
+          <a href="https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje">
             this example
           </a>{" "}
           of a listicle. This content clearly takes the form of a listicle, but
@@ -332,9 +310,7 @@ function Guidelines() {
         <li>It violates any of the above guidelines.</li>
         <li>
           It is overly political (see{" "}
-          <a href="#keep-politics-out-of-it" className="tertiary-accent">
-            this section about politics
-          </a>
+          <a href="#keep-politics-out-of-it">this section about politics</a>
           ).
         </li>
         <li>
@@ -356,10 +332,8 @@ function Guidelines() {
         corporation, etc.), or a representative of an organization (as
         previously defined). If your organization would like to promote their
         content on our site, please contact{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>{" "}
-        for inquiries about advertising. Otherwise, creating/posting content to
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a> for
+        inquiries about advertising. Otherwise, creating/posting content to
         byeAI is not permitted.
       </p>
       <h2>Representatives</h2>
@@ -382,10 +356,7 @@ function Guidelines() {
       <p>
         This checkmark indicates that a user has been approved to use AI
         assistance to help create their content. See{" "}
-        <a className="tertiary-accent" href="#ai-assistance-information">
-          this section
-        </a>{" "}
-        for more info.
+        <a href="#ai-assistance-information">this section</a> for more info.
       </p>
       <h1>Sources Cited</h1>
       <p>
@@ -394,23 +365,15 @@ function Guidelines() {
       </p>
       <ul>
         <li>
-          <a
-            href="https://nationalmtb.org/wp-content/uploads/Student-Athlete-Code-Of-Conduct-041723.pdf"
-            className="tertiary-accent"
-          >
+          <a href="https://nationalmtb.org/wp-content/uploads/Student-Athlete-Code-Of-Conduct-041723.pdf">
             Nica Code of Conduct
           </a>
         </li>
         <li>
-          <a href="https://dev.to/code-of-conduct" className="tertiary-accent">
-            Dev.to Code of Conduct
-          </a>
+          <a href="https://dev.to/code-of-conduct">Dev.to Code of Conduct</a>
         </li>
         <li>
-          <a
-            href="https://docs.daily.dev/docs/for-content-creators/content-guidelines"
-            className="tertiary-accent"
-          >
+          <a href="https://docs.daily.dev/docs/for-content-creators/content-guidelines">
             Daily.dev Content Guidelines
           </a>
         </li>
