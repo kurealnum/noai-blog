@@ -1,1 +1,0 @@
-import{a3 as s,j as r,L as o}from"./index-8BmAB2w1.js";function i(){const e=s();return r.jsxs("div",{id:"error-page",children:[r.jsxs("h1",{children:["HTTP ",e.status]}),r.jsx("p",{children:e.data}),r.jsx("p",{children:e.message}),r.jsx(o,{to:"/feed",children:r.jsx("i",{children:"Go home"})})]})}export{i as default};
