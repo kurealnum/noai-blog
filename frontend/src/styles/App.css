@@ -17,6 +17,7 @@ input {
   --text-size: 20px;
   --small-text-size: 14px;
   --light-border-color: rgba(255, 255, 255, 0.4);
+  --extremely-light-border-color: rgba(255, 255, 255, 0.1);
   --landing-page-header: 40px;
   --light-svg-color: rgba(255, 255, 255, 0.85);
   --button-font-size: 18px;
@@ -84,6 +85,7 @@ fieldset {
 .blogpost-thumbnail {
   height: 162px;
   width: 288px;
+  border-radius: 10px;
 }
 
 .post-form {
@@ -608,7 +610,7 @@ textarea {
   width: 85vw;
   background: var(--background);
   padding: 10px;
-  border: var(--light-border-color) 1px solid;
+  border: var(--extremely-light-border-color) 1px solid;
   border-radius: 10px;
   display: flex;
   flex-direction: column;
@@ -618,6 +620,7 @@ textarea {
 
 .blog-post {
   width: min-content;
+  padding: 6px;
 }
 
 .comment a {
@@ -625,7 +628,14 @@ textarea {
 }
 
 .blog-post h2 {
-  margin-top: 20px;
+  margin: 5px auto;
+  text-align: center;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  max-width: 278px;
+  font-size: var(--navbar-font-size);
 }
 
 .link-comment {
@@ -680,11 +690,20 @@ h3 {
   font-style: italic;
 }
 
+.info-user-box {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+.info-user-box img {
+  width: 30px;
+  border-radius: 50%;
+}
+
 .info {
   display: flex;
   flex-direction: row;
-  font-style: italic;
-  font-weight: 200;
+  font-weight: 300;
   width: 100%;
   justify-content: space-around;
   max-width: 300px;

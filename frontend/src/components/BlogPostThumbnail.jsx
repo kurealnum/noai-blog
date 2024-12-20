@@ -14,6 +14,9 @@ import Thumbnail from "./Thumbnail";
 
 function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
   const [open, setOpen] = useState(false);
+  const [isImage, setIsImage] = useState(
+    content["user"]["profile_picture"] != null,
+  );
   function dialogHelper() {
     adminDeletePost(
       content["user"]["username"],
@@ -55,7 +58,15 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
         <Thumbnail url={content["thumbnail"]} />
         <h2>{content["title"]}</h2>
         <div className="info">
-          <p>{"By " + content["user"]["username"]}</p>
+          <div className="info-user-box">
+            {isImage ? (
+              <img
+                src={content["user"]["profile_picture"]}
+                onError={() => setIsImage(false)}
+              />
+            ) : null}
+            <p>{content["user"]["username"]}</p>{" "}
+          </div>
           <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
         </div>
         {isAdminDashboard && isAdmin() ? (
