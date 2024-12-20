@@ -77,6 +77,12 @@ function Faq() {
           byeAI is a blogging website for software developers and computer
           people alike that completely disallows AI generated content.
         </p>
+        <h2>What's the best way for me to write an article?</h2>
+        <p>
+          While our built in markdown editor may be nice for simple content
+          creation, we recommend using purpose-built writing software such as
+          Google Docs or MS Word to produce the final draft of your writing.
+        </p>
         <h2>How does byeAI detect AI generated content?</h2>
         <p>
           We have a standardized system in place that helps take care of AI

@@ -852,6 +852,8 @@ p {
 }
 
 .text-based-page {
+  font-size: 17px;
+  letter-spacing: 0.025em;
   line-height: 1.3em;
   margin: 0 auto;
   display: flex;
