@@ -433,6 +433,10 @@ img {
   width: fit-content;
 }
 
+#member-since {
+  gap: 6px;
+}
+
 .date-field {
   display: flex;
   flex-direction: column;

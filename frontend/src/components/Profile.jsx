@@ -1,3 +1,4 @@
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import { CheckCircle, Delete } from "@mui/icons-material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -5,7 +6,7 @@ import { adminDeleteUser, isAdmin } from "../features/helpers";
 import FlagButton from "./FlagButton";
 import { Dialog } from "@mui/material";
 
-function Profile({ content, isAdminDashboard, refetch }) {
+function Profile({ content, isAdminDashboard, refetch, showDateJoined }) {
   const [isProfilePicture, setIsProfilePicture] = useState(true);
   const [open, setOpen] = useState(false);
 
@@ -33,12 +34,20 @@ function Profile({ content, isAdminDashboard, refetch }) {
         </>
       ) : null}
       <Link to={"/homepage/" + content["user"]["username"]}>
-        <span>{content["user"]["username"]}</span>
+        {content["user"]["username"]}
       </Link>
       {content["user"]["approved_ai_usage"] ? (
         <Link to="/guidelines#green-checkmarks-on-users-profiles">
           <CheckCircle />
         </Link>
+      ) : null}
+      {showDateJoined === true ? (
+        <div id="member-since">
+          <CalendarMonthIcon />
+          <i>
+            <p>{content["user"]["date_joined"].replace(/(T.*)/g, "")}</p>
+          </i>
+        </div>
       ) : null}
       {isAdminDashboard && isAdmin() ? (
         <>
