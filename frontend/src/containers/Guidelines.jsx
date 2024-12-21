@@ -9,31 +9,23 @@ function Guidelines() {
         content. That’s not our only rule though! Here’s all the “fun” rules we
         have.
       </p>
-      <p>
-        (If you're looking for the about us section, click{" "}
-        <Link className="tertiary-accent" to="/about-us">
-          here
-        </Link>
-        . And if you're looking for the FAQ, click{" "}
-        <Link to="/faq" className="tertiary-accent">
-          here
-        </Link>
-        .)
-      </p>
+      <i>
+        <p>
+          (If you're looking for the about us section, click{" "}
+          <Link to="/about-us">here</Link>. And if you're looking for the FAQ,
+          click <Link to="/faq">here</Link>
+          .)
+        </p>
+      </i>
       <h2>Contact Information</h2>
       <p>
         Please use{" "}
-        <a
-          className="tertiary-accent"
-          href="https://form.jotform.com/242828369788175"
-        >
+        <a href="https://form.jotform.com/242828369788175">
           this anonymous form
         </a>{" "}
         to submit an incident report. Alternatively, for more general requests,
         you can send an email to{" "}
-        <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
-          thenoaiblog@gmail.com
-        </a>
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>
       </p>
       <h2>The basics</h2>
       <p>
@@ -41,8 +33,14 @@ function Guidelines() {
         be a surprise!
       </p>
       <p>
-        Be nice. We’d love to stop here, but just in case, here’s all the things
-        that fall under “be nice”:
+        Firstly, let's define a term: computer people. This term is used
+        frequently throughout the guidelines, and it simply refers to anyone who
+        takes an interest in computers. That interest may be hardware, software,
+        coding, theming, or anything else that falls in the realm of computers.{" "}
+      </p>
+      <p>
+        Next, be nice. We’d love to stop here, but just in case, here’s all the
+        things that fall under “be nice”:
       </p>
       <ul>
         <li>Be respectful of differing viewpoints</li>
@@ -64,7 +62,7 @@ function Guidelines() {
         </li>
         <li>
           Do your best to be empathetic. You have not lived the life that
-          someone else has lived.
+          someone else has.
         </li>
       </ul>
       <p>
@@ -81,18 +79,21 @@ function Guidelines() {
         This is the important one! Content that is found to be AI generated/AI
         assisted will be removed, but content that is only suspected to be AI
         generated/AI assisted will result in a message to the author of the post
-        asking for “proof” of creation (read more about this in{" "}
-        <a href="#suspected-content" className="tertiary-accent">
-          the section about handling content that is suspected to be AI
-          generated.
-        </a>
+        asking for “proof” of creation{" "}
+        <i>
+          (read more about this in{" "}
+          <a href="#suspected-content">
+            the section about handling content that is suspected to be AI
+            generated.
+          </a>
+        </i>
         ).
       </p>
       <h3>How are you detecting AI generated/AI assisted content?</h3>
       <p>
         We depend almost entirely on our users and manual moderation. In other
         words, we understand that 90% of content that is posted here is almost
-        certainly not AI generated/AI assisted. Thus, dealing with the leftover
+        certainly not AI generated or assisted. Thus, dealing with the leftover
         10% by hand is a much easier task.
       </p>
       <p>So how do we deal with that leftover 10%? Good question.</p>
@@ -100,25 +101,21 @@ function Guidelines() {
         Before we begin, I (the author of these guidelines and the founder of
         byeAI – Oscar) would like to make a personal note. I <i>always</i> err
         on the side of caution, and even when all of the checks listed below
-        prove to be positive, I, and anyone else moderating byeAI, will try to
-        find a way to resolve the situation without immediately removing the
-        content.
+        prove to be positive, I will and try to find a way to resolve the
+        situation without immediately removing the content.
       </p>
       <p>
-        Getting back on topic now... Firstly, the suspected content will be
-        tested with{" "}
-        <a href="https://gptzero.me/" className="tertiary-accent">
-          GPTZero
-        </a>{" "}
-        or a similar tool. byeAI understands that tools like this can be
-        inaccurate on occasion, and thus we won’t derive the likelihood that a
-        piece of content is AI generated based solely off of this.
+        Getting back on topic now... firstly, the suspected content will be
+        tested with <a href="https://gptzero.me/">GPTZero</a> or a similar tool.
+        We understand that tools like this can be inaccurate on occasion, and
+        thus we won’t derive the likelihood that a piece of content is AI
+        generated based solely off of this.
       </p>
       <p>
         Secondly, we attempt to replicate a blog post using AI. We do this by
         extracting a few sentences from an article that seems to summarize it
         best (for example, the conclusion), and asking AI to write a blog post
-        based off of that summary. If both this test and GPTZero gave a positive
+        based off of that summary. If both this test and GPTZero give a positive
         result, we’ll normally call it a day, and mark this post as AI
         assisted/AI generated (which again, will result in this article being
         removed).
@@ -144,19 +141,8 @@ function Guidelines() {
         <li>Does the author post more than once a day?</li>
       </ul>
       <p>
-        It should be noted that if a piece of content reaches this third step,
-        it will no longer be considered solely as AI generated/AI assisted
-        content, and it will instead be considered as suspected AI generated/AI
-        assisted content. This is important because a post that is simply found
-        to be AI generated/AI assisted will be removed without warning, while a
-        post that is suspected to be AI generated/AI assisted will only result
-        in a friendly email to the author asking for “proof” of creation (read
-        more about this in{" "}
-        <a href="#suspected-content" className="tertiary-accent">
-          the section about handling content that is suspected to be AI
-          generated.
-        </a>
-        ).
+        As a reminder, if the post is found to be AI generated or assisted,
+        we'll go ahead and remove the post and possibly the author's account.
       </p>
       <p>
         If you have any suggestions about this system, we’d love to hear it.
@@ -182,16 +168,14 @@ function Guidelines() {
       </p>
       <p>
         Firstly, please ensure that the email was sent from{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>
-        . If it was not, the email may be a phishing attempt. Please fill out an
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>. If it
+        was not, the email may be a phishing attempt. If so, please feel out an
         incident report.
       </p>
       <p>
-        If you’ve gotten this far, you’ll need to provide evidence that you,
-        without the assistance of AI, created that piece of content. Here are
-        some acceptable ways to prove that:
+        Secondly, you’ll need to provide evidence that you, without the
+        assistance of AI, created that piece of content. Here are some
+        acceptable ways to prove that:
       </p>
       <ul>
         <li>
@@ -219,19 +203,19 @@ function Guidelines() {
       <p>
         This isn’t a cult. byeAI has no problem with an author using AI to
         assist themselves in coding or most other activities that may relate to
-        byeAI (we would prefer if code that is included in content wasn’t
+        us (granted, we would prefer if code that is included in content wasn’t
         completely AI generated, but even if it is, we can’t enforce it). The
         only thing that byeAI explicitly prohibits is the usage of artificial
         intelligence in content posted to byeAI.
       </p>
       <p>
-        However, if you’d like to ask an AI a question, then use another
-        resource to validate the AI’s answer, you may. For instance, if you were
-        writing a post about HTML and didn’t understand what a paragraph element
-        was, it would be appropriate for me to ask ChatGPT to explain it, then
-        make your way to MDN and cite their definition of a paragraph as a
-        resource in my post. It would not be appropriate for me to copy and
-        paste the answer that ChatGPT gave to me directly into my post.
+        However, if you’d like to ask an LLM a question, then use another
+        resource to validate the LLM's answer, you may. For instance, if you
+        were writing a post about HTML and didn’t understand what a paragraph
+        element was, it would be appropriate for you to ask ChatGPT to explain
+        it, then make your way to MDN and cite their definition of a paragraph
+        as a resource in your post. It would not be appropriate for you to copy
+        and paste the answer that ChatGPT gave to you directly into your post.
       </p>
       <h3 id="ai-assistance-information">
         I’m an author that isn’t fluent in English, but uses AI to help me
@@ -239,23 +223,19 @@ function Guidelines() {
       </h3>
       <p>
         Please contact{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>
-        . We would be happy to make accommodations for you – these
-        accommodations would likely be “immunity” from AI checks, and a little
-        sticker on your profile that says you’re approved to use AI. Optionally,
-        you may remain anonymous (until we have to approve your content for AI
-        usage, of course) by submitting a question through the incident report.
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>. We
+        would be happy to make accommodations for you – these accommodations
+        would likely be “immunity” from AI checks, and a little sticker on your
+        profile that says you’re approved to use AI. Additionally, you may
+        remain anonymous (until we have to approve your content for AI usage, of
+        course) by submitting a question through the incident report.
       </p>
       <h2>No listicles</h2>
-      <a href="#what-is-a-listicle" className="tertiary-accent">
-        But what is a listicle?
-      </a>
+      <a href="#what-is-a-listicle">But what is a listicle?</a>
       <p>
-        This is not a strict rule. byeAI understands that some content is simply
+        This is not a strict rule. We understands that some content is simply
         presented best in the format of a listicle, and we don’t want to
-        prohibit quality content that simply happens to take the form of a
+        prohibit quality content that just happens to take the form of a
         listicle. However, we do ask that you keep articles in a list format to
         a minimum. If you would like to write a listicle, please:
       </p>
@@ -273,10 +253,7 @@ function Guidelines() {
         <li>
           Pick a side. Either stay as far away from list-based content as
           possible, or go full force into it. For clarity, check out{" "}
-          <a
-            href="https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje"
-            className="tertiary-accent"
-          >
+          <a href="https://dev.to/afif/i-made-100-css-loaders-for-your-next-project-4eje">
             this example
           </a>{" "}
           of a listicle. This content clearly takes the form of a listicle, but
@@ -286,8 +263,8 @@ function Guidelines() {
       </ul>
       <p>
         If posts are found to be violating any of the above rules, they will not
-        be removed. The post will simply be marked as a listicle and thus, it
-        will receive a penalty on byeAI’s ranking algorithm.
+        be removed. The post will simply be marked as a listicle, which will
+        cause it to will receive a penalty on byeAI’s ranking algorithm.
       </p>
       <h3 id="what-is-a-listicle">What is a listicle?</h3>
       <p>
@@ -321,10 +298,7 @@ function Guidelines() {
           exception of discussion posts and any other posts that warrant a short
           and low effort body)
         </li>
-        <li>
-          It is sexually explicit. There’s no excuse for anything inappropriate
-          on a blogging platform for computer people.
-        </li>
+        <li>It is sexually explicit.</li>
         <li>
           It violates the privacy rights of any other users on the platform (ex.
           doxxing someone).
@@ -332,9 +306,7 @@ function Guidelines() {
         <li>It violates any of the above guidelines.</li>
         <li>
           It is overly political (see{" "}
-          <a href="#keep-politics-out-of-it" className="tertiary-accent">
-            this section about politics
-          </a>
+          <a href="#keep-politics-out-of-it">this section about politics</a>
           ).
         </li>
         <li>
@@ -356,10 +328,8 @@ function Guidelines() {
         corporation, etc.), or a representative of an organization (as
         previously defined). If your organization would like to promote their
         content on our site, please contact{" "}
-        <a href="mailto: thenoaiblog@gmail.com" className="tertiary-accent">
-          thenoaiblog@gmail.com
-        </a>{" "}
-        for inquiries about advertising. Otherwise, creating/posting content to
+        <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a> for
+        inquiries about advertising. Otherwise, creating/posting content to
         byeAI is not permitted.
       </p>
       <h2>Representatives</h2>
@@ -382,10 +352,7 @@ function Guidelines() {
       <p>
         This checkmark indicates that a user has been approved to use AI
         assistance to help create their content. See{" "}
-        <a className="tertiary-accent" href="#ai-assistance-information">
-          this section
-        </a>{" "}
-        for more info.
+        <a href="#ai-assistance-information">this section</a> for more info.
       </p>
       <h1>Sources Cited</h1>
       <p>
@@ -394,23 +361,15 @@ function Guidelines() {
       </p>
       <ul>
         <li>
-          <a
-            href="https://nationalmtb.org/wp-content/uploads/Student-Athlete-Code-Of-Conduct-041723.pdf"
-            className="tertiary-accent"
-          >
+          <a href="https://nationalmtb.org/wp-content/uploads/Student-Athlete-Code-Of-Conduct-041723.pdf">
             Nica Code of Conduct
           </a>
         </li>
         <li>
-          <a href="https://dev.to/code-of-conduct" className="tertiary-accent">
-            Dev.to Code of Conduct
-          </a>
+          <a href="https://dev.to/code-of-conduct">Dev.to Code of Conduct</a>
         </li>
         <li>
-          <a
-            href="https://docs.daily.dev/docs/for-content-creators/content-guidelines"
-            className="tertiary-accent"
-          >
+          <a href="https://docs.daily.dev/docs/for-content-creators/content-guidelines">
             Daily.dev Content Guidelines
           </a>
         </li>

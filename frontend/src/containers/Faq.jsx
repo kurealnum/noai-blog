@@ -77,14 +77,17 @@ function Faq() {
           byeAI is a blogging website for software developers and computer
           people alike that completely disallows AI generated content.
         </p>
+        <h2>What's the best way for me to write an article?</h2>
+        <p>
+          While our built in markdown editor may be nice for simple content
+          creation, we recommend using purpose-built writing software such as
+          Google Docs or MS Word to produce the final draft of your writing.
+        </p>
         <h2>How does byeAI detect AI generated content?</h2>
         <p>
           We have a standardized system in place that helps take care of AI
           generated/assisted posts. You can read more about this in our{" "}
-          <Link className="tertiary-accent" to="/guidelines">
-            guidelines
-          </Link>
-          .
+          <Link to="/guidelines">guidelines</Link>.
         </p>
         <h2>What kind of content can I find on byeAI?</h2>
         <p>
@@ -95,17 +98,12 @@ function Faq() {
         <p>
           byeAI is not open source. However, if you’re curious about the inner
           workings of a certain part of byeAI, please send an email to{" "}
-          <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
-            thenoaiblog@gmail.com
-          </a>
-          .
+          <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>.
         </p>
         <h2>Can I nominate something to be added to the FAQ/guidelines?</h2>
         <p>
           Probably. Please send an email to{" "}
-          <a className="tertiary-accent" href="mailto: thenoaiblog@gmail.com">
-            thenoaiblog@gmail.com
-          </a>
+          <a href="mailto: thenoaiblog@gmail.com">thenoaiblog@gmail.com</a>
           specifically asking what you’d like to see changed.
         </p>
         <h2>How big should my thumbnails be on byeAI?</h2>
