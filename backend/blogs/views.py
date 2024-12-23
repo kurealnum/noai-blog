@@ -102,9 +102,10 @@ class BlogPostView(APIView):
         except BlogPost.DoesNotExist:
             is_original_post = None
 
+        # weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
         if title_slug != original_slug and is_original_post:
             return Response(
-                data={"A post with this title already exists!"},
+                data={"error": "A post with this title already exists!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -364,7 +365,10 @@ class FollowingView(APIView):
                     follower=user, user__username=username
                 )
             except Follower.DoesNotExist:
-                return Http404
+                return Response(
+                    data={"error": "This user does not exist"},
+                    status=status.HTTP_404_NOT_FOUND,
+                )
             serializer = GetFollowerSerializer(data)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:

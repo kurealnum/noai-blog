@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AnonymousUser
 from django.test import TestCase
 from rest_framework.request import Request
 from rest_framework.test import APIRequestFactory, force_authenticate
@@ -22,6 +23,8 @@ class IsModeratorTestCase(TestCase):
     def test_with_no_user(self):
         tmp = self.factory.get("/", content_type="application/json")
         request = Request(tmp)  # type:ignore
+        # messy? yes, but this is necessary to get full coverage
+        request.user = None  # type: ignore
         res = self.callable.has_permission(request, APIView())
 
         self.assertFalse(res)
@@ -116,6 +119,8 @@ class IsAdminTestCase(TestCase):
     def test_with_no_user(self):
         tmp = self.factory.get("/", content_type="application/json")
         request = Request(tmp)  # type:ignore
+        # messy? yes, but this is necessary to get full coverage
+        request.user = None  # type: ignore
         res = self.callable.has_permission(request, APIView())
 
         self.assertFalse(res)
