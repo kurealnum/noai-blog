@@ -35,7 +35,7 @@ class cTestCase(TestCase):
 class BlogPostSearchTC(cTestCase):
     def test_does_get_with_correct_query(self):
         request = self.client.get(
-            reverse_lazy("search_blog_post", kwargs={"search": "awesome"})
+            reverse_lazy("search_blog_post", kwargs={"search": "awesome", "page": "1"})
         )
         expected_length = 1
         expected_status = 200
@@ -44,9 +44,7 @@ class BlogPostSearchTC(cTestCase):
 
     def test_does_get_with_no_query(self):
         request = self.client.get(
-            reverse_lazy(
-                "search_blog_post",
-            )
+            reverse_lazy("search_blog_post", kwargs={"page": "1"})
         )
         expected_length = 2
         expected_status = 200
@@ -55,7 +53,19 @@ class BlogPostSearchTC(cTestCase):
 
     def test_does_not_get_with_incorrect_query(self):
         request = self.client.get(
-            reverse_lazy("search_blog_post", kwargs={"search": "wrongwrong"})
+            reverse_lazy(
+                "search_blog_post", kwargs={"search": "wrongwrong", "page": "1"}
+            )
+        )
+        expected_length = 0
+        expected_status = 200
+        self.assertEqual(expected_length, len(request.data))  # type: ignore
+        self.assertEqual(expected_status, request.status_code)
+
+    def test_does_get_with_page_two(self):
+        # makes sure that querying for a page that doesn't have anything on it works ok
+        request = self.client.get(
+            reverse_lazy("search_blog_post", kwargs={"page": "2"})
         )
         expected_length = 0
         expected_status = 200
