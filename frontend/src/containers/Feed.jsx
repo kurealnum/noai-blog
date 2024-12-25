@@ -3,6 +3,7 @@ import { getFeed } from "../features/helpers";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { CircularProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
+import SearchBar from "../components/SearchBar";
 
 function Feed() {
   // the amount of advertisements to show every x posts: advertise ratio of 5 = 1 ad every 5 posts
@@ -52,6 +53,7 @@ function Feed() {
   }
   return (
     <>
+      <SearchBar />
       <ul className="feed">
         {data.map((content, index) => (
           <>
