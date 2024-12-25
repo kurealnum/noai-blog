@@ -7,7 +7,12 @@ from blogs.serializers import BlogPostSerializer
 
 
 class BlogPostSearch(APIView):
-    def get(self, request, search):
+    def get(self, request, search=None):
+        if not search:
+            queryset = BlogPost.objects.all()[:50]
+            serializer = BlogPostSerializer(queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         queryset = BlogPost.objects.filter(title__search=search)
         serializer = BlogPostSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
