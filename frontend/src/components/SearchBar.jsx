@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import "../styles/SearchBar.css";
 
-function SearchBar() {
+function SearchBar({ type }) {
   function searchFormOnSubmit(e) {
     e.preventDefault();
   }
