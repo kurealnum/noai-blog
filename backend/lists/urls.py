@@ -1,0 +1,9 @@
+from django.urls import path
+
+from lists.views import ListFeed, ListView
+
+urlpatterns = [
+    path("feed/<index>", ListFeed.as_view(), name="list_feed"),
+    path("get-list/<title>", ListView.as_view(), name="manage_list"),
+    path("get-list/<username>/<slug>/", ListView.as_view(), name="manage_list"),
+]

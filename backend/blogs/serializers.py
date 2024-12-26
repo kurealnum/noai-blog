@@ -38,7 +38,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SingleBlogPostUserSerializer(serializers.ModelSerializer):
+class PostUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
         fields = ("username", "profile_picture", "approved_ai_usage")
@@ -53,7 +53,7 @@ class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.Serializer):
-    user = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
     title = serializers.CharField(max_length=100)
     content = serializers.CharField(
         max_length=101
@@ -82,7 +82,7 @@ class CreateOrUpdateCommentSerializer(serializers.ModelSerializer):
 
 
 class CommentAndUserSerializer(serializers.Serializer):
-    user = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
     reply_to = CommentSerializer()
     content = serializers.CharField()
     created_date = serializers.DateTimeField()
@@ -92,8 +92,8 @@ class CommentAndUserSerializer(serializers.Serializer):
 
 
 class GetFollowerSerializer(serializers.ModelSerializer):
-    user = SingleBlogPostUserSerializer()
-    follower = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
+    follower = PostUserSerializer()
 
     class Meta:  # type: ignore
         model = Follower
