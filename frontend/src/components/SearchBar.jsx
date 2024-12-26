@@ -3,7 +3,7 @@ import "../styles/SearchBar.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function SearchBar({ type }) {
+function SearchBar({ type, defaultSearchValue }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
@@ -25,7 +25,9 @@ function SearchBar({ type }) {
         <input
           type="text"
           id="search"
-          defaultValue={"Search..."}
+          defaultValue={
+            defaultSearchValue === "" ? "Search..." : defaultSearchValue
+          }
           onFocus={(e) => e.target.select()}
           onChange={(e) => setQuery(e.target.value)}
         ></input>

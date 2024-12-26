@@ -50,6 +50,7 @@ function Feed() {
       showPaginator={true}
       page={page}
       setPage={setPage}
+      defaultSearchValue={""}
     />
   );
 }

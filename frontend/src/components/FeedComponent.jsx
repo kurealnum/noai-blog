@@ -10,10 +10,11 @@ function FeedComponent({
   showPaginator,
   setPage,
   page,
+  defaultSearchValue,
 }) {
   return (
     <>
-      <SearchBar type={type} />
+      <SearchBar type={type} defaultSearchValue={defaultSearchValue} />
       <ul className="feed">
         {data.map((content, index) => (
           <>
