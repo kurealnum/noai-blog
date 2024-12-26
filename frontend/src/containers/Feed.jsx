@@ -46,7 +46,7 @@ function Feed() {
     <FeedComponent
       data={data}
       advertiseRatio={advertiseRatio}
-      type={"standard"}
+      type={"posts"}
       showPaginator={true}
       page={page}
       setPage={setPage}

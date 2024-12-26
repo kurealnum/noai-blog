@@ -45,7 +45,15 @@ const router = createBrowserRouter([
     errorElement: <RootBoundary />,
     children: [
       {
-        path: "/search/:type/:search",
+        path: "/search/:type/:query/",
+        element: (
+          <Page type={"public"} title={"Search"}>
+            <Search />
+          </Page>
+        ),
+      },
+      {
+        path: "/search/:type/",
         element: (
           <Page type={"public"} title={"Search"}>
             <Search />

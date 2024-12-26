@@ -42,7 +42,7 @@ When running the project in production, the admin panel is **not** located at /a
 
 For the love of all that is holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
 
-When referencing the different kinds of articles on byeAI (listicles, tutorials, general articles, etc.), "standard" articles refer to, well, standard articles, "lists" refer to listicles, and "tutorials" refers to tutorials.
+When referencing the different kinds of articles on byeAI (listicles, tutorials, general articles, etc.), "post" articles refer to, well, standard articles, "lists" refer to listicles, and "tutorials" refers to tutorials.
 
 ### Testing Markdown
 
