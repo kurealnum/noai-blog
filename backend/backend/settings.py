@@ -82,10 +82,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sitemaps",
+    "django.contrib.postgres",
     "rest_framework",
     "corsheaders",
     "accounts",
     "blogs",
+    "search",
     "storages",
 ]
 

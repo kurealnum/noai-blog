@@ -1,5 +1,6 @@
 from io import BytesIO
 import json
+from django.template.defaultfilters import slugify
 from django.test import TestCase
 from django.urls import reverse_lazy
 from accounts.models import CustomUser
@@ -191,6 +192,16 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_result = "Here's something about my blog post"
         self.assertEqual(expected_result, request["content"])
 
+    def test_does_work_with_wrong_title(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_post", kwargs={"username": "bobby", "slug": "the-wrong-title"}
+            )
+        )
+
+        expected_status = 404
+        self.assertEqual(expected_status, request.status_code)
+
     def test_does_create_properly(self):
         img = BytesIO(
             b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
@@ -205,6 +216,21 @@ class BlogPostViewTestCase(CustomTestCase):
             "content": "Here's my awesome blog post ##",
             "likes": 0,
             "thumbnail": img,
+        }
+        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_post_with_no_thumbnail(self):
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
         }
         request = temp_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
@@ -284,6 +310,96 @@ class BlogPostViewTestCase(CustomTestCase):
             "content": "Some new content",
             "original_slug": to_edit.slug_field,
             "thumbnail": "undefined",
+        }
+        request = temp_client.put(reverse_lazy("edit_post"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_edit_work_with_new_title(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = BlogPost.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": slugify("An edited title"),
+            "content": "Some new content",
+            "original_slug": to_edit.slug_field,
+            "thumbnail": "undefined",
+        }
+        request = temp_client.put(reverse_lazy("edit_post"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_not_put_with_duplicate_title(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = BlogPost.objects.create(
+            user=self.user,
+            title="A basic title",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        duplicate = BlogPost.objects.create(
+            user=self.user, title="new-title", content="content", thumbnail=img
+        )
+        duplicate.save()
+
+        # i have no idea why we have to use SimpleUploadedFile for some things and BytesIO for others
+        new_img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        new_img.name = "myimage.gif"
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "new-title",
+            "title_slug": "new-title",
+            "content": "Some new content",
+            "thumbnail": new_img,
+            "original_slug": to_edit.slug_field,
+        }
+        request = temp_client.put(reverse_lazy("edit_post"), data=data)
+        expected_result = "A post with this title already exists!"
+        self.assertEqual(expected_result, request.data["error"])
+
+    def test_does_put_with_no_thumbnail_in_original_post(self):
+        # create a separate object to edit
+        to_edit = BlogPost.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": to_edit.slug_field,
+            "content": "Some new content",
+            "thumbnail": "undefined",
+            "original_slug": to_edit.slug_field,
         }
         request = temp_client.put(reverse_lazy("edit_post"), data=data)
         expected_result = "An edited title"
@@ -518,6 +634,14 @@ class FollowingViewTestCase(CustomTestCase):
 
         self.assertEqual(expected_result, request.data["user"]["username"])
 
+    def test_does_get_with_incorrect_username_return_404(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="jonny")
+        request = temp_client.get(reverse_lazy("manage_following", args=["idontexist"]))
+        expected_result = "This user does not exist"
+
+        self.assertEqual(expected_result, request.data["error"])
+
 
 class ReactionViewTestCase(CustomTestCase):
     def setUp(self):
@@ -537,7 +661,10 @@ class ReactionViewTestCase(CustomTestCase):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
         request = temp_client.get(
-            reverse_lazy("manage_post_reactions", args=[self.blog_post.slug_field])
+            reverse_lazy(
+                "manage_post_reactions",
+                args=[self.blog_post.user.username, self.blog_post.slug_field],
+            )
         )
         expected_response = 200
         self.assertEqual(expected_response, request.status_code)

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouteLoaderData } from "react-router-dom";
 import "../styles/Homepage.css";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import {
   getUserInfoByUsername,
   getBlogPosts,
@@ -141,23 +140,12 @@ function Homepage() {
             </button>
           </div>
           <div className="general-info">
-            <div className="about-me-wrapper">
-              <p id="about-me">{userInfo["about_me"]}</p>
-              <div id="member-since">
-                <CalendarMonthIcon />
-                <p>
-                  Member since {userInfo["date_joined"].replace(/(T.*)/g, "")}
-                </p>
-              </div>
-            </div>
-            <div className="technical-info">
-              <h2>Technical Info</h2>
-              <p>{userInfo["technical_info"]}</p>
-            </div>
+            <p>{userInfo["about_me"]}</p>
+            <p>{userInfo["technical_info"]}</p>
           </div>
           <div className="extra-info">
-            <div className="links">
-              <h2>Links</h2>
+            <h2>Links</h2>
+            <ul className="links">
               {links === null || links.length === 0 ? (
                 <p>This user doesn't have any links!</p>
               ) : (
@@ -167,17 +155,17 @@ function Homepage() {
                   </li>
                 ))
               )}
-            </div>
-            <div className="list">
-              <h2>Blog Posts</h2>
+            </ul>
+            <h2>Blog Posts</h2>
+            <ul className="feed">
               {blogPosts === null || blogPosts.length === 0 ? (
-                <p>There's nothing here. Go make some posts!</p>
+                <p>There's nothing here!</p>
               ) : (
                 blogPosts.map((content, index) => (
                   <BlogPostThumbnail key={index} content={content} />
                 ))
               )}
-            </div>
+            </ul>
           </div>
           <Snackbar
             open={followError}

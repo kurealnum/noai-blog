@@ -77,6 +77,16 @@ function NavBar() {
                       <li>
                         <Link to="/about-us">About Us</Link>
                       </li>
+                      <li>
+                        <a href="https://github.com/kurealnum/byeAI/releases/">
+                          Changelog
+                        </a>
+                      </li>
+                      <li>
+                        <a href="https://github.com/kurealnum/byeAI/issues">
+                          Issues
+                        </a>
+                      </li>
                       <hr></hr>
                       <li>
                         <Link to="/logout">Logout</Link>

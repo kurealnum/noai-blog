@@ -42,6 +42,8 @@ When running the project in production, the admin panel is **not** located at /a
 
 For the love of all that is holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
 
+When referencing the different kinds of articles on byeAI (listicles, tutorials, general articles, etc.), "post" articles refer to, well, standard articles, "lists" refer to listicles, and "tutorials" refers to tutorials.
+
 ### Testing Markdown
 
 Use this bit of markdown to test any Markdown renders:
@@ -109,7 +111,7 @@ USE_STORAGES=True
 AWS_ACCESS_KEY_ID="accesskey"
 AWS_SECRET_ACCESS_KEY="secretaccesskey"
 AWS_STORAGE_BUCKET_NAME="byeai-main-spaces"
-AWS_S3_ENDPOINT_URL="https://byeai-main-spaces.nyc3.digitaloceanspaces.com"
+AWS_S3_ENDPOINT_URL="https://myurl"
 AWS_LOCATION='static'
 AWS_DEFAULT_ACL='public-read'
 AWS_QUERYSTRING_AUTH=False

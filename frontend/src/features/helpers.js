@@ -750,7 +750,28 @@ async function adminDeleteUser(username) {
 }
 // END OF ADMIN FUNCTIONS
 
+async function search(type, query, page) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "GET",
+    credentials: "include",
+  };
+
+  // if there's no query given, we don't want to include it in the url
+  let url = "";
+  if (query != null) {
+    url = "/api/search/" + type + "/" + query + "/" + page + "/";
+  } else {
+    url = "/api/search/" + type + "/" + page + "/";
+  }
+  const response = await fetch(url, config);
+  return await response.json();
+}
+
 export {
+  search,
   deleteAccount,
   adminDeleteUser,
   adminDeleteComment,
