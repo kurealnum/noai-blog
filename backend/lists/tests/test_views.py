@@ -1,3 +1,4 @@
+from io import BytesIO
 from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.test import APIClient, APIRequestFactory
@@ -21,6 +22,10 @@ class cTestCase(TestCase):
         self.user.save()
         self.list_one = List.objects.create(
             user=self.user, title="one", content="1. 2. 3."
+        )
+        self.authenticated_client = APIClient()
+        self.authenticated_client.login(
+            username="bobby", password="TerriblePassword123"
         )
 
 
@@ -68,3 +73,31 @@ class ListViewTC(cTestCase):
         request = self.client.get(reverse_lazy("manage_list", args=["bobby", "one"]))
         expected_title = "one"
         self.assertEqual(expected_title, request.data["title"])  # type: ignore
+
+    def test_does_post_with_thumbnail(self):
+        img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        img.name = "myimage.gif"
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            "thumbnail": img,
+        }
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_post_with_no_thumbnail(self):
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
+        }
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])

@@ -1,6 +1,8 @@
 from blogs.serializers import PostUserSerializer
 from rest_framework import serializers
 
+from lists.models import List
+
 
 class ListSerializer(serializers.Serializer):
     user = PostUserSerializer()
@@ -15,3 +17,11 @@ class ListSerializer(serializers.Serializer):
     likes = serializers.IntegerField(default=-1, required=False)
     score = serializers.IntegerField(default=-1, required=False)
     thumbnail = serializers.ImageField(default=None, required=False)
+
+
+class CreateOrUpdateListSerializer(serializers.ModelSerializer):
+    thumbnail = serializers.ImageField(allow_null=True, required=False)
+
+    class Meta:  # type:ignore
+        model = List
+        fields = ("user", "title", "content", "thumbnail")

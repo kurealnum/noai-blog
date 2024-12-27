@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 from blogs.models import Follower
 from lists.models import List
-from lists.serializers import ListSerializer
+from lists.serializers import CreateOrUpdateListSerializer, ListSerializer
 
 
 class ListView(APIView):
@@ -29,6 +29,30 @@ class ListView(APIView):
             )
             serializer = ListSerializer(list_post)
             return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        data = request.data
+
+        # blog post specific data
+        user = self.request.user.id  # type: ignore
+        title = data["title"]
+        content = data["content"]
+        thumbnail = data["thumbnail"]
+        if thumbnail == "undefined":
+            thumbnail = None
+        serializer_data = {
+            "user": user,
+            "title": title,
+            "content": content,
+            "thumbnail": thumbnail,
+        }
+
+        serializer = CreateOrUpdateListSerializer(data=serializer_data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListFeed(APIView):
