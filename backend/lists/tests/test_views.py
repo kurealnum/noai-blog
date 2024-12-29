@@ -1,4 +1,6 @@
 from io import BytesIO
+from django.core.files.uploadedfile import SimpleUploadedFile
+from django.template.defaultfilters import slugify
 from django.test import TestCase
 from django.urls import reverse_lazy
 from rest_framework.test import APIClient, APIRequestFactory
@@ -86,7 +88,7 @@ class ListViewTC(cTestCase):
             "likes": 0,
             "thumbnail": img,
         }
-        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        request = self.authenticated_client.post(reverse_lazy("create_list"), data=data)
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
 
@@ -98,6 +100,159 @@ class ListViewTC(cTestCase):
             # this is how JS handles this, so we have to manually put "undefined"
             "thumbnail": "undefined",
         }
-        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        request = self.authenticated_client.post(reverse_lazy("create_list"), data=data)
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_edit_properly(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = List.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        # i have no idea why we have to use SimpleUploadedFile for some things and BytesIO for others
+        new_img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        new_img.name = "myimage.gif"
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": to_edit.slug_field,
+            "content": "Some new content",
+            "thumbnail": new_img,
+            "original_slug": to_edit.slug_field,
+        }
+        request = temp_client.put(reverse_lazy("edit_list"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_edit_work_with_no_img(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = List.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": to_edit.slug_field,
+            "content": "Some new content",
+            "original_slug": to_edit.slug_field,
+            "thumbnail": "undefined",
+        }
+        request = temp_client.put(reverse_lazy("edit_list"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_edit_work_with_new_title(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = List.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": slugify("An edited title"),
+            "content": "Some new content",
+            "original_slug": to_edit.slug_field,
+            "thumbnail": "undefined",
+        }
+        request = temp_client.put(reverse_lazy("edit_list"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_not_put_with_duplicate_title(self):
+        img = SimpleUploadedFile(
+            "test.gif",
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00",
+        )
+        # create a separate object to edit
+        to_edit = List.objects.create(
+            user=self.user,
+            title="A basic title",
+            content="Here's something about my blog post",
+            thumbnail=img,
+        )
+        to_edit.save()
+
+        duplicate = List.objects.create(
+            user=self.user, title="new-title", content="content", thumbnail=img
+        )
+        duplicate.save()
+
+        # i have no idea why we have to use SimpleUploadedFile for some things and BytesIO for others
+        new_img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        new_img.name = "myimage.gif"
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "new-title",
+            "title_slug": "new-title",
+            "content": "Some new content",
+            "thumbnail": new_img,
+            "original_slug": to_edit.slug_field,
+        }
+        request = temp_client.put(reverse_lazy("edit_list"), data=data)
+        expected_result = "A post with this title already exists!"
+        self.assertEqual(expected_result, request.data["error"])
+
+    def test_does_put_with_no_thumbnail_in_original_post(self):
+        # create a separate object to edit
+        to_edit = List.objects.create(
+            user=self.user,
+            title="my unique blog post",
+            content="Here's something about my blog post",
+        )
+        to_edit.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "An edited title",
+            "title_slug": to_edit.slug_field,
+            "content": "Some new content",
+            "thumbnail": "undefined",
+            "original_slug": to_edit.slug_field,
+        }
+        request = temp_client.put(reverse_lazy("edit_list"), data=data)
+        expected_result = "An edited title"
+        self.assertEqual(expected_result, request.data["title"])

@@ -54,6 +54,55 @@ class ListView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def put(self, request):
+        data = request.data
+
+        # blog post specific data
+        user = self.request.user.id  # type: ignore
+        title = data["title"]
+        title_slug = data["title_slug"]
+        content = data["content"]
+        thumbnail = data["thumbnail"]
+        original_slug = data["original_slug"]
+
+        try:
+            is_original_post = List.objects.get(
+                user=self.request.user, slug_field=title_slug
+            )
+        except List.DoesNotExist:
+            is_original_post = None
+
+        # weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
+        if title_slug != original_slug and is_original_post:
+            return Response(
+                data={"error": "A post with this title already exists!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if thumbnail == "undefined" and is_original_post:
+            thumbnail = is_original_post.thumbnail
+            if not thumbnail:
+                thumbnail = None
+        elif thumbnail == "undefined":
+            thumbnail = None
+
+        serializer_data = {
+            "user": user,
+            "title": title,
+            "content": content,
+            "thumbnail": thumbnail,
+        }
+
+        instance = get_object_or_404(List, user=user, slug_field=original_slug)
+        serializer = CreateOrUpdateListSerializer(
+            data=serializer_data, instance=instance
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ListFeed(APIView):
     permission_classes = (AllowAny,)
