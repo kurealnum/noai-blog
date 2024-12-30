@@ -103,6 +103,13 @@ class ListView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    def delete(self, request):
+        data = request.data
+        user = self.request.user
+        to_delete = get_object_or_404(List, user=user, slug_field=data["slug"])
+        to_delete.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class ListFeed(APIView):
     permission_classes = (AllowAny,)

@@ -8,4 +8,5 @@ urlpatterns = [
     path("get-list/<username>/<slug>/", ListView.as_view(), name="manage_list"),
     path("create-list/", ListView.as_view(), name="create_list"),
     path("edit-list/", ListView.as_view(), name="edit_list"),
+    path("delete-list/", ListView.as_view(), name="delete_list"),
 ]

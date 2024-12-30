@@ -256,3 +256,19 @@ class ListViewTC(cTestCase):
         request = temp_client.put(reverse_lazy("edit_list"), data=data)
         expected_result = "An edited title"
         self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_delete_work(self):
+        # create an object, then delete it
+        to_delete = List.objects.create(
+            user=self.user,
+            title="my unique list",
+            content="Here's something about my list",
+        )
+        to_delete.save()
+
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {"slug": to_delete.slug_field}
+        request = temp_client.delete(reverse_lazy("delete_list"), data=data)
+        expected_status = 204
+        self.assertEqual(expected_status, request.status_code)
