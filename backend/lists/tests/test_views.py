@@ -67,12 +67,12 @@ class ListFeedTC(cTestCase):
 
 class ListViewTC(cTestCase):
     def test_does_get_with_title(self):
-        request = self.client.get(reverse_lazy("manage_list", args=["one"]))
+        request = self.client.get(reverse_lazy("get_list", args=["one"]))
         expected_title = "one"
         self.assertEqual(expected_title, request.data["title"])  # type: ignore
 
     def test_does_get_with_username_and_slug(self):
-        request = self.client.get(reverse_lazy("manage_list", args=["bobby", "one"]))
+        request = self.client.get(reverse_lazy("get_list", args=["bobby", "one"]))
         expected_title = "one"
         self.assertEqual(expected_title, request.data["title"])  # type: ignore
 

@@ -31,7 +31,7 @@ class List(models.Model):
 
     def get_absolute_url(self):
         return reverse(
-            "get_post", kwargs={"username": self.user.username, "slug": self.slug_field}
+            "get_list", kwargs={"username": self.user.username, "slug": self.slug_field}
         )
 
     def save(self, *args, **kwargs):
