@@ -16,17 +16,14 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from base.base_views import BaseReactionView
-from blogs.models import BlogPost, Comment, Follower, PostReaction
+from base.base_views import BaseCommentView, BaseReactionView
+from blogs.models import BlogPost, PostComment, Follower
 from blogs.serializers import (
     BlogPostSerializer,
-    CommentAndUserSerializer,
     CommentSerializer,
     CreateOrUpdateBlogPostSerializer,
-    CreateOrUpdateCommentSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
-    ReactionSerializer,
 )
 
 
@@ -36,7 +33,7 @@ class CommentListUserView(generics.ListAPIView):
 
     def get_queryset(self):  # type: ignore
         user = self.request.user.id  # type: ignore
-        return Comment.objects.filter(user=user).select_related("post")
+        return PostComment.objects.filter(user=user).select_related("post")
 
 
 # this is the view for a *single* blog post
@@ -174,72 +171,11 @@ class CommentReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Comment.objects.filter(user=user).exclude(reply_to=None)
+        return PostComment.objects.filter(user=user).exclude(reply_to=None)
 
 
-# This view handles getting all comments for a BlogPost, creating a comment, editing a comment, and deletingr a comment
-class CommentListView(APIView):
-    def get_permissions(self):
-        permissions = super().get_permissions()
-        if self.request.method.lower() != "get":  # type: ignore
-            permissions.append(IsAuthenticated())  # type: ignore
-        return permissions
-
-    def get(self, request, username, slug):
-        post = generics.get_object_or_404(
-            BlogPost, slug_field=slug, user__username=username
-        )
-        queryset = Comment.objects.filter(post=post).select_related("user", "reply_to")
-        serializer = CommentAndUserSerializer(queryset, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        data = request.data
-
-        # this is mainly for the frontend, because it is being a pain.
-        if "reply_to" not in data.keys():
-            reply_to = None
-        else:
-            reply_to = data["reply_to"]
-
-        if reply_to == "":
-            reply_to = None
-
-        new_comment = {
-            "user": self.request.user.id,  # type:ignore
-            "post": generics.get_object_or_404(
-                BlogPost, slug_field=data["slug"], user=self.request.user
-            ).pk,
-            "content": data["content"],
-            "is_read": False,
-            "reply_to": reply_to,
-        }
-        serializer = CreateOrUpdateCommentSerializer(data=new_comment)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # in this case, updating a comment only involves changing the content
-    def patch(self, request, id):
-        data = request.data
-        user = self.request.user
-        comment = generics.get_object_or_404(Comment, pk=id, user=user)
-        serializer = CreateOrUpdateCommentSerializer(
-            instance=comment, data={"content": data["content"], "user": user.id}  # type: ignore
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, id):
-        user = self.request.user
-        comment = generics.get_object_or_404(Comment, user=user, pk=id)
-        comment.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class BlogPostCommentView(BaseCommentView):
+    pass
 
 
 # This view returns replies to *posts* that a user has made
@@ -249,7 +185,7 @@ class PostReplyListView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return Comment.objects.filter(user=user, reply_to=None)
+        return PostComment.objects.filter(user=user, reply_to=None)
 
 
 class FeedListView(APIView):
@@ -270,7 +206,7 @@ class FeedListView(APIView):
             BlogPost.objects.all()
             .annotate(
                 reactions=Count("postreaction"),
-                comments=Count("comment"),
+                comments=Count("postcomment"),
                 score=ExpressionWrapper(
                     (F("reactions") * reaction_score) + (F("comments") * comment_score),
                     output_field=FloatField(),
@@ -402,7 +338,7 @@ class ModeratorModifyCommentView(APIView):
     permission_classes = (IsModerator,)
 
     def patch(self, request, id):
-        comment = generics.get_object_or_404(Comment, pk=id)
+        comment = generics.get_object_or_404(PostComment, pk=id)
         comment.toggle_flagged()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -429,7 +365,9 @@ class AdminGetAllFlaggedCommentsView(APIView):
     permission_classes = (IsAdmin,)
 
     def get(self, request):
-        queryset = Comment.objects.filter(flagged=True).select_related("user", "post")
+        queryset = PostComment.objects.filter(flagged=True).select_related(
+            "user", "post"
+        )
         serializer = CommentSerializer(queryset, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -469,7 +407,7 @@ class AdminManageCommentView(APIView):
     permission_classes = (IsAdmin,)
 
     def delete(self, request, id):
-        comment = generics.get_object_or_404(Comment, pk=id)
+        comment = generics.get_object_or_404(PostComment, pk=id)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

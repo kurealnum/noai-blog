@@ -7,7 +7,7 @@ from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ..models import BlogPost, CommentReaction, Follower, PostReaction, Comment
+from ..models import BlogPost, CommentReaction, Follower, PostReaction, PostComment
 
 
 class CustomTestCase(TestCase):
@@ -52,10 +52,10 @@ class BlogTestCase(CustomTestCase):
         self.assertEqual(expected_result, reaction_count)
 
     def test_does_comment_register(self):
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
-        comment_count = Comment.objects.filter(post=self.blog_post).count()
+        comment_count = PostComment.objects.filter(post=self.blog_post).count()
         expected_result = 1
         self.assertEqual(expected_result, comment_count)
 
@@ -68,7 +68,7 @@ class BlogTestCase(CustomTestCase):
 class CommentTestCase(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.comment = Comment.objects.create(
+        self.comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is a very polite comment"
         )
 
@@ -82,10 +82,10 @@ class CommentTestCase(CustomTestCase):
 class CommentListUserViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
 
@@ -104,10 +104,10 @@ class CommentListUserViewTestCase(CustomTestCase):
 class CommentListViewTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
-        self.comment = Comment.objects.create(
+        self.comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
 
@@ -126,7 +126,7 @@ class CommentListViewTestCase(CustomTestCase):
 
     # delete should not actually delete the comment -- instead, it should set the content of the comment to "This comment was deleted" and change the user to a "ghost" user
     def test_does_delete_work_properly(self):
-        new_comment = Comment.objects.create(
+        new_comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="Comment"
         )
         id = new_comment.pk
@@ -139,7 +139,7 @@ class CommentListViewTestCase(CustomTestCase):
 
     # should only update content
     def test_does_patch_work_properly(self):
-        new_comment = Comment.objects.create(
+        new_comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="Comment"
         )
         id = new_comment.pk
@@ -448,10 +448,10 @@ class BlogPostListTestCase(CustomTestCase):
 class CommentReplyListTestCase(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.comment = Comment.objects.create(
+        self.comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
-        self.comment_two = Comment.objects.create(
+        self.comment_two = PostComment.objects.create(
             user=self.user,
             post=self.blog_post,
             content="This IS a reply!",
@@ -471,10 +471,10 @@ class CommentReplyListTestCase(CustomTestCase):
 class PostReplyListTestCase(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
-        self.comment = Comment.objects.create(
+        self.comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
-        self.comment_two = Comment.objects.create(
+        self.comment_two = PostComment.objects.create(
             user=self.user,
             post=self.blog_post,
             content="This IS a reply!",
@@ -521,7 +521,7 @@ class FeedListTestCase(CustomTestCase):
         )
 
         # adding a comment to test that the 3rd blog post is listed first
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, content="a comment", post=self.blog_post_3
         )
 
@@ -737,7 +737,7 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
         self.moderator.save()
 
     def test_does_patch_work_with_mod_user(self):
-        comment = Comment.objects.create(
+        comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
         temp_client = APIClient()
@@ -746,7 +746,7 @@ class ModeratorModifyCommentViewTestCase(CustomTestCase):
             reverse_lazy("toggle_flagged_comment", kwargs={"id": comment.pk}),
         )
 
-        new_comment = Comment.objects.get(pk=comment.pk)
+        new_comment = PostComment.objects.get(pk=comment.pk)
         expected_status = 204
         self.assertEqual(expected_status, request.status_code)
         self.assertTrue(new_comment.flagged)
@@ -828,15 +828,15 @@ class AdminGetAllFlaggedCommentsViewTestCase(CustomTestCase):
         super().setUp()
 
         # unflagged
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
 
         # flagged
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user,
             post=self.blog_post,
             content="A flagged comment",
@@ -952,7 +952,7 @@ class AdminManagePostViewTestCase(CustomTestCase):
 class AdminManageCommentViewTestCase(CustomTestCase):
     # this should NOT actually delete the comment. see the delete method in the model
     def test_delete_comment(self):
-        comment = Comment.objects.create(
+        comment = PostComment.objects.create(
             user=self.user, post=self.blog_post, content="A really good comment"
         )
 

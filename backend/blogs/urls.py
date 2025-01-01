@@ -18,7 +18,7 @@ from blogs.views import (
     ModeratorModifyPostView,
     ModeratorModifyUserView,
     PostReplyListView,
-    CommentListView,
+    BlogPostCommentView,
     CommentListUserView,
     PostReactionView,
 )
@@ -35,12 +35,12 @@ urlpatterns = [
     # CommentListView URLs
     path(
         "get-comments/<username>/<slug>/",
-        CommentListView.as_view(),
+        BlogPostCommentView.as_view(),
         name="get_comments",
     ),
-    path("delete-comment/<id>/", CommentListView.as_view(), name="delete_comment"),
-    path("edit-comment/<id>/", CommentListView.as_view(), name="edit_comment"),
-    path("create-comment/", CommentListView.as_view(), name="create_comment"),
+    path("delete-comment/<id>/", BlogPostCommentView.as_view(), name="delete_comment"),
+    path("edit-comment/<id>/", BlogPostCommentView.as_view(), name="edit_comment"),
+    path("create-comment/", BlogPostCommentView.as_view(), name="create_comment"),
     # BlogPostLISTView
     path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
     path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),

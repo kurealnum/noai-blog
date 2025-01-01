@@ -70,7 +70,7 @@ class PostReaction(models.Model):
         unique_together = "user", "post"
 
 
-class Comment(models.Model):
+class PostComment(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.SET(get_sentinel_user))
     post = models.ForeignKey(
         to=BlogPost, on_delete=models.CASCADE, null=True, blank=True
@@ -98,4 +98,4 @@ class Comment(models.Model):
 
 class CommentReaction(models.Model):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
-    comment = models.ForeignKey(to=Comment, on_delete=models.SET_NULL, null=True)
+    comment = models.ForeignKey(to=PostComment, on_delete=models.SET_NULL, null=True)
