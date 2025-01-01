@@ -20,7 +20,7 @@ from blogs.views import (
     PostReplyListView,
     CommentListView,
     CommentListUserView,
-    ReactionView,
+    PostReactionView,
 )
 
 urlpatterns = [
@@ -64,12 +64,12 @@ urlpatterns = [
     # ReactionView
     path(
         "manage-post-reactions/",
-        ReactionView.as_view(),
+        PostReactionView.as_view(),
         name="manage_post_reactions",
     ),
     path(
         "manage-post-reactions/<username>/<slug>/",
-        ReactionView.as_view(),
+        PostReactionView.as_view(),
         name="manage_post_reactions",
     ),
     # ModeratorModifyPostView

@@ -272,3 +272,50 @@ class ListViewTC(cTestCase):
         request = temp_client.delete(reverse_lazy("delete_list"), data=data)
         expected_status = 204
         self.assertEqual(expected_status, request.status_code)
+
+
+class ListReactionViewTC(cTestCase):
+    def setUp(self):
+        super().setUp()
+        self.reaction = ListReaction.objects.create(user=self.user, post=self.list_one)
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+
+    def test_does_get_succesfully(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        request = temp_client.get(
+            reverse_lazy(
+                "manage_list_reactions",
+                args=[self.list_one.user.username, self.list_one.slug_field],
+            )
+        )
+        expected_response = 200
+        self.assertEqual(expected_response, request.status_code)
+
+    def test_does_succesfully_create(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="jonny")
+        data = {
+            "slug": self.list_one.slug_field,
+            "username": self.list_one.user.username,
+        }
+        request = temp_client.post(reverse_lazy("manage_list_reactions"), data=data)
+        expected_result = 201
+
+        self.assertEqual(expected_result, request.status_code)
+
+    def test_does_succesfully_delete(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        data = {"slug": self.list_one.slug_field}
+        request = temp_client.delete(reverse_lazy("manage_list_reactions"), data=data)
+        expected_result = 204
+        self.assertEqual(expected_result, request.status_code)

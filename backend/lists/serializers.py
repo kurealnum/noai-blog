@@ -1,7 +1,7 @@
 from blogs.serializers import PostUserSerializer
 from rest_framework import serializers
 
-from lists.models import List
+from lists.models import List, ListReaction
 
 
 class ListSerializer(serializers.Serializer):
@@ -25,3 +25,9 @@ class CreateOrUpdateListSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = List
         fields = ("user", "title", "content", "thumbnail")
+
+
+class ListReactionSerializer(serializers.ModelSerializer):
+    class Meta:  # type: ignore
+        model = ListReaction
+        fields = "__all__"

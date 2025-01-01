@@ -16,6 +16,7 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
+from base.base_views import BaseReactionView
 from blogs.models import BlogPost, Comment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
@@ -380,42 +381,9 @@ class FollowingView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
-# both methods takes in user (self.request.user) and the post slug (its unique)
-class ReactionView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request, slug, username):
-        # here, user refers to the authenticated user making the request, and username refers to the username of the user that published the article
-        user = self.request.user
-        blog_post = generics.get_object_or_404(
-            BlogPost, slug_field=slug, user__username=username
-        )
-        reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
-        serializer = ReactionSerializer(reaction)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-    def post(self, request):
-        user = self.request.user.id  # type: ignore
-        slug = request.data["slug"]
-        username = request.data["username"]
-        blog_post = generics.get_object_or_404(
-            BlogPost, slug_field=slug, user__username=username
-        ).pk
-        data = {"user": user, "post": blog_post}
-        serializer = ReactionSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request):
-        user = self.request.user
-        slug = request.data["slug"]
-        blog_post = generics.get_object_or_404(BlogPost, slug_field=slug)
-        reaction = generics.get_object_or_404(PostReaction, post=blog_post, user=user)
-        reaction.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+# defaults for basereactionview are correct for PostReactionView
+class PostReactionView(BaseReactionView):
+    pass
 
 
 class ModeratorModifyPostView(APIView):
