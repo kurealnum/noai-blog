@@ -477,24 +477,6 @@ img {
   text-align: left;
 }
 
-.dropdown-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-  padding: 10px;
-  border: var(--light-border-color) 1px solid;
-  border-radius: 10px;
-  font-size: var(--link-font-size);
-  background: var(--page-background);
-  margin-left: 5px;
-}
-
-.dropdown-list a {
-  text-decoration: none;
-  color: var(--light-text);
-}
-
 .username-box #pfp {
   border-radius: 50%;
   height: 54px;
