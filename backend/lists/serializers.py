@@ -1,7 +1,7 @@
 from blogs.serializers import PostUserSerializer
 from rest_framework import serializers
 
-from lists.models import List, ListReaction
+from lists.models import List, ListComment, ListReaction
 
 
 class ListSerializer(serializers.Serializer):
@@ -30,4 +30,18 @@ class CreateOrUpdateListSerializer(serializers.ModelSerializer):
 class ListReactionSerializer(serializers.ModelSerializer):
     class Meta:  # type: ignore
         model = ListReaction
+        fields = "__all__"
+
+
+class ListCommentSerializer(serializers.ModelSerializer):
+    post = ListSerializer(required=False)
+
+    class Meta:  # type:ignore
+        model = ListComment
+        fields = "__all__"
+
+
+class CreateOrUpdateListCommentSerializer(serializers.ModelSerializer):
+    class Meta:  # type:ignore
+        model = ListComment
         fields = "__all__"

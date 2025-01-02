@@ -65,6 +65,7 @@ class BaseCommentView(APIView):
     post_model = BlogPost
     serializer_for_get = CommentAndUserSerializer
     serializer_for_post = CreateOrUpdateCommentSerializer
+    serializer_for_put = CreateOrUpdateCommentSerializer
 
     def get_permissions(self):
         permissions = super().get_permissions()
@@ -115,7 +116,7 @@ class BaseCommentView(APIView):
         data = request.data
         user = self.request.user
         comment = get_object_or_404(self.main_model, pk=id, user=user)
-        serializer = self.serializer_for_post(
+        serializer = self.serializer_for_put(
             instance=comment, data={"content": data["content"], "user": user.id}  # type: ignore
         )
         if serializer.is_valid():

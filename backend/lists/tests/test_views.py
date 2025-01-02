@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from rest_framework.test import APIClient, APIRequestFactory
 
 from accounts.models import CustomUser
-from lists.models import List, ListReaction
+from lists.models import List, ListComment, ListReaction
 
 
 class cTestCase(TestCase):
@@ -25,6 +25,7 @@ class cTestCase(TestCase):
         self.list_one = List.objects.create(
             user=self.user, title="one", content="1. 2. 3."
         )
+        self.list_one.save()
         self.authenticated_client = APIClient()
         self.authenticated_client.login(
             username="bobby", password="TerriblePassword123"
@@ -319,3 +320,83 @@ class ListReactionViewTC(cTestCase):
         request = temp_client.delete(reverse_lazy("manage_list_reactions"), data=data)
         expected_result = 204
         self.assertEqual(expected_result, request.status_code)
+
+
+class ListCommentViewTC(cTestCase):
+    def setUp(self):
+        super().setUp()
+        self.comment = ListComment.objects.create(
+            user=self.user, post=self.list_one, content="This is NOT a reply!"
+        )
+        ListComment.objects.create(
+            user=self.user, post=self.list_one, content="This is NOT a reply!"
+        )
+
+    def test_does_get_work_properly(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_list_comments",
+                kwargs={
+                    "slug": self.list_one.slug_field,
+                    "username": self.user.username,
+                },
+            )
+        )
+        expected_length = 2
+        self.assertEqual(expected_length, len(request.data))  # type: ignore
+
+    # delete should not actually delete the comment -- instead, it should set the content of the comment to "This comment was deleted" and change the user to a "ghost" user
+    def test_does_delete_work_properly(self):
+        new_comment = ListComment.objects.create(
+            user=self.user, post=self.list_one, content="Comment"
+        )
+        id = new_comment.pk
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.delete(reverse_lazy("delete_list_comment", args=[id]))
+        expected_result = 204
+        self.assertEqual(expected_result, request.status_code)
+
+    # should only update content
+    def test_does_patch_work_properly(self):
+        new_comment = ListComment.objects.create(
+            user=self.user, post=self.list_one, content="Comment"
+        )
+        id = new_comment.pk
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.patch(
+            reverse_lazy("edit_list_comment", args=[id]), data={"content": "Edited!"}
+        )
+
+        expected_response = "Edited!"
+        expected_status = 200
+        self.assertEqual(expected_status, request.status_code)
+        self.assertEqual(expected_response, request.data["content"])
+
+    def test_does_create_work_properly_without_reply_to(self):
+        data = {
+            "slug": self.list_one.slug_field,
+            "content": "This is some content",
+            "reply_to": "",
+        }
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.post(reverse_lazy("create_list_comment"), data)
+        expected_status = 201
+        self.assertEqual(expected_status, request.status_code)
+
+    # "with" reply_to
+    def test_does_create_work_properly_with_reply_to(self):
+        data = {
+            "slug": self.list_one.slug_field,
+            "content": "This is some content",
+            "reply_to": self.comment.pk,
+        }
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        request = temp_client.post(reverse_lazy("create_list_comment"), data)
+        expected_status = 201
+        self.assertEqual(expected_status, request.status_code)

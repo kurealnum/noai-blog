@@ -6,8 +6,8 @@ from django.urls import reverse_lazy
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from accounts.views import LinksView
 from ..models import CustomUser, Link
-from blogs.models import BlogPost, Comment
-from rest_framework.test import APIClient, APIRequestFactory, force_authenticate
+from blogs.models import BlogPost, PostComment
+from rest_framework.test import APIClient, APIRequestFactory
 
 
 class CustomTestCase(TestCase):
@@ -154,7 +154,7 @@ class UserInfoViewTestCase(CustomTestCase):
             about_me="I am Jon, destroyer of worlds.",
             username="jonny",
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser, post=blog_post, content="Hello world", is_read=False
         )
         temp_client = APIClient()
@@ -505,26 +505,26 @@ class NotificationViewTestCase(CustomTestCase):
         self.alt_post = BlogPost.objects.create(
             user=self.altuser, title="huh", content="My weird blog post"
         )
-        self.original_comment = Comment.objects.create(
+        self.original_comment = PostComment.objects.create(
             user=self.user, post=self.post, content="Hello world", is_read=True
         )
 
         # these should be included in the get request
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser,
             post=self.post,
             content="Hello world",
             is_read=True,
             reply_to=self.original_comment,
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser,
             post=self.post,
             content="Hello world",
             is_read=False,
             reply_to=self.original_comment,
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser,
             post=self.alt_post,
             content="I am the other unread comment",
@@ -533,7 +533,7 @@ class NotificationViewTestCase(CustomTestCase):
         )
 
         # this should not be included
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.user,
             post=self.alt_post,
             content="I am the other unread comment",
@@ -568,10 +568,10 @@ class NotificationCountViewTestCase(CustomTestCase):
         )
 
         # unread comments
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser, post=self.post, content="Hello world", is_read=False
         )
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser,
             post=self.post,
             content="I am the other unread comment",
@@ -579,7 +579,7 @@ class NotificationCountViewTestCase(CustomTestCase):
         )
 
         # read comments
-        Comment.objects.create(
+        PostComment.objects.create(
             user=self.altuser, post=self.post, content="Hello world", is_read=True
         )
 

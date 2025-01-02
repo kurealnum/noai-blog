@@ -101,7 +101,7 @@ class CommentListUserViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, result[1].get("content"))
 
 
-class CommentListViewTestCase(CustomTestCase):
+class BlogPostCommentViewTC(CustomTestCase):
     def setUp(self):
         super().setUp()
         self.comment = PostComment.objects.create(
