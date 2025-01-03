@@ -1,4 +1,5 @@
 import store from "./authStore/store";
+import reverse_url from "./reverse";
 
 const getCookie = (name) => {
   let cookieValue = null;
@@ -21,7 +22,7 @@ async function getUserInfo() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/accounts/user-info/", config);
+  const response = await fetch(reverse_url("USER_INFO"), config);
   if (response.ok) {
     return await response.json();
   }
@@ -44,10 +45,7 @@ async function getUserInfoByUsername(username) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/accounts/user-info/" + username + "/",
-    config,
-  );
+  const response = await fetch(reverse_url("USER_INFO", [username]), config);
   if (response.ok) {
     return await response.json();
   }
