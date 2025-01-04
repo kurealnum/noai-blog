@@ -23,3 +23,4 @@ export const Following = lazy(() => import("../containers/Following"));
 export const AdminDashboard = lazy(
   () => import("../containers/AdminDashboard"),
 );
+export const ListFeed = lazy(() => import("../containers/ListFeed.jsx"));

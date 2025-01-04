@@ -25,6 +25,7 @@ import {
   Following,
   AdminDashboard,
   Faq,
+  ListFeed,
 } from "./LazyImports";
 import Search from "../containers/Search.jsx";
 
@@ -49,6 +50,14 @@ const router = createBrowserRouter([
         element: (
           <Page type={"public"} title={"Search"}>
             <Search />
+          </Page>
+        ),
+      },
+      {
+        path: "/lists",
+        element: (
+          <Page type={"public"} title={"Lists"}>
+            <ListFeed />
           </Page>
         ),
       },

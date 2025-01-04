@@ -153,7 +153,7 @@ function NavBar() {
                       </Link>
                     </li>
                     <li className="navbar-item">
-                      <Link to="/???">
+                      <Link to="/lists">
                         <Tooltip title="Lists">
                           <FormatListNumbered />
                         </Tooltip>

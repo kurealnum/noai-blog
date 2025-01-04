@@ -1,18 +1,18 @@
-import { getFeed } from "../features/helpers";
 import FeedComponent from "../components/FeedComponent";
+import { getListFeed } from "../features/helpers";
 
-function Feed() {
+function ListFeed() {
   const advertiseRatio = 18;
   return (
     <FeedComponent
       advertiseRatio={advertiseRatio}
-      type={"posts"}
+      type={"lists"}
       showPaginator={true}
       defaultSearchValue={""}
-      queryFunction={getFeed}
+      queryFunction={getListFeed}
       includePage={true}
     />
   );
 }
 
-export default Feed;
+export default ListFeed;

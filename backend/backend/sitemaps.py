@@ -9,7 +9,7 @@ class StaticSitemap(Sitemap):
     protocol = "https"
 
     def items(self):
-        return ["guidelines", "faq", "about-us", "login", "register"]
+        return ["guidelines", "faq", "about-us", "login", "register", "feed", "lists"]
 
     def location(self, item):
         # not using reverse() because these aren't routes on django's end

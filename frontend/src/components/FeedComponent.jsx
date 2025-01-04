@@ -48,6 +48,8 @@ function FeedComponent({
     );
   }
 
+  console.log(type);
+
   if (!data || data.length === 0) {
     return (
       <>
@@ -64,7 +66,7 @@ function FeedComponent({
       <ul className="feed">
         {data.map((content, index) => (
           <>
-            <BlogPostThumbnail key={index} content={content} />
+            <BlogPostThumbnail key={index} content={content} type={type} />
             {(index + 1) % advertiseRatio == 0 ? (
               <div
                 className="feed-advertisement"

@@ -1,5 +1,5 @@
 import store from "./authStore/store";
-import reverse_url from "./reverse";
+import reverseUrl from "./reverseUrl";
 
 const getCookie = (name) => {
   let cookieValue = null;
@@ -22,7 +22,7 @@ async function getUserInfo() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(reverse_url("USER_INFO"), config);
+  const response = await fetch(reverseUrl("USER_INFO"), config);
   if (response.ok) {
     return await response.json();
   }
@@ -45,7 +45,7 @@ async function getUserInfoByUsername(username) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(reverse_url("USER_INFO", [username]), config);
+  const response = await fetch(reverseUrl("USER_INFO", [username]), config);
   if (response.ok) {
     return await response.json();
   }
@@ -246,6 +246,16 @@ async function getFeed(index) {
     credentials: "include",
   };
   const response = await fetch("/api/blog-posts/feed/" + index + "/", config);
+  return await response.json();
+}
+
+async function getListFeed(index) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch(reverseUrl("LIST_FEED", [index]), config);
   return await response.json();
 }
 
@@ -817,6 +827,7 @@ export {
   getFeed,
   createPost,
   doesPathExist,
+  getListFeed,
 };
 
 export default getCookie;

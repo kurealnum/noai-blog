@@ -4,9 +4,9 @@ from lists.views import ListCommentView, ListFeed, ListReactionView, ListView
 
 urlpatterns = [
     # ListFeed
-    path("feed/<index>", ListFeed.as_view(), name="list_feed"),
+    path("feed/<index>/", ListFeed.as_view(), name="list_feed"),
     # ListView
-    path("get-list/<title>", ListView.as_view(), name="get_list"),
+    path("get-list/<title>/", ListView.as_view(), name="get_list"),
     path("get-list/<username>/<slug>/", ListView.as_view(), name="get_list"),
     path("create-list/", ListView.as_view(), name="create_list"),
     path("edit-list/", ListView.as_view(), name="edit_list"),
