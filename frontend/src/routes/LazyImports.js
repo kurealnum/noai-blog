@@ -24,3 +24,4 @@ export const AdminDashboard = lazy(
   () => import("../containers/AdminDashboard"),
 );
 export const ListFeed = lazy(() => import("../containers/ListFeed.jsx"));
+export const List = lazy(() => import("../containers/List.jsx"));

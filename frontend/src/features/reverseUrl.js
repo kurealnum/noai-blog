@@ -9,7 +9,19 @@ function reverseUrl(name, args) {
     case "GET_BLOG_POST":
       return add_args(base_url + "blog-posts/get-post/", args);
     case "GET_LIST":
-      return add_args(base_url + "list/get-list/", args);
+      return add_args(base_url + "lists/get-list/", args);
+    case "GET_BLOG_POST_COMMENTS":
+      return add_args(base_url + "blog-posts/get-comments/", args);
+    case "GET_LIST_COMMENTS":
+      return add_args(base_url + "lists/get-comments/", args);
+    case "MANAGE_BLOG_POST_REACTIONS":
+      return add_args(base_url + "blog-posts/manage-post-reactions/", args);
+    case "MANAGE_LIST_REACTIONS":
+      return add_args(base_url + "lists/manage-list-reactions/", args);
+    case "CREATE_LIST_COMMENT":
+      return add_args(base_url + "lists/create-comment/");
+    case "CREATE_BLOG_POST_COMMENT":
+      return add_args(base_url + "blog-posts/create-comment/");
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":

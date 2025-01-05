@@ -212,20 +212,25 @@ async function getComments() {
   return null;
 }
 
-async function getBlogPost({ username, slug }) {
+async function getPost({ username, slug, type }) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/blog-posts/get-post/" + username + "/" + slug + "/",
-    config,
-  );
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("GET_LIST", [username, slug]);
+  } else {
+    url = reverseUrl("GET_BLOG_POST", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   if (response.ok) {
     return await response.json();
   }
-  throw new Error("Blog post not found!");
+  throw new Error("Post not found!");
 }
 
 async function register(formData) {
@@ -349,7 +354,7 @@ async function isFollowingUser(username) {
   return response.ok;
 }
 
-async function createReaction(slug, username) {
+async function createReaction(slug, username, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -359,14 +364,19 @@ async function createReaction(slug, username) {
     method: "POST",
     body: JSON.stringify({ slug: slug, username: username }),
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/",
-    config,
-  );
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS");
+  } else {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
-async function deleteReaction(slug) {
+async function deleteReaction(slug, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -376,14 +386,19 @@ async function deleteReaction(slug) {
     method: "DELETE",
     body: JSON.stringify({ slug: slug }),
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/",
-    config,
-  );
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS");
+  } else {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
-async function getReaction(slug, username) {
+async function getReaction(slug, username, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -391,10 +406,15 @@ async function getReaction(slug, username) {
     credentials: "include",
     method: "GET",
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/" + username + "/" + slug + "/",
-    config,
-  );
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS", [username, slug]);
+  } else {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -453,7 +473,7 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
   }
 }
 
-async function getCommentsByPost(username, slug) {
+async function getCommentsByPost(username, slug, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -461,10 +481,15 @@ async function getCommentsByPost(username, slug) {
     credentials: "include",
     method: "GET",
   };
-  const response = await fetch(
-    "/api/blog-posts/get-comments/" + username + "/" + slug + "/",
-    config,
-  );
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("GET_LIST_COMMENTS", [username, slug]);
+  } else {
+    url = reverseUrl("GET_BLOG_POST_COMMENTS", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return await response.json();
 }
 
@@ -507,7 +532,7 @@ async function editComment(id, content) {
   return response.ok;
 }
 
-async function createComment(slug, content, replyTo) {
+async function createComment(slug, content, replyTo, type) {
   if (!replyTo) {
     replyTo = "";
   }
@@ -520,7 +545,15 @@ async function createComment(slug, content, replyTo) {
     credentials: "include",
     body: JSON.stringify({ slug: slug, content: content, reply_to: replyTo }),
   };
-  const response = await fetch("/api/blog-posts/create-comment/", config);
+
+  let url;
+  if (type === "lists") {
+    url = reverseUrl("CREATE_LIST_COMMENT");
+  } else {
+    url = reverseUrl("CREATE_BLOG_POST_COMMENT");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -819,7 +852,7 @@ export {
   deleteLink,
   changeSettings,
   getComments,
-  getBlogPost,
+  getPost,
   getUserInfo,
   register,
   slugify,

@@ -1,7 +1,7 @@
 import SimpleMdeReact from "react-simplemde-editor";
 import { useState, useMemo, useEffect } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { editPost, getBlogPost, slugify } from "../features/helpers";
+import { editPost, getPost, slugify } from "../features/helpers";
 import { CircularProgress } from "@mui/material";
 import { Navigate, useParams, useRouteLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
@@ -30,7 +30,7 @@ function EditPost() {
 
   // Querys/mutations
   const toEditBlogPostQuery = useQuery({
-    queryFn: () => getBlogPost({ username: userData["username"], slug: slug }),
+    queryFn: () => getPost({ username: userData["username"], slug: slug }),
     queryKey: [
       "toEditBlogPost",
       { username: userData["username"], slug: slug },
