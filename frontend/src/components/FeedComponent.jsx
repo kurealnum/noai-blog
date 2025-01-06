@@ -4,18 +4,19 @@ import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
+import { getPostType } from "../features/helpers";
 
 // this is the feed *component*. not the feed logic itself
 function FeedComponent({
   args,
   advertiseRatio,
-  type,
   showPaginator,
   defaultSearchValue,
   queryFunction,
   includePage,
 }) {
   const [page, setPage] = useState(1);
+  const type = getPostType();
 
   if (args == undefined) {
     args = [];
@@ -66,7 +67,7 @@ function FeedComponent({
       <ul className="feed">
         {data.map((content, index) => (
           <>
-            <BlogPostThumbnail key={index} content={content} type={type} />
+            <BlogPostThumbnail key={index} content={content} />
             {(index + 1) % advertiseRatio == 0 ? (
               <div
                 className="feed-advertisement"

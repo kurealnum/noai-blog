@@ -22,6 +22,10 @@ function reverseUrl(name, args) {
       return add_args(base_url + "lists/create-comment/");
     case "CREATE_BLOG_POST_COMMENT":
       return add_args(base_url + "blog-posts/create-comment/");
+    case "DELETE_LIST_COMMENT":
+      return add_args(base_url + "lists/delete-comment/", args);
+    case "DELETE_BLOG_POST_COMMENT":
+      return add_args(base_url + "blog-posts/delete-comment/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":

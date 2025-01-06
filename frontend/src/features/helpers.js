@@ -16,6 +16,10 @@ const getCookie = (name) => {
   return cookieValue;
 };
 
+function getPostType() {
+  return store.getState()["store"]["postInfo"]["type"];
+}
+
 async function getUserInfo() {
   const config = {
     headers: { "Content-Type": "application/json" },
@@ -220,7 +224,7 @@ async function getPost({ username, slug, type }) {
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("GET_LIST", [username, slug]);
   } else {
     url = reverseUrl("GET_BLOG_POST", [username, slug]);
@@ -366,7 +370,7 @@ async function createReaction(slug, username, type) {
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS");
   } else {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
@@ -388,7 +392,7 @@ async function deleteReaction(slug, type) {
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS");
   } else {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
@@ -408,7 +412,7 @@ async function getReaction(slug, username, type) {
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS", [username, slug]);
   } else {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS", [username, slug]);
@@ -483,7 +487,7 @@ async function getCommentsByPost(username, slug, type) {
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("GET_LIST_COMMENTS", [username, slug]);
   } else {
     url = reverseUrl("GET_BLOG_POST_COMMENTS", [username, slug]);
@@ -507,10 +511,17 @@ async function deleteComment(id) {
     credentials: "include",
     method: "DELETE",
   };
-  const response = await fetch(
-    "/api/blog-posts/delete-comment/" + id + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("DELETE_LIST_COMMENT", [id]);
+  } else {
+    url = reverseUrl("DELETE_BLOG_POST_COMMENT", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -532,7 +543,7 @@ async function editComment(id, content) {
   return response.ok;
 }
 
-async function createComment(slug, content, replyTo, type) {
+async function createComment(username, slug, content, replyTo, type) {
   if (!replyTo) {
     replyTo = "";
   }
@@ -543,11 +554,16 @@ async function createComment(slug, content, replyTo, type) {
     },
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ slug: slug, content: content, reply_to: replyTo }),
+    body: JSON.stringify({
+      username: username,
+      slug: slug,
+      content: content,
+      reply_to: replyTo,
+    }),
   };
 
   let url;
-  if (type === "lists") {
+  if (type === "list") {
     url = reverseUrl("CREATE_LIST_COMMENT");
   } else {
     url = reverseUrl("CREATE_BLOG_POST_COMMENT");
@@ -588,22 +604,22 @@ async function getNotificationCount() {
 }
 
 function isMod() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isMod || currentStore.isAdmin || currentStore.isSuperuser;
 }
 
 function isAdmin() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isAdmin || currentStore.isSuperuser;
 }
 
 function isSuperuser() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isSuperuser;
 }
 
 function isAuthenticated() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isAuthenticated;
 }
 
@@ -861,6 +877,7 @@ export {
   createPost,
   doesPathExist,
   getListFeed,
+  getPostType,
 };
 
 export default getCookie;

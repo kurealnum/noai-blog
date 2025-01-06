@@ -1,4 +1,4 @@
-from blogs.serializers import PostUserSerializer
+from blogs.serializers import CommentSerializer, PostUserSerializer
 from rest_framework import serializers
 
 from lists.models import List, ListComment, ListReaction
@@ -35,6 +35,13 @@ class ListReactionSerializer(serializers.ModelSerializer):
 
 class ListCommentSerializer(serializers.ModelSerializer):
     post = ListSerializer(required=False)
+    user = PostUserSerializer()
+    reply_to = CommentSerializer()
+    content = serializers.CharField()
+    created_date = serializers.DateTimeField()
+    updated_date = serializers.DateTimeField()
+    id = serializers.IntegerField()
+    flagged = serializers.BooleanField()
 
     class Meta:  # type:ignore
         model = ListComment

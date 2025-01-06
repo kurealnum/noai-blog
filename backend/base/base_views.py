@@ -98,7 +98,9 @@ class BaseCommentView(APIView):
         new_comment = {
             "user": self.request.user.id,  # type:ignore
             "post": get_object_or_404(
-                self.post_model, slug_field=data["slug"], user=self.request.user
+                self.post_model,
+                slug_field=data["slug"],
+                user__username=data["username"],
             ).pk,
             "content": data["content"],
             "is_read": False,

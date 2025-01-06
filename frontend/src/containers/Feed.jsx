@@ -6,7 +6,6 @@ function Feed() {
   return (
     <FeedComponent
       advertiseRatio={advertiseRatio}
-      type={"posts"}
       showPaginator={true}
       defaultSearchValue={""}
       queryFunction={getFeed}

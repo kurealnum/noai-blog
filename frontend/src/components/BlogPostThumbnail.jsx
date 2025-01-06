@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   adminDeletePost,
+  getPostType,
   isAdmin,
   slugify,
   toggleListicle,
@@ -13,19 +14,20 @@ import { useEffect, useState } from "react";
 import Thumbnail from "./Thumbnail";
 import reverseUrl from "../features/reverseUrl";
 
-function BlogPostThumbnail({ content, isAdminDashboard, refetch, type }) {
+function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
   const [reverseName, setReverseName] = useState("");
   const [open, setOpen] = useState(false);
   const [isImage, setIsImage] = useState(
     content["user"]["profile_picture"] != null,
   );
+  const type = getPostType();
 
   useEffect(() => {
     switch (type) {
-      case "posts":
+      case "post":
         setReverseName("f_GET_BLOG_POST");
         break;
-      case "lists":
+      case "list":
         setReverseName("f_GET_LIST");
         break;
       default:

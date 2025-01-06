@@ -9,7 +9,6 @@ function Search() {
     <FeedComponent
       args={[type, query]}
       advertiseRatio={advertiseRatio}
-      type={"posts"}
       showPaginator={true}
       defaultSearchValue={""}
       queryFunction={search}

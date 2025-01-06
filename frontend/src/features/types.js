@@ -18,3 +18,7 @@ export const IS_SUPERUSER_TRUE = "IS_SUPERUSER_TRUE";
 // General Dispatch States
 export const NOT_LOGGED_IN = "NOT_LOGGED_IN";
 export const LOGGED_IN = "LOGGED_IN";
+
+// Dispatch States for PostInfo
+export const TYPE_LIST = "TYPE_LIST";
+export const TYPE_BLOG_POST = "TYPE_BLOG_POST";

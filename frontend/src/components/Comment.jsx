@@ -4,6 +4,7 @@ import {
   createComment,
   deleteComment,
   editComment,
+  getPostType,
   isAdmin,
   isAuthenticated,
 } from "../features/helpers";
@@ -21,7 +22,7 @@ function Comment({
   refetch,
   isAdminDashboard,
 }) {
-  let { slug } = useParams();
+  let { username, slug } = useParams();
   if (!slug) {
     slug = content["post"]["slug_field"];
   }
@@ -30,6 +31,8 @@ function Comment({
   const [editReplyOpen, setEditReplyOpen] = useState(false);
   const userData = useRouteLoaderData("root");
   const [open, setOpen] = useState(false);
+  const type = getPostType();
+
   function handleClose() {
     setOpen(false);
   }
@@ -69,7 +72,7 @@ function Comment({
     e.preventDefault();
     const content = e.target[0].value;
     const replyTo = e.target[1].dataset["id"];
-    createComment(slug, content, replyTo).then((res) => {
+    createComment(username, slug, content, replyTo, type).then((res) => {
       if (res) {
         setEditReplyOpen(false);
         refetch();

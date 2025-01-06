@@ -6,7 +6,6 @@ function ListFeed() {
   return (
     <FeedComponent
       advertiseRatio={advertiseRatio}
-      type={"lists"}
       showPaginator={true}
       defaultSearchValue={""}
       queryFunction={getListFeed}
