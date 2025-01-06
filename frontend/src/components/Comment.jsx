@@ -72,7 +72,7 @@ function Comment({
     e.preventDefault();
     const content = e.target[0].value;
     const replyTo = e.target[1].dataset["id"];
-    createComment(username, slug, content, replyTo, type).then((res) => {
+    createComment(username, slug, content, replyTo).then((res) => {
       if (res) {
         setEditReplyOpen(false);
         refetch();

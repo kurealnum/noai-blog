@@ -92,7 +92,7 @@ function PostComponent() {
 
   function createCommentHelper(e) {
     e.preventDefault();
-    createComment(username, slug, e.target[0].value, "", type).then((res) => {
+    createComment(username, slug, e.target[0].value, "").then((res) => {
       if (res) {
         getCommentsByPostQuery.refetch();
         e.target[0].value = "";

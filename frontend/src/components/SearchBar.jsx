@@ -2,17 +2,21 @@ import { Search } from "@mui/icons-material";
 import "../styles/SearchBar.css";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { getPostType } from "../features/helpers";
 
-function SearchBar({ type, defaultSearchValue }) {
+function SearchBar({ defaultSearchValue }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
 
   function searchFormOnSubmit(e) {
     e.preventDefault();
+    const type = getPostType();
+    const formattedType = type === "blogPost" ? "posts" : "lists";
+
     if (query === "") {
-      navigate("/search/" + type + "/");
+      navigate("/search/" + formattedType + "/");
     } else {
-      navigate("/search/" + type + "/" + query + "/");
+      navigate("/search/" + formattedType + "/" + query + "/");
     }
   }
 

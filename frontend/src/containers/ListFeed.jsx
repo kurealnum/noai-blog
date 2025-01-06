@@ -1,5 +1,6 @@
 import FeedComponent from "../components/FeedComponent";
 import { getListFeed } from "../features/helpers";
+import { TYPE_LIST } from "../features/types";
 
 function ListFeed() {
   const advertiseRatio = 18;
@@ -10,6 +11,7 @@ function ListFeed() {
       defaultSearchValue={""}
       queryFunction={getListFeed}
       includePage={true}
+      typeSet={TYPE_LIST}
     />
   );
 }

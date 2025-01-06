@@ -543,7 +543,7 @@ async function editComment(id, content) {
   return response.ok;
 }
 
-async function createComment(username, slug, content, replyTo, type) {
+async function createComment(username, slug, content, replyTo) {
   if (!replyTo) {
     replyTo = "";
   }
@@ -561,6 +561,8 @@ async function createComment(username, slug, content, replyTo, type) {
       reply_to: replyTo,
     }),
   };
+
+  const type = getPostType();
 
   let url;
   if (type === "list") {

@@ -5,6 +5,8 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { CircularProgress } from "@mui/material";
 import { getPostType } from "../features/helpers";
+import { useDispatch } from "react-redux";
+import { checkPostType } from "../features/authStore/authSlice";
 
 // this is the feed *component*. not the feed logic itself
 function FeedComponent({
@@ -14,8 +16,13 @@ function FeedComponent({
   defaultSearchValue,
   queryFunction,
   includePage,
+  // typeSet literally exists for the sole purpose of setting the type "of post" in the feed
+  typeSet,
 }) {
   const [page, setPage] = useState(1);
+  const dispatch = useDispatch();
+  dispatch(checkPostType(typeSet));
+
   const type = getPostType();
 
   if (args == undefined) {
@@ -49,8 +56,6 @@ function FeedComponent({
     );
   }
 
-  console.log(type);
-
   if (!data || data.length === 0) {
     return (
       <>
@@ -63,7 +68,7 @@ function FeedComponent({
   }
   return (
     <>
-      <SearchBar type={type} defaultSearchValue={defaultSearchValue} />
+      <SearchBar defaultSearchValue={defaultSearchValue} />
       <ul className="feed">
         {data.map((content, index) => (
           <>
