@@ -26,6 +26,18 @@ function reverseUrl(name, args) {
       return add_args(base_url + "lists/delete-comment/", args);
     case "DELETE_BLOG_POST_COMMENT":
       return add_args(base_url + "blog-posts/delete-comment/", args);
+    case "EDIT_LIST_COMMENT":
+      return add_args(base_url + "lists/edit-comment/", args);
+    case "EDIT_BLOG_POST_COMMENT":
+      return add_args(base_url + "blog-posts/edit-comment/", args);
+    case "FLAG_LIST":
+      return add_args(base_url + "lists/toggle-flagged-post/", args);
+    case "FLAG_BLOG_POST":
+      return add_args(base_url + "blog-posts/toggle-flagged-post/", args);
+    case "FLAG_LIST_COMMENt":
+      return add_args(base_url + "lists/toggle-flagged-comment/", args);
+    case "FLAG_BLOG_POST_COMMENT":
+      return add_args(base_url + "blog-posts/toggle-flagged-comment/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":

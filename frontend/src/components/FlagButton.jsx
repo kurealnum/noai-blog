@@ -10,6 +10,7 @@ import {
 import { Flag, OutlinedFlag } from "@mui/icons-material";
 
 // content is used for the url (i.e, username and slug, or just slug, or id, etc)
+// type refers to the type of item the flagbutton is for, NOT the postType (see redux)
 function FlagButton({ type, isFlaggedParam, content }) {
   const [isFlagged, setIsFlagged] = useState(isFlaggedParam);
 

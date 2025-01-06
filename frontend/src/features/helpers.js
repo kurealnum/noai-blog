@@ -226,7 +226,7 @@ async function getPost({ username, slug, type }) {
   let url;
   if (type === "list") {
     url = reverseUrl("GET_LIST", [username, slug]);
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("GET_BLOG_POST", [username, slug]);
   }
 
@@ -372,7 +372,7 @@ async function createReaction(slug, username, type) {
   let url;
   if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS");
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
   }
 
@@ -394,7 +394,7 @@ async function deleteReaction(slug, type) {
   let url;
   if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS");
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
   }
 
@@ -414,7 +414,7 @@ async function getReaction(slug, username, type) {
   let url;
   if (type === "list") {
     url = reverseUrl("MANAGE_LIST_REACTIONS", [username, slug]);
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("MANAGE_BLOG_POST_REACTIONS", [username, slug]);
   }
 
@@ -489,7 +489,7 @@ async function getCommentsByPost(username, slug, type) {
   let url;
   if (type === "list") {
     url = reverseUrl("GET_LIST_COMMENTS", [username, slug]);
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("GET_BLOG_POST_COMMENTS", [username, slug]);
   }
 
@@ -517,7 +517,7 @@ async function deleteComment(id) {
   let url;
   if (type === "list") {
     url = reverseUrl("DELETE_LIST_COMMENT", [id]);
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("DELETE_BLOG_POST_COMMENT", [id]);
   }
 
@@ -536,10 +536,16 @@ async function editComment(id, content) {
     body: JSON.stringify({ content: content }),
   };
 
-  const response = await fetch(
-    "/api/blog-posts/edit-comment/" + id + "/",
-    config,
-  );
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("EDIT_LIST_COMMENT", [id]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("EDIT_BLOG_POST_COMMENT", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -567,7 +573,7 @@ async function createComment(username, slug, content, replyTo) {
   let url;
   if (type === "list") {
     url = reverseUrl("CREATE_LIST_COMMENT");
-  } else {
+  } else if (type === "blogPost") {
     url = reverseUrl("CREATE_BLOG_POST_COMMENT");
   }
 
@@ -651,10 +657,16 @@ async function toggleFlagPost(username, slug) {
     credentials: "include",
     method: "PATCH",
   };
-  const response = await fetch(
-    "/api/blog-posts/toggle-flagged-post/" + username + "/" + slug + "/",
-    config,
-  );
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("FLAG_LIST", [username, slug]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("FLAG_BLOG_POST", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -667,10 +679,17 @@ async function toggleFlagComment(id) {
     credentials: "include",
     method: "PATCH",
   };
-  const response = await fetch(
-    "/api/blog-posts/toggle-flagged-comment/" + id + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("FLAG_LIST", [id]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("FLAG_BLOG_POST", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
