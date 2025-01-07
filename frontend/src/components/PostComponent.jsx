@@ -51,11 +51,11 @@ function PostComponent() {
 
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
     queryKey: ["getPost_" + type, username, slug],
-    queryFn: () => getPost({ username, slug, type }),
+    queryFn: () => getPost(username, slug),
   });
   const getCommentsByPostQuery = useQuery({
     queryKey: ["getCommentsByPost_" + type, username, slug],
-    queryFn: () => getCommentsByPost(username, slug, type),
+    queryFn: () => getCommentsByPost(username, slug),
   });
 
   useEffect(() => {

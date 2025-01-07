@@ -216,12 +216,14 @@ async function getComments() {
   return null;
 }
 
-async function getPost({ username, slug, type }) {
+async function getPost(username, slug) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
+
+  const type = getPostType();
 
   let url;
   if (type === "list") {
@@ -402,7 +404,7 @@ async function deleteReaction(slug, type) {
   return response.ok;
 }
 
-async function getReaction(slug, username, type) {
+async function getReaction(slug, username) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -410,6 +412,8 @@ async function getReaction(slug, username, type) {
     credentials: "include",
     method: "GET",
   };
+
+  const type = getPostType();
 
   let url;
   if (type === "list") {
@@ -477,7 +481,7 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
   }
 }
 
-async function getCommentsByPost(username, slug, type) {
+async function getCommentsByPost(username, slug) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -485,6 +489,8 @@ async function getCommentsByPost(username, slug, type) {
     credentials: "include",
     method: "GET",
   };
+
+  const type = getPostType();
 
   let url;
   if (type === "list") {
