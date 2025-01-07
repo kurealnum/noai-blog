@@ -42,14 +42,20 @@ class ListView(APIView):
     # this function assumes that either username and slug will be none or title will be none
     def get(self, request, username=None, slug=None, title=None):
         if title:
-            list_post = get_object_or_404(List, title=title)
-            serializer = ListSerializer(list_post)
+            _list = (
+                List.objects.select_related("user")
+                .annotate(likes=Count("listreaction"))
+                .get(user__username=username, slug_field=slug)
+            )
+            serializer = ListSerializer(_list)
             return Response(serializer.data, status=status.HTTP_200_OK)
         if username and slug:
-            list_post = get_object_or_404(
-                List, user__username=username, slug_field=slug
+            _list = (
+                List.objects.select_related("user")
+                .annotate(likes=Count("listreaction"))
+                .get(user__username=username, slug_field=slug)
             )
-            serializer = ListSerializer(list_post)
+            serializer = ListSerializer(_list)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):

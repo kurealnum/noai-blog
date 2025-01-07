@@ -21,6 +21,7 @@ function Comment({
   isNotification,
   refetch,
   isAdminDashboard,
+  id,
 }) {
   let { username, slug } = useParams();
   if (!slug) {
@@ -87,6 +88,7 @@ function Comment({
           (isReply ? "comment comment-reply" : "comment") +
           (content["is_read"] ? " " : " unread-notification")
         }
+        key={id}
       >
         <div className="top-bar">
           {isNotification ? (

@@ -11,7 +11,7 @@ function Comments({ raw, refetch }) {
             <Comment
               content={data[key]}
               isReply={level > 1}
-              key={data[key]["id"]}
+              id={data[key]["id"]}
               refetch={refetch}
             />
             {renderedCommentsHelper(Object.keys(input[key]), level + 1)}
