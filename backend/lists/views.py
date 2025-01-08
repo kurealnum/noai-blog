@@ -46,22 +46,16 @@ class ListView(APIView):
 
     # this function assumes that either username and slug will be none or title will be none
     def get(self, request, username=None, slug=None, title=None):
-        if title:
-            _list = (
+        try:
+            res = (
                 List.objects.select_related("user")
                 .annotate(likes=Count("listreaction"))
                 .get(user__username=username, slug_field=slug)
             )
-            serializer = ListSerializer(_list)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        if username and slug:
-            _list = (
-                List.objects.select_related("user")
-                .annotate(likes=Count("listreaction"))
-                .get(user__username=username, slug_field=slug)
-            )
-            serializer = ListSerializer(_list)
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = ListSerializer(res)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        except List.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
     def post(self, request):
         data = request.data

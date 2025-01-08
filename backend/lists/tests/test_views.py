@@ -67,11 +67,6 @@ class ListFeedTC(cTestCase):
 
 
 class ListViewTC(cTestCase):
-    def test_does_get_with_title(self):
-        request = self.client.get(reverse_lazy("get_list", args=["one"]))
-        expected_title = "one"
-        self.assertEqual(expected_title, request.data["title"])  # type: ignore
-
     def test_does_get_with_username_and_slug(self):
         request = self.client.get(reverse_lazy("get_list", args=["bobby", "one"]))
         expected_title = "one"
@@ -381,6 +376,7 @@ class ListCommentViewTC(cTestCase):
             "slug": self.list_one.slug_field,
             "content": "This is some content",
             "reply_to": "",
+            "username": "bobby",
         }
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
@@ -394,6 +390,7 @@ class ListCommentViewTC(cTestCase):
             "slug": self.list_one.slug_field,
             "content": "This is some content",
             "reply_to": self.comment.pk,
+            "username": "bobby",
         }
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")

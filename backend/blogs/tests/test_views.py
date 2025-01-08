@@ -160,6 +160,7 @@ class BlogPostCommentViewTC(CustomTestCase):
             "slug": self.blog_post.slug_field,
             "content": "This is some content",
             "reply_to": "",
+            "username": "bobby",
         }
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
@@ -173,6 +174,7 @@ class BlogPostCommentViewTC(CustomTestCase):
             "slug": self.blog_post.slug_field,
             "content": "This is some content",
             "reply_to": self.comment.pk,
+            "username": "bobby",
         }
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
