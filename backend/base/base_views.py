@@ -1,13 +1,15 @@
 # This file contains a lot of the "base" views for certain functionality that other files can inherit from. For instance, BaseReactionView is the base view for ReactionViews for both Lists and BlogPosts
 
+from django.http.response import Http404
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from blogs.models import BlogPost, PostComment, PostReaction
 from blogs.serializers import (
+    BlogPostSerializer,
     CommentAndUserSerializer,
     CreateOrUpdateCommentSerializer,
     ReactionSerializer,
@@ -132,3 +134,26 @@ class BaseCommentView(APIView):
         comment = get_object_or_404(self.main_model, user=user, pk=id)
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# this is the view for *multiple* blog posts
+class BasePostListView(APIView):
+    permission_classes = (AllowAny,)
+    main_model = BlogPost
+    serializer_for_get = BlogPostSerializer
+
+    def get(self, request, username=None):
+        if username:
+            try:
+                res = self.main_model.objects.filter(user__username=username)
+                if len(res) == 0:
+                    raise self.main_model.DoesNotExist
+                serializer = self.serializer_for_get(res, many=True)
+            except self.main_model.DoesNotExist:
+                raise Http404
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            user = self.request.user.id  # type:ignore
+            res = self.main_model.objects.filter(user=user).select_related("user")
+            serializer = self.serializer_for_get(res, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)

@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from base.base_views import BaseCommentView, BaseReactionView
+from base.base_views import BaseCommentView, BasePostListView, BaseReactionView
 from blogs.models import BlogPost, PostComment, Follower
 from blogs.serializers import (
     BlogPostSerializer,
@@ -144,24 +144,8 @@ class BlogPostView(APIView):
 
 
 # this is the view for *multiple* blog posts
-class BlogPostListView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, username=None):
-        if username:
-            try:
-                res = BlogPost.objects.filter(user__username=username)
-                if len(res) == 0:
-                    raise BlogPost.DoesNotExist
-                serializer = BlogPostSerializer(res, many=True)
-            except BlogPost.DoesNotExist:
-                raise Http404
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        else:
-            user = self.request.user.id  # type:ignore
-            res = BlogPost.objects.filter(user=user).select_related("user")
-            serializer = BlogPostSerializer(res, many=True)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
+class BlogPostListView(BasePostListView):
+    pass
 
 
 # This view returns replies to *comments* that a user has made

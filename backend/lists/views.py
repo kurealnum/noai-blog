@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from base.base_views import BaseCommentView, BaseReactionView
+from base.base_views import BaseCommentView, BasePostListView, BaseReactionView
 from blogs.models import Follower
 from lists.models import List, ListComment, ListReaction
 from lists.serializers import (
@@ -30,6 +30,11 @@ class ListReactionView(BaseReactionView):
     reaction_model = ListReaction
     reaction_serializer_for_get = ListReactionSerializer
     reaction_serializer_for_post = ListReactionSerializer
+
+
+class List_ListView(BasePostListView):
+    main_model = List
+    serializer_for_get = ListSerializer
 
 
 class ListView(APIView):

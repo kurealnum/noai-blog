@@ -400,3 +400,26 @@ class ListCommentViewTC(cTestCase):
         request = temp_client.post(reverse_lazy("create_list_comment"), data)
         expected_status = 201
         self.assertEqual(expected_status, request.status_code)
+
+
+class List_ListViewTC(cTestCase):
+    def test_get_work(self):
+        # temp client for logging in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        response = temp_client.get(reverse_lazy("get_lists"))
+
+        # expected_title, basically
+        expected_result = "one"
+        self.assertEqual(expected_result, response.data[-1].get("title"))
+
+    def test_get_with_correct_username(self):
+        request = self.client.get(reverse_lazy("get_lists", args=["bobby"]))
+        expected_result = "one"
+        result = request.data[-1].get("title")  # type: ignore
+        self.assertEqual(result, expected_result)
+
+    def test_get_with_incorrect_username(self):
+        request = self.client.get(reverse_lazy("get_lists", args=["theworngusername"]))
+        expected_result = "Not found."
+        self.assertEqual(request.data["detail"], expected_result)  # type: ignore

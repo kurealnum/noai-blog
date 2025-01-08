@@ -1,6 +1,12 @@
 from django.urls import path
 
-from lists.views import ListCommentView, ListFeed, ListReactionView, ListView
+from lists.views import (
+    List_ListView,
+    ListCommentView,
+    ListFeed,
+    ListReactionView,
+    ListView,
+)
 
 urlpatterns = [
     # ListFeed
@@ -31,4 +37,7 @@ urlpatterns = [
         ListReactionView.as_view(),
         name="manage_list_reactions",
     ),
+    # List_ListView
+    path("get-lists/", List_ListView.as_view(), name="get_lists"),
+    path("get-lists/<username>/", List_ListView.as_view(), name="get_lists"),
 ]
