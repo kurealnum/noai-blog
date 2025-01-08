@@ -4,24 +4,21 @@ import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-function DashboardBlogPostThumbnail({
+function DashboardPostThumbnail({
   title,
   username,
   createdDate,
   content,
   editHelper,
-  index,
-  posts,
-  setPosts,
+  refetch,
+  type,
 }) {
   const [open, setOpen] = useState(false);
 
   function dialogHelper() {
     deletePost(slugify(title)).then((res) => {
       if (res) {
-        const newPosts = posts.slice(0, index).concat(posts.slice(index + 1));
-        setPosts(newPosts);
-        setOpen(false);
+        refetch();
       }
       setOpen(false);
     });
@@ -70,4 +67,4 @@ function DashboardBlogPostThumbnail({
   );
 }
 
-export default DashboardBlogPostThumbnail;
+export default DashboardPostThumbnail;

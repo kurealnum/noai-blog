@@ -38,6 +38,10 @@ function reverseUrl(name, args) {
       return add_args(base_url + "lists/toggle-flagged-comment/", args);
     case "FLAG_BLOG_POST_COMMENT":
       return add_args(base_url + "blog-posts/toggle-flagged-comment/", args);
+    case "GET_BLOG_POSTS":
+      return add_args(base_url + "blog-posts/get-posts/", args);
+    case "GET_LISTS":
+      return add_args(base_url + "lists/get-lists/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":

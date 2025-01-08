@@ -56,27 +56,23 @@ async function getUserInfoByUsername(username) {
   return null;
 }
 
-async function getBlogPosts(username) {
+async function getPosts(username, type) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
 
-  // this code is weirdly written, but my lsp keeps yelling at me unless i do it this way
-  if (username == null) {
-    const response = await fetch("/api/blog-posts/get-posts/", config);
-    if (response.ok) {
-      return await response.json();
-    }
-  } else {
-    const response = await fetch(
-      "/api/blog-posts/get-posts/" + username + "/",
-      config,
-    );
-    if (response.ok) {
-      return await response.json();
-    }
+  let url;
+  if (type === "list") {
+    url = reverseUrl("GET_LISTS", [username]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("GET_BLOG_POSTS", [username]);
+  }
+
+  const response = await fetch(url, config);
+  if (response.ok) {
+    return await response.json();
   }
   return null;
 }
@@ -890,7 +886,7 @@ export {
   unfollowUser,
   getLinks,
   getUserInfoByUsername,
-  getBlogPosts,
+  getPosts,
   createLink,
   deleteLink,
   changeSettings,
