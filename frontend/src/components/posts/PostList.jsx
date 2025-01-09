@@ -23,10 +23,7 @@ function PostList({ query, type }) {
         {query.data.map((content, index) => (
           <DashboardPostThumbnail
             key={index}
-            title={content.title}
-            username={content.user.username}
-            createdDate={content.created_date}
-            content={content.content}
+            content={content}
             editHelper={editHelper}
             refetch={query.refetch}
             type={type}

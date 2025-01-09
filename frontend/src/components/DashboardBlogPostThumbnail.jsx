@@ -3,20 +3,13 @@ import { deletePost, slugify } from "../features/helpers";
 import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import reverseUrl from "../features/reverseUrl";
 
-function DashboardPostThumbnail({
-  title,
-  username,
-  createdDate,
-  content,
-  editHelper,
-  refetch,
-  type,
-}) {
+function DashboardPostThumbnail({ content, editHelper, refetch, type }) {
   const [open, setOpen] = useState(false);
 
   function dialogHelper() {
-    deletePost(slugify(title)).then((res) => {
+    deletePost(slugify(content["title"])).then((res) => {
       if (res) {
         refetch();
       }
@@ -32,7 +25,7 @@ function DashboardPostThumbnail({
     <li className="blog-post">
       <div className="edit-buttons">
         {" "}
-        <button onClick={() => editHelper(slugify(title))}>
+        <button onClick={() => editHelper(slugify(content["title"]))}>
           <Edit />
         </button>
         <button onClick={() => setOpen(true)}>
@@ -53,15 +46,29 @@ function DashboardPostThumbnail({
         </Dialog>
       </div>
 
-      <Link to={"/post/" + username + "/" + slugify(title) + "/"}>
-        <h2>{title}</h2>
+      <Link
+        to={
+          type == "list"
+            ? reverseUrl("f_GET_LIST", [
+                content["user"]["username"],
+                slugify(content["title"]),
+              ])
+            : reverseUrl("f_GET_BLOG_POST", [
+                content["user"]["username"],
+                slugify(content["title"]),
+              ])
+        }
+      >
+        <h2>{content["title"]}</h2>
       </Link>
       <div className="info">
-        <p>{"By " + username}</p>
-        <p>{createdDate.replace(/(T.*)/g, "")}</p>
+        <p>{"By " + content["user"]["username"]}</p>
+        <p>{content["created_date"].replace(/(T.*)/g, "")}</p>
       </div>
       <p className="hint" data-testid="post-content">
-        {content.length > 100 ? content.slice(0, 101) + "..." : content}
+        {content["content"].length > 100
+          ? content.slice(0, 101) + "..."
+          : content["content"]}
       </p>
     </li>
   );

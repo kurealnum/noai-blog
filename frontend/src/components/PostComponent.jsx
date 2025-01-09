@@ -113,7 +113,6 @@ function PostComponent() {
             margin: "auto",
           }}
         />
-        ;
       </div>
     );
   }

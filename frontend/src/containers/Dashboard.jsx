@@ -3,7 +3,6 @@ import { getPosts } from "../features/helpers";
 import { Link, useRouteLoaderData } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import LoadingIcon from "../components/LoadingIcon.jsx";
-import DashboardPostThumbnail from "../components/DashboardBlogPostThumbnail";
 import PostList from "../components/posts/PostList.jsx";
 
 function Dashboard() {
