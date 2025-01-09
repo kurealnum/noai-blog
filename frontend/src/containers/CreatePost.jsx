@@ -2,7 +2,7 @@ import SimpleMdeReact from "react-simplemde-editor";
 import { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createPost, slugify } from "../features/helpers";
-import { CircularProgress } from "@mui/material";
+import { MenuItem, Select } from "@mui/material";
 import { Navigate, useRouteLoaderData } from "react-router-dom";
 import DOMPurify from "dompurify";
 import "../styles/EasyMDE.css";
@@ -10,6 +10,8 @@ import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/atom-one-dark.css";
+import "../styles/CreatePost.css";
+import LoadingIcon from "../components/LoadingIcon.jsx";
 
 const marked = new Marked(
   markedHighlight({
@@ -28,9 +30,9 @@ function CreatePost() {
     title: "Default Title",
   });
   const [thumbnail, setThumbnail] = useState({});
-
   const userData = useRouteLoaderData("root");
   const createPostMutation = useMutation({ mutationFn: createPost });
+  const [postType, setPostType] = useState("post");
 
   // autosave feature
   const autosavedValue =
@@ -66,19 +68,12 @@ function CreatePost() {
     setThumbnail({ [e.target.name]: e.target.files[0] });
   }
 
+  function handleChange_PostTypeDropdown(e) {
+    setPostType(e.target.value);
+  }
+
   if (createPostMutation.isPending) {
-    return (
-      <CircularProgress
-        sx={{
-          position: "absolute",
-          left: "0",
-          right: "0",
-          top: "0",
-          bottom: "0",
-          margin: "auto",
-        }}
-      />
-    );
+    return <LoadingIcon />;
   } else if (createPostMutation.isSuccess) {
     return (
       <Navigate
@@ -108,6 +103,15 @@ function CreatePost() {
             accept="image/png, image/jpeg"
             onChange={(e) => setThumbnailHelper(e, true)}
           />
+          <Select
+            id="post-type"
+            value={postType}
+            onChange={handleChange_PostTypeDropdown}
+            defaultOpen
+          >
+            <MenuItem value="blogPost">Blog Post</MenuItem>
+            <MenuItem value="list">List</MenuItem>
+          </Select>
           <label htmlFor="title" hidden>
             Title
           </label>

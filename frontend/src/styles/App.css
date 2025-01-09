@@ -357,22 +357,6 @@ button[type="submit"] {
   display: none;
 }
 
-.post-form #title {
-  outline: none;
-  border: none;
-  border-bottom: var(--light-border-color) solid 1px;
-  background: none;
-  padding-bottom: 4px;
-  font-size: var(--subheader-font-size);
-  display: block;
-  width: 100%;
-  max-width: 900px;
-}
-
-.post-form #thumbnail {
-  width: 100%;
-}
-
 .save-button {
   color: var(--light-text);
   padding: 6px 50px;
@@ -1036,12 +1020,6 @@ p img {
   #create-post img,
   #blog-post img {
     max-width: 600px;
-  }
-  .post-form #title {
-    width: 65%;
-  }
-  .post-form #thumbnail {
-    width: 30%;
   }
   #blog-post {
     max-width: 800px;
