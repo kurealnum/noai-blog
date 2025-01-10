@@ -281,7 +281,17 @@ async function createPost({ newBlogPost, thumbnail }) {
     credentials: "include",
     body: data,
   };
-  const response = await fetch("/api/blog-posts/create-post/", config);
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("CREATE_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("CREATE_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
 
   if (!response.ok) {
     // only give the user one error message at a time

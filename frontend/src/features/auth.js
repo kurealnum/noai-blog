@@ -22,7 +22,7 @@ async function login({ username, password }) {
     store.dispatch(checkAuthenticated(LOGIN_FAIL));
   }
 
-  return store.getState().auth.isAuthenticated;
+  return store.getState().store.isAuthenticated;
 }
 
 async function logout() {
@@ -42,7 +42,7 @@ async function logout() {
     store.dispatch(checkAuthenticated(LOGOUT_FAIL));
   }
 
-  return store.getState().auth.isAuthenticated;
+  return store.getState().store.isAuthenticated;
 }
 
 export { login, logout };

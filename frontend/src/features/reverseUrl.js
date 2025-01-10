@@ -42,6 +42,10 @@ function reverseUrl(name, args) {
       return add_args(base_url + "blog-posts/get-posts/", args);
     case "GET_LISTS":
       return add_args(base_url + "lists/get-lists/", args);
+    case "CREATE_LIST":
+      return add_args(base_url + "lists/create-list/", args);
+    case "CREATE_BLOG_POST":
+      return add_args(base_url + "blog-posts/create-post/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":

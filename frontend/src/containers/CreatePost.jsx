@@ -12,6 +12,10 @@ import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/atom-one-dark.css";
 import "../styles/CreatePost.css";
 import LoadingIcon from "../components/LoadingIcon.jsx";
+import { useDispatch } from "react-redux";
+import { TYPE_BLOG_POST, TYPE_LIST } from "../features/types.js";
+import reverseUrl from "../features/reverseUrl.js";
+import { checkPostType } from "../features/authStore/authSlice.js";
 
 const marked = new Marked(
   markedHighlight({
@@ -33,6 +37,7 @@ function CreatePost() {
   const userData = useRouteLoaderData("root");
   const createPostMutation = useMutation({ mutationFn: createPost });
   const [postType, setPostType] = useState("post");
+  const dispatch = useDispatch();
 
   // autosave feature
   const autosavedValue =
@@ -69,19 +74,34 @@ function CreatePost() {
   }
 
   function handleChange_PostTypeDropdown(e) {
+    const newPostType = e.target.value;
+
+    if (newPostType === "list") {
+      dispatch(checkPostType(TYPE_LIST));
+    } else if (newPostType === "blogPost") {
+      dispatch(checkPostType(TYPE_BLOG_POST));
+    }
+
     setPostType(e.target.value);
   }
 
   if (createPostMutation.isPending) {
     return <LoadingIcon />;
   } else if (createPostMutation.isSuccess) {
-    return (
-      <Navigate
-        to={
-          "/post/" + userData["username"] + "/" + slugify(newBlogPost["title"])
-        }
-      />
-    );
+    let url;
+    if (postType === "list") {
+      url = reverseUrl("f_GET_LIST", [
+        userData["username"],
+        slugify(newBlogPost["title"]),
+      ]);
+    } else if (postType === "blogPost") {
+      url = reverseUrl("f_GET_BLOG_POST", [
+        userData["username"],
+        slugify(newBlogPost["title"]),
+      ]);
+    }
+
+    return <Navigate to={url} />;
   }
   return (
     <div id="create-post">
