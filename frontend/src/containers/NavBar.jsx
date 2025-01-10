@@ -8,11 +8,15 @@ import {
   ExpandMore,
   Feed,
   FormatListNumbered,
+  Instagram,
   Notifications,
   NotificationsActive,
+  Twitter,
+  YouTube,
 } from "@mui/icons-material";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Fade, Popper, Tooltip } from "@mui/material";
+import TikTokIcon from "../components/svgs/TikTokIcon.jsx";
 
 function NavBar() {
   const userData = useLoaderData();
@@ -114,6 +118,23 @@ function NavBar() {
                         <a href="https://github.com/kurealnum/byeAI/issues">
                           Issues
                         </a>
+                      </li>
+                      <hr></hr>
+                      <li>
+                        <div className="socials">
+                          <a href="https://x.com/byeai_">
+                            <Twitter />
+                          </a>
+                          <a href="https://www.instagram.com/byeai_/">
+                            <Instagram />
+                          </a>
+                          <a href="https://www.tiktok.com/@byeai_">
+                            <TikTokIcon />
+                          </a>
+                          <a href="https://www.youtube.com/@byeAIplatform">
+                            <YouTube />
+                          </a>
+                        </div>
                       </li>
                       <hr></hr>
                       <li>
