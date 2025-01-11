@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import DashboardPostThumbnail from "../DashboardBlogPostThumbnail";
+import DashboardPostThumbnail from "../DashboardPostThumbnail";
 
 function PostList({ query, type }) {
   const navigate = useNavigate();
