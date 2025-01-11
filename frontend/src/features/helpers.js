@@ -477,7 +477,17 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
     credentials: "include",
     body: data,
   };
-  const response = await fetch("/api/blog-posts/edit-post/", config);
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("EDIT_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("EDIT_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
   if (!response.ok) {
     // only give the user one error message at a time
     const errorMessages = await response.json();

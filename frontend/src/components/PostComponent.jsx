@@ -31,6 +31,7 @@ import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/base16/classic-light.css";
+import reverseUrl from "../features/reverseUrl.js";
 
 const marked = new Marked(
   markedHighlight({
@@ -195,7 +196,14 @@ function PostComponent() {
               }}
             />
             {userData["username"] === username ? (
-              <Link className="text-box" to={"/edit-post/" + slug}>
+              <Link
+                className="text-box"
+                to={
+                  type === "list"
+                    ? reverseUrl("f_EDIT_LIST", [type, slug])
+                    : reverseUrl("f_EDIT_BLOG_POST", ["blog-post", slug])
+                }
+              >
                 <p>Edit</p>
               </Link>
             ) : null}

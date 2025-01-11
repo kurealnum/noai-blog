@@ -34,7 +34,7 @@ function reverseUrl(name, args) {
       return add_args(base_url + "lists/toggle-flagged-post/", args);
     case "FLAG_BLOG_POST":
       return add_args(base_url + "blog-posts/toggle-flagged-post/", args);
-    case "FLAG_LIST_COMMENt":
+    case "FLAG_LIST_COMMENT":
       return add_args(base_url + "lists/toggle-flagged-comment/", args);
     case "FLAG_BLOG_POST_COMMENT":
       return add_args(base_url + "blog-posts/toggle-flagged-comment/", args);
@@ -46,10 +46,18 @@ function reverseUrl(name, args) {
       return add_args(base_url + "lists/create-list/", args);
     case "CREATE_BLOG_POST":
       return add_args(base_url + "blog-posts/create-post/", args);
+    case "EDIT_BLOG_POST":
+      return add_args(base_url + "blog-posts/edit-post/", args);
+    case "EDIT_LIST":
+      return add_args(base_url + "lists/edit-list/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":
       return add_args("/list/", args);
+    case "f_EDIT_BLOG_POST":
+      return add_args("/edit-post/", args);
+    case "f_EDIT_LIST":
+      return add_args("/edit-post/", args);
   }
 }
 

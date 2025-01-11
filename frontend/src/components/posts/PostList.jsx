@@ -1,13 +1,6 @@
-import { useNavigate } from "react-router-dom";
 import DashboardPostThumbnail from "../DashboardPostThumbnail";
 
 function PostList({ query, type }) {
-  const navigate = useNavigate();
-
-  function editHelper(slug) {
-    navigate("/edit-post/" + slug);
-  }
-
   if (query.isError || query.data === null) {
     return (
       <p>
@@ -24,7 +17,6 @@ function PostList({ query, type }) {
           <DashboardPostThumbnail
             key={index}
             content={content}
-            editHelper={editHelper}
             refetch={query.refetch}
             type={type}
           />

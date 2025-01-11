@@ -79,7 +79,7 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "/edit-post/:slug",
+        path: "/edit-post/:type/:slug",
         element: (
           <Page type={"private"} title={"Edit Post"}>
             <EditPost />

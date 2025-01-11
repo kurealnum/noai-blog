@@ -10,6 +10,10 @@ import hljs from "highlight.js";
 import { Marked } from "marked";
 import { markedHighlight } from "marked-highlight";
 import "highlight.js/styles/atom-one-dark.css";
+import reverseUrl from "../features/reverseUrl";
+import { useDispatch } from "react-redux";
+import { checkPostType } from "../features/authStore/authSlice";
+import { TYPE_BLOG_POST, TYPE_LIST } from "../features/types";
 
 const marked = new Marked(
   markedHighlight({
@@ -24,16 +28,23 @@ const marked = new Marked(
 function EditPost() {
   // Init data
   const userData = useRouteLoaderData("root");
-  const { slug } = useParams();
+  const { type, slug } = useParams();
   const [newBlogPost, setNewBlogPost] = useState({});
   const [thumbnail, setThumbnail] = useState({});
+  const dispatch = useDispatch();
+
+  if (type === "list") {
+    dispatch(checkPostType(TYPE_LIST));
+  } else if (type === "blog-post") {
+    dispatch(checkPostType(TYPE_BLOG_POST));
+  }
 
   // Querys/mutations
   const toEditBlogPostQuery = useQuery({
-    queryFn: () => getPost({ username: userData["username"], slug: slug }),
+    queryFn: () => getPost(userData["username"], slug),
     queryKey: [
       "toEditBlogPost",
-      { username: userData["username"], slug: slug },
+      { username: userData["username"], slug: slug, type: type },
     ],
     retry: false,
   });
@@ -106,13 +117,19 @@ function EditPost() {
       />
     );
   } else if (editPostMutation.isSuccess) {
-    return (
-      <Navigate
-        to={
-          "/post/" + userData["username"] + "/" + slugify(newBlogPost["title"])
-        }
-      />
-    );
+    let url;
+    if (type === "list") {
+      url = reverseUrl("f_GET_LIST", [
+        userData["username"],
+        slugify(newBlogPost["title"]),
+      ]);
+    } else if (type === "blog-post") {
+      url = reverseUrl("f_GET_BLOG_POST", [
+        userData["username"],
+        slugify(newBlogPost["title"]),
+      ]);
+    }
+    return <Navigate to={url} />;
   }
 
   return (

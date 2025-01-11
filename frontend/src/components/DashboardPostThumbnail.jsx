@@ -2,11 +2,23 @@ import { Delete, Edit } from "@mui/icons-material";
 import { deletePost, slugify } from "../features/helpers";
 import { Dialog } from "@mui/material";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import reverseUrl from "../features/reverseUrl";
 
-function DashboardPostThumbnail({ content, editHelper, refetch, type }) {
+function DashboardPostThumbnail({ content, refetch, type }) {
   const [open, setOpen] = useState(false);
+
+  const navigate = useNavigate();
+
+  function editHelper(slug) {
+    let url;
+    if (type === "list") {
+      url = reverseUrl("f_EDIT_LIST", ["list", slug]);
+    } else if (type === "blogPost") {
+      url = reverseUrl("f_EDIT_BLOG_POST", ["blog-post", slug]);
+    }
+    navigate(url);
+  }
 
   function dialogHelper() {
     deletePost(slugify(content["title"])).then((res) => {

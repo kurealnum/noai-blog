@@ -8,8 +8,6 @@ import PostList from "../components/posts/PostList.jsx";
 function Dashboard() {
   const userData = useRouteLoaderData("root");
 
-  console.log(userData);
-
   const blogPostQuery = useQuery({
     queryKey: ["getBlogPosts"],
     queryFn: () => getPosts(userData["username"], "blogPost"),
