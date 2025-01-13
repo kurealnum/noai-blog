@@ -5,6 +5,10 @@
   border-radius: 10px !important;
 }
 
+.MuiPaper-root {
+  border: 1px var(--extremely-light-border-color) solid;
+}
+
 .MuiMenuItem-root {
   color: var(--light-text);
   font-family: inherit;
@@ -20,6 +24,10 @@
 
 .MuiOutlinedInput-notchedOutline {
   border: none;
+}
+
+.MuiPaper-root li:hover {
+  background: var(--primary);
 }
 
 .post-form #title {

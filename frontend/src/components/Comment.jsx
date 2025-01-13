@@ -251,9 +251,7 @@ function Comment({
         <form
           onSubmit={(e) => replyHelper(e)}
           className={
-            isReply
-              ? "reply-comment-form edit-comment-form comment-reply"
-              : "edit-comment-form reply-comment-form"
+            isReply ? "reply-to-reply-comment-form" : "reply-comment-form"
           }
         >
           <textarea />
