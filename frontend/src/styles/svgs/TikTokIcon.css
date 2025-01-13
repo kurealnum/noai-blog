@@ -1,0 +1,18 @@
+.tiktok-icon {
+  width: 24px;
+}
+
+.socials {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.socials a {
+  display: flex;
+  width: min-content;
+  justify-content: center;
+  align-items: center;
+}

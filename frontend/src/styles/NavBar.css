@@ -76,5 +76,29 @@ nav #pfp {
 }
 
 .dropdown-list a {
+  text-decoration: none;
   color: var(--light-text);
+}
+
+.dropdown-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  padding: 10px;
+  border: var(--light-border-color) 1px solid;
+  border-radius: 10px;
+  font-size: var(--link-font-size);
+  background: var(--page-background);
+  margin-left: 5px;
+}
+
+.dropdown-list-horizontal {
+  flex-direction: row;
+}
+
+.dropdown-list-horizontal a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

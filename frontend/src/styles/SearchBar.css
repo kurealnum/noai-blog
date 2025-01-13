@@ -17,9 +17,24 @@
   font-size: var(--text-size);
   height: 20px;
   width: 300px;
+  transition-property: border;
+  transition-duration: 140ms;
+  transition-timing-function: linear;
+  outline: none;
+}
+
+.search-bar input:hover {
+  border: white 1px solid;
+}
+
+.search-bar button:hover {
+  color: var(--tertiary);
 }
 
 .search-bar button {
+  transition-property: color;
+  transition-duration: 90ms;
+  transition-timing-function: ease;
   border: none;
   width: min-content;
   margin: 5px;

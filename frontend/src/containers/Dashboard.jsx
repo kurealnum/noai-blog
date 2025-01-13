@@ -1,94 +1,54 @@
-import { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
-import {
-  getBlogPosts,
-  getComments,
-  limitLength,
-  slugify,
-} from "../features/helpers";
-import DashboardBlogPostThumbnail from "../components/DashboardBlogPostThumbnail";
-import { Link, useNavigate } from "react-router-dom";
+import { getPosts } from "../features/helpers";
+import { Link, useRouteLoaderData } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import LoadingIcon from "../components/LoadingIcon.jsx";
+import PostList from "../components/posts/PostList.jsx";
 
 function Dashboard() {
-  const [posts, setPosts] = useState([]);
-  const [comments, setComments] = useState([]);
-  const navigate = useNavigate();
+  const userData = useRouteLoaderData("root");
 
-  useEffect(() => {
-    getBlogPosts().then((res) => {
-      setPosts(res);
-    });
-    getComments().then((res) => {
-      setComments(res);
-    });
-  }, []);
+  const blogPostQuery = useQuery({
+    queryKey: ["getBlogPosts"],
+    queryFn: () => getPosts(userData["username"], "blogPost"),
+    enabled: !!userData["username"],
+  });
+  const listsQuery = useQuery({
+    queryKey: ["getLists"],
+    queryFn: () => getPosts(userData["username"], "list"),
+    enabled: !!userData["username"],
+  });
 
-  function editHelper(slug) {
-    navigate("/edit-post/" + slug);
+  if (blogPostQuery.isLoading || listsQuery.isLoading) {
+    return <LoadingIcon />;
+  } else if (blogPostQuery.isError && listsQuery.isError) {
+    return (
+      <div id="error-page">
+        <h1>There was an error rendering your dashboard!</h1>
+        <p>{blogPostQuery.error.message}</p>
+        <p>{listsQuery.error.message}</p>
+      </div>
+    );
+  } else if (blogPostQuery.isSuccess || listsQuery.isSuccess) {
+    return (
+      <div id="dashboard">
+        <section className="flex-row-spacing vertical-margin-50">
+          <Link to="/followers" className="link-button">
+            View followers
+          </Link>
+          <Link to="/following" className="link-button">
+            View following
+          </Link>
+        </section>
+        <section className="list-section">
+          <h1>Your posts</h1>
+          <PostList query={blogPostQuery} type={"blogPost"} />
+          <h1>Your lists</h1>
+          <PostList query={listsQuery} type={"list"} />
+        </section>
+      </div>
+    );
   }
-
-  return (
-    <div id="dashboard">
-      <section className="flex-row-spacing vertical-margin-50">
-        <Link to="/followers" className="link-button">
-          View followers
-        </Link>
-        <Link to="/following" className="link-button">
-          View following
-        </Link>
-      </section>
-      <section className="list-section">
-        <h1>Your comments</h1>
-        <ul className="list">
-          {comments === null || comments.length === 0 ? (
-            <p role="progressbar">
-              There's nothing here. Go make some comments!
-            </p>
-          ) : (
-            comments.map((content, index) => (
-              <li className="comment" key={index}>
-                <Link
-                  to={
-                    "/post/" +
-                    content["post"]["user"]["username"] +
-                    "/" +
-                    slugify(content["post"]["title"])
-                  }
-                  data-testid="comment-content"
-                >
-                  {limitLength(content["content"])}
-                </Link>
-              </li>
-            ))
-          )}
-        </ul>
-      </section>
-
-      <section className="list-section">
-        {" "}
-        <h1>Your posts</h1>
-        <ul className="list">
-          {posts.length === null || posts.length === 0 ? (
-            <p role="progressbar">There's nothing here. Go make some posts!</p>
-          ) : (
-            posts.map((content, index) => (
-              <DashboardBlogPostThumbnail
-                key={index}
-                title={content.title}
-                username={content.user.username}
-                createdDate={content.created_date}
-                content={content.content}
-                editHelper={editHelper}
-                posts={posts}
-                setPosts={setPosts}
-                index={index}
-              />
-            ))
-          )}
-        </ul>
-      </section>
-    </div>
-  );
 }
 
 export default Dashboard;

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from .models import BlogPost, Comment, Follower, PostReaction
+from .models import BlogPost, PostComment, Follower, PostReaction
 
 
 class NotificationBlogPostSerializer(serializers.Serializer):
@@ -38,7 +38,7 @@ class ReactionSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class SingleBlogPostUserSerializer(serializers.ModelSerializer):
+class PostUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
         fields = ("username", "profile_picture", "approved_ai_usage")
@@ -53,7 +53,7 @@ class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
 
 
 class BlogPostSerializer(serializers.Serializer):
-    user = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
     title = serializers.CharField(max_length=100)
     content = serializers.CharField(
         max_length=101
@@ -71,18 +71,18 @@ class CommentSerializer(serializers.ModelSerializer):
     post = BlogPostSerializer(required=False)
 
     class Meta:  # type:ignore
-        model = Comment
+        model = PostComment
         fields = "__all__"
 
 
 class CreateOrUpdateCommentSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
-        model = Comment
+        model = PostComment
         fields = "__all__"
 
 
 class CommentAndUserSerializer(serializers.Serializer):
-    user = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
     reply_to = CommentSerializer()
     content = serializers.CharField()
     created_date = serializers.DateTimeField()
@@ -92,8 +92,8 @@ class CommentAndUserSerializer(serializers.Serializer):
 
 
 class GetFollowerSerializer(serializers.ModelSerializer):
-    user = SingleBlogPostUserSerializer()
-    follower = SingleBlogPostUserSerializer()
+    user = PostUserSerializer()
+    follower = PostUserSerializer()
 
     class Meta:  # type: ignore
         model = Follower

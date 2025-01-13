@@ -4,6 +4,7 @@ import {
   createComment,
   deleteComment,
   editComment,
+  getPostType,
   isAdmin,
   isAuthenticated,
 } from "../features/helpers";
@@ -20,8 +21,9 @@ function Comment({
   isNotification,
   refetch,
   isAdminDashboard,
+  id,
 }) {
-  let { slug } = useParams();
+  let { username, slug } = useParams();
   if (!slug) {
     slug = content["post"]["slug_field"];
   }
@@ -30,6 +32,8 @@ function Comment({
   const [editReplyOpen, setEditReplyOpen] = useState(false);
   const userData = useRouteLoaderData("root");
   const [open, setOpen] = useState(false);
+  const type = getPostType();
+
   function handleClose() {
     setOpen(false);
   }
@@ -69,7 +73,7 @@ function Comment({
     e.preventDefault();
     const content = e.target[0].value;
     const replyTo = e.target[1].dataset["id"];
-    createComment(slug, content, replyTo).then((res) => {
+    createComment(username, slug, content, replyTo).then((res) => {
       if (res) {
         setEditReplyOpen(false);
         refetch();
@@ -84,6 +88,7 @@ function Comment({
           (isReply ? "comment comment-reply" : "comment") +
           (content["is_read"] ? " " : " unread-notification")
         }
+        key={id}
       >
         <div className="top-bar">
           {isNotification ? (
@@ -246,9 +251,7 @@ function Comment({
         <form
           onSubmit={(e) => replyHelper(e)}
           className={
-            isReply
-              ? "reply-comment-form edit-comment-form comment-reply"
-              : "edit-comment-form reply-comment-form"
+            isReply ? "reply-to-reply-comment-form" : "reply-comment-form"
           }
         >
           <textarea />

@@ -14,7 +14,7 @@ from accounts.serializers import (
     NewCustomUserSerializer,
     PutCustomUserSerializer,
 )
-from blogs.models import Comment
+from blogs.models import PostComment
 from blogs.serializers import NotificationCommentSerializer
 
 
@@ -111,7 +111,7 @@ class UserInfoView(APIView):
 
             # this only gets comments, nothing else
             notifications_count = (
-                Comment.objects.filter(
+                PostComment.objects.filter(
                     Q(post__user=user) | Q(reply_to__user=user), is_read=False
                 )
                 .exclude(user__username=self.request.user.username)  # type: ignore
@@ -252,7 +252,7 @@ class NotificationView(APIView):
     def get(self, request):
         user = self.request.user  # type: ignore
         unread_comments = (
-            Comment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
+            PostComment.objects.filter(Q(reply_to__user=user) | Q(post__user=user))
             .select_related("user", "post", "post__user")
             .order_by("-created_date")
             .exclude(user__username=self.request.user.username)  # type: ignore
@@ -280,7 +280,7 @@ class NotificationCountView(APIView):
     def get(self, request):
         user = self.request.user.id  # type: ignore
         unread_comments = (
-            Comment.objects.filter(
+            PostComment.objects.filter(
                 Q(reply_to__user=user) | Q(post__user=user), is_read=False
             ).exclude(
                 user__username=self.request.user.username  # type: ignore

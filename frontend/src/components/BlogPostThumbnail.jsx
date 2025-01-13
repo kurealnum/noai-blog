@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   adminDeletePost,
+  getPostType,
   isAdmin,
   slugify,
   toggleListicle,
@@ -9,14 +10,32 @@ import FlagButton from "./FlagButton";
 import { useMutation } from "@tanstack/react-query";
 import { Delete, PlaylistAdd, PlaylistRemove } from "@mui/icons-material";
 import { Dialog } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Thumbnail from "./Thumbnail";
+import reverseUrl from "../features/reverseUrl";
 
 function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
+  const [reverseName, setReverseName] = useState("");
   const [open, setOpen] = useState(false);
   const [isImage, setIsImage] = useState(
     content["user"]["profile_picture"] != null,
   );
+  const type = getPostType();
+
+  useEffect(() => {
+    switch (type) {
+      case "post":
+        setReverseName("f_GET_BLOG_POST");
+        break;
+      case "list":
+        setReverseName("f_GET_LIST");
+        break;
+      default:
+        setReverseName("f_GET_BLOG_POST");
+        break;
+    }
+  }, [type]);
+
   function dialogHelper() {
     adminDeletePost(
       content["user"]["username"],
@@ -47,13 +66,10 @@ function BlogPostThumbnail({ content, isAdminDashboard, refetch }) {
         isFlaggedParam={content["flagged"]}
       />
       <Link
-        to={
-          "/post/" +
-          content["user"]["username"] +
-          "/" +
-          slugify(content["title"]) +
-          "/"
-        }
+        to={reverseUrl(reverseName, [
+          content["user"]["username"],
+          slugify(content["title"]),
+        ])}
       >
         <Thumbnail url={content["thumbnail"]} />
         <h2>{content["title"]}</h2>

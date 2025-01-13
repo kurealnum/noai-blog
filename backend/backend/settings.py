@@ -88,6 +88,7 @@ INSTALLED_APPS = [
     "accounts",
     "blogs",
     "search",
+    "lists",
     "storages",
 ]
 

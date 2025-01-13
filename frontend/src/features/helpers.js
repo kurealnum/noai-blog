@@ -1,4 +1,5 @@
 import store from "./authStore/store";
+import reverseUrl from "./reverseUrl";
 
 const getCookie = (name) => {
   let cookieValue = null;
@@ -15,13 +16,17 @@ const getCookie = (name) => {
   return cookieValue;
 };
 
+function getPostType() {
+  return store.getState()["store"]["postInfo"]["type"];
+}
+
 async function getUserInfo() {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/accounts/user-info/", config);
+  const response = await fetch(reverseUrl("USER_INFO"), config);
   if (response.ok) {
     return await response.json();
   }
@@ -44,37 +49,30 @@ async function getUserInfoByUsername(username) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/accounts/user-info/" + username + "/",
-    config,
-  );
+  const response = await fetch(reverseUrl("USER_INFO", [username]), config);
   if (response.ok) {
     return await response.json();
   }
   return null;
 }
 
-async function getBlogPosts(username) {
+async function getPosts(username, type) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
 
-  // this code is weirdly written, but my lsp keeps yelling at me unless i do it this way
-  if (username == null) {
-    const response = await fetch("/api/blog-posts/get-posts/", config);
-    if (response.ok) {
-      return await response.json();
-    }
-  } else {
-    const response = await fetch(
-      "/api/blog-posts/get-posts/" + username + "/",
-      config,
-    );
-    if (response.ok) {
-      return await response.json();
-    }
+  let url;
+  if (type === "list") {
+    url = reverseUrl("GET_LISTS", [username]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("GET_BLOG_POSTS", [username]);
+  }
+
+  const response = await fetch(url, config);
+  if (response.ok) {
+    return await response.json();
   }
   return null;
 }
@@ -214,20 +212,27 @@ async function getComments() {
   return null;
 }
 
-async function getBlogPost({ username, slug }) {
+async function getPost(username, slug) {
   const config = {
     headers: { "Content-Type": "application/json" },
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch(
-    "/api/blog-posts/get-post/" + username + "/" + slug + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("GET_LIST", [username, slug]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("GET_BLOG_POST", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   if (response.ok) {
     return await response.json();
   }
-  throw new Error("Blog post not found!");
+  throw new Error("Post not found!");
 }
 
 async function register(formData) {
@@ -251,6 +256,16 @@ async function getFeed(index) {
   return await response.json();
 }
 
+async function getListFeed(index) {
+  const config = {
+    headers: { "Content-Type": "application/json" },
+    method: "GET",
+    credentials: "include",
+  };
+  const response = await fetch(reverseUrl("LIST_FEED", [index]), config);
+  return await response.json();
+}
+
 async function createPost({ newBlogPost, thumbnail }) {
   let data = new FormData();
   data.append("thumbnail", thumbnail["thumbnail"]);
@@ -266,7 +281,17 @@ async function createPost({ newBlogPost, thumbnail }) {
     credentials: "include",
     body: data,
   };
-  const response = await fetch("/api/blog-posts/create-post/", config);
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("CREATE_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("CREATE_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
 
   if (!response.ok) {
     // only give the user one error message at a time
@@ -341,7 +366,7 @@ async function isFollowingUser(username) {
   return response.ok;
 }
 
-async function createReaction(slug, username) {
+async function createReaction(slug, username, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -351,14 +376,19 @@ async function createReaction(slug, username) {
     method: "POST",
     body: JSON.stringify({ slug: slug, username: username }),
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/",
-    config,
-  );
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS");
+  } else if (type === "blogPost") {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
-async function deleteReaction(slug) {
+async function deleteReaction(slug, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -368,10 +398,15 @@ async function deleteReaction(slug) {
     method: "DELETE",
     body: JSON.stringify({ slug: slug }),
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/",
-    config,
-  );
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS");
+  } else if (type === "blogPost") {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -383,10 +418,17 @@ async function getReaction(slug, username) {
     credentials: "include",
     method: "GET",
   };
-  const response = await fetch(
-    "/api/blog-posts/manage-post-reactions/" + username + "/" + slug + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("MANAGE_LIST_REACTIONS", [username, slug]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("MANAGE_BLOG_POST_REACTIONS", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -403,7 +445,7 @@ async function getNotifications() {
   return await response.json();
 }
 
-async function deletePost(slug) {
+async function deletePost(slug, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -414,7 +456,14 @@ async function deletePost(slug) {
     body: JSON.stringify({ slug: slug }),
   };
 
-  const response = await fetch("/api/blog-posts/delete-post/", config);
+  let url;
+  if (type === "list") {
+    url = reverseUrl("DELETE_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("DELETE_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -435,7 +484,17 @@ async function editPost({ newBlogPost, thumbnail, originalSlug }) {
     credentials: "include",
     body: data,
   };
-  const response = await fetch("/api/blog-posts/edit-post/", config);
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("EDIT_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("EDIT_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
   if (!response.ok) {
     // only give the user one error message at a time
     const errorMessages = await response.json();
@@ -453,10 +512,17 @@ async function getCommentsByPost(username, slug) {
     credentials: "include",
     method: "GET",
   };
-  const response = await fetch(
-    "/api/blog-posts/get-comments/" + username + "/" + slug + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("GET_LIST_COMMENTS", [username, slug]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("GET_BLOG_POST_COMMENTS", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return await response.json();
 }
 
@@ -474,10 +540,17 @@ async function deleteComment(id) {
     credentials: "include",
     method: "DELETE",
   };
-  const response = await fetch(
-    "/api/blog-posts/delete-comment/" + id + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("DELETE_LIST_COMMENT", [id]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("DELETE_BLOG_POST_COMMENT", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -492,14 +565,20 @@ async function editComment(id, content) {
     body: JSON.stringify({ content: content }),
   };
 
-  const response = await fetch(
-    "/api/blog-posts/edit-comment/" + id + "/",
-    config,
-  );
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("EDIT_LIST_COMMENT", [id]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("EDIT_BLOG_POST_COMMENT", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
-async function createComment(slug, content, replyTo) {
+async function createComment(username, slug, content, replyTo) {
   if (!replyTo) {
     replyTo = "";
   }
@@ -510,9 +589,24 @@ async function createComment(slug, content, replyTo) {
     },
     method: "POST",
     credentials: "include",
-    body: JSON.stringify({ slug: slug, content: content, reply_to: replyTo }),
+    body: JSON.stringify({
+      username: username,
+      slug: slug,
+      content: content,
+      reply_to: replyTo,
+    }),
   };
-  const response = await fetch("/api/blog-posts/create-comment/", config);
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("CREATE_LIST_COMMENT");
+  } else if (type === "blogPost") {
+    url = reverseUrl("CREATE_BLOG_POST_COMMENT");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -547,22 +641,22 @@ async function getNotificationCount() {
 }
 
 function isMod() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isMod || currentStore.isAdmin || currentStore.isSuperuser;
 }
 
 function isAdmin() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isAdmin || currentStore.isSuperuser;
 }
 
 function isSuperuser() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isSuperuser;
 }
 
 function isAuthenticated() {
-  const currentStore = store.getState().auth;
+  const currentStore = store.getState().store;
   return currentStore.isAuthenticated;
 }
 
@@ -592,10 +686,16 @@ async function toggleFlagPost(username, slug) {
     credentials: "include",
     method: "PATCH",
   };
-  const response = await fetch(
-    "/api/blog-posts/toggle-flagged-post/" + username + "/" + slug + "/",
-    config,
-  );
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("FLAG_LIST", [username, slug]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("FLAG_BLOG_POST", [username, slug]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -608,10 +708,17 @@ async function toggleFlagComment(id) {
     credentials: "include",
     method: "PATCH",
   };
-  const response = await fetch(
-    "/api/blog-posts/toggle-flagged-comment/" + id + "/",
-    config,
-  );
+
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("FLAG_LIST", [id]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("FLAG_BLOG_POST", [id]);
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 
@@ -806,12 +913,12 @@ export {
   unfollowUser,
   getLinks,
   getUserInfoByUsername,
-  getBlogPosts,
+  getPosts,
   createLink,
   deleteLink,
   changeSettings,
   getComments,
-  getBlogPost,
+  getPost,
   getUserInfo,
   register,
   slugify,
@@ -819,6 +926,8 @@ export {
   getFeed,
   createPost,
   doesPathExist,
+  getListFeed,
+  getPostType,
 };
 
 export default getCookie;
