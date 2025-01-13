@@ -3,7 +3,7 @@ import { useParams, useRouteLoaderData } from "react-router-dom";
 import "../styles/Homepage.css";
 import {
   getUserInfoByUsername,
-  getBlogPosts,
+  getPosts,
   getLinks,
   isFollowingUser,
   followUser,
@@ -51,7 +51,7 @@ function Homepage() {
         setDoesUserExist(true);
       }
     });
-    getBlogPosts(username).then((res) => {
+    getPosts(username, "blogPost").then((res) => {
       setBlogPosts(res);
     });
     getLinks(username).then((res) => {
