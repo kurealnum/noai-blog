@@ -21,7 +21,7 @@ function DashboardPostThumbnail({ content, refetch, type }) {
   }
 
   function dialogHelper() {
-    deletePost(slugify(content["title"])).then((res) => {
+    deletePost(slugify(content["title"]), type).then((res) => {
       if (res) {
         refetch();
       }

@@ -445,7 +445,7 @@ async function getNotifications() {
   return await response.json();
 }
 
-async function deletePost(slug) {
+async function deletePost(slug, type) {
   const config = {
     headers: {
       "Content-Type": "application/json",
@@ -456,7 +456,14 @@ async function deletePost(slug) {
     body: JSON.stringify({ slug: slug }),
   };
 
-  const response = await fetch("/api/blog-posts/delete-post/", config);
+  let url;
+  if (type === "list") {
+    url = reverseUrl("DELETE_LIST");
+  } else if (type === "blogPost") {
+    url = reverseUrl("DELETE_BLOG_POST");
+  }
+
+  const response = await fetch(url, config);
   return response.ok;
 }
 

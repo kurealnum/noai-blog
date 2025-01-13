@@ -50,6 +50,10 @@ function reverseUrl(name, args) {
       return add_args(base_url + "blog-posts/edit-post/", args);
     case "EDIT_LIST":
       return add_args(base_url + "lists/edit-list/", args);
+    case "DELETE_LIST":
+      return add_args(base_url + "lists/delete-list/", args);
+    case "DELETE_BLOG_POST":
+      return add_args(base_url + "blog-posts/delete-post/", args);
     case "f_GET_BLOG_POST":
       return add_args("/post/", args);
     case "f_GET_LIST":
