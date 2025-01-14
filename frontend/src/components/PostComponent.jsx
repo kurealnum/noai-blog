@@ -151,10 +151,7 @@ function PostComponent() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
         ></script>
-        <div id="blog-post">
-          <div className="blogpost-thumbnail-wrapper">
-            <Thumbnail url={data["thumbnail"]} />
-          </div>
+        <div id="blog-post" className="text-based-page">
           <h1>{data.title}</h1>
           <div className="info-bar">
             <div className="info-bar-box">
@@ -218,7 +215,7 @@ function PostComponent() {
               __html: DOMPurify.sanitize(marked.parse(data["content"])),
             }}
           ></div>
-          <div>
+          <div className="comments">
             <h2>Comments</h2>
             {isAuthenticated() ? (
               <form
