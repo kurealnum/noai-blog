@@ -13,3 +13,11 @@ class Crosspost(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
     post_type = models.CharField(choices=POST_TYPE_CHOICES, default=BLOG_POST)  # type: ignore
+
+
+class CrosspostReaction(models.Model):
+    user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
+    post = models.ForeignKey(to=Crosspost, on_delete=models.SET_NULL, null=True)
+
+    class Meta:  # type: ignore
+        unique_together = "user", "post"
