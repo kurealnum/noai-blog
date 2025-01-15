@@ -162,6 +162,34 @@ fieldset {
   margin: 0 auto;
 }
 
+#blog-post h1 {
+  margin-top: 35px;
+  margin-bottom: 35px;
+}
+
+#blog-post a {
+  margin: 0;
+}
+
+.text-based-page img {
+  margin: 50px auto;
+  border-radius: 5px;
+}
+
+.comments {
+  width: 100%;
+}
+
+#blog-post .comments h2 {
+  margin: 20px 70px;
+  margin-top: 30px;
+}
+
+#blog-post .pfp {
+  margin: 0;
+  border-radius: 50%;
+}
+
 .edit-comment-form,
 .reply-comment-form {
   padding: 0;
@@ -807,6 +835,11 @@ p {
 #landing-page h1 {
   font-size: var(--landing-page-header);
   padding: 0 20px;
+}
+
+.info-box p,
+.info-box h2 {
+  text-align: center;
 }
 
 #landing-page a,
