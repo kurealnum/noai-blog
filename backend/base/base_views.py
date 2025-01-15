@@ -222,7 +222,7 @@ class BasePostView(APIView):
     def put(self, request):
         data = request.data
 
-        # blog post specific data
+        # post specific data
         user = self.request.user.id  # type: ignore
         title = data["title"]
         title_slug = data["title_slug"]
