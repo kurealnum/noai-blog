@@ -47,7 +47,6 @@ function PostComponent() {
   const { username, slug } = useParams();
   const userData = useRouteLoaderData("root");
   const [doesReactionExist, setDoesReactionExist] = useState(false);
-  const [isLeftAligned, setIsLeftAligned] = useState(false);
   const type = getPostType();
 
   const { data, isLoading, isSuccess, isError, error, refetch } = useQuery({
@@ -178,12 +177,6 @@ function PostComponent() {
               <CalendarMonthIcon />
               <span>{data["created_date"].replace(/(T.*)/g, "")}</span>
             </div>
-            <button
-              className="reaction-button"
-              onClick={() => setIsLeftAligned(!isLeftAligned)}
-            >
-              {isLeftAligned ? <FormatAlignCenter /> : <FormatAlignLeft />}
-            </button>
             <FlagButton
               type={"post"}
               isFlaggedParam={data["flagged"]}
@@ -206,11 +199,7 @@ function PostComponent() {
             ) : null}
           </div>
           <div
-            className={
-              isLeftAligned
-                ? "blog-post-content-align-left"
-                : "blog-post-content-align-center"
-            }
+            className={"blog-post-content-align-left"}
             dangerouslySetInnerHTML={{
               __html: DOMPurify.sanitize(marked.parse(data["content"])),
             }}

@@ -1,1 +1,0 @@
-import{j as e,F as t,b1 as a,as as s}from"./index-DLaIVEUD.js";function i(){return e.jsx(t,{advertiseRatio:18,showPaginator:!0,defaultSearchValue:"",queryFunction:a,includePage:!0,typeSet:s})}export{i as default};

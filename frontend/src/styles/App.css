@@ -837,6 +837,11 @@ p {
   padding: 0 20px;
 }
 
+.info-box p,
+.info-box h2 {
+  text-align: center;
+}
+
 #landing-page a,
 #link-button,
 .link-button {
