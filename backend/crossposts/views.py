@@ -1,10 +1,18 @@
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from base.base_views import BasePostListView, BasePostView, BaseReactionView
-from crossposts.models import Crosspost, CrosspostReaction
+from rest_framework.views import APIView
+from base.base_views import (
+    BaseCommentView,
+    BasePostListView,
+    BasePostView,
+    BaseReactionView,
+)
+from crossposts.models import Crosspost, CrosspostComment, CrosspostReaction
 from crossposts.serializers import (
+    CreateOrUpdateCrosspostCommentSerializer,
     CreateOrUpdateCrosspostSerializer,
+    CrosspostCommentAndUserSerializer,
     CrosspostReactionSerializer,
     CrosspostSerializer,
 )
@@ -79,3 +87,11 @@ class CrosspostReactionView(BaseReactionView):
     reaction_model = CrosspostReaction
     reaction_serializer_for_get = CrosspostReactionSerializer
     reaction_serializer_for_post = CrosspostReactionSerializer
+
+
+class CrosspostCommentView(BaseCommentView):
+    main_model = CrosspostComment
+    post_model = Crosspost
+    serializer_for_get = CrosspostCommentAndUserSerializer
+    serializer_for_post = CreateOrUpdateCrosspostCommentSerializer
+    serializer_for_put = CreateOrUpdateCrosspostCommentSerializer

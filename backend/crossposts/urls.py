@@ -1,6 +1,11 @@
 from django.urls import path
 
-from crossposts.views import CrosspostListView, CrosspostReactionView, CrosspostView
+from crossposts.views import (
+    CrosspostCommentView,
+    CrosspostListView,
+    CrosspostReactionView,
+    CrosspostView,
+)
 
 urlpatterns = [
     # CrosspostListView
@@ -27,5 +32,25 @@ urlpatterns = [
         "manage-reactions/<username>/<slug>/",
         CrosspostReactionView.as_view(),
         name="manage_crosspost_reactions",
+    ),
+    path(
+        "get-comments/<username>/<slug>/",
+        CrosspostCommentView.as_view(),
+        name="get_crosspost_comments",
+    ),
+    path(
+        "delete-comment/<id>/",
+        CrosspostCommentView.as_view(),
+        name="delete_crosspost_comment",
+    ),
+    path(
+        "edit-comment/<id>/",
+        CrosspostCommentView.as_view(),
+        name="edit_crosspost_comment",
+    ),
+    path(
+        "create-comment/",
+        CrosspostCommentView.as_view(),
+        name="create_crosspost_comment",
     ),
 ]
