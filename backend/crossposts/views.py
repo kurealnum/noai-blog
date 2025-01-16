@@ -37,8 +37,20 @@ class CrosspostView(BasePostView):
         user = self.request.user.id  # type: ignore
         title = data["title"]
         post_type = data["post_type"]
+        url = data["url"]
 
-        serializer_data = {"title": title, "post_type": post_type, "user": user}
+        if url[:8] != "https://":
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST,
+                data={"error": "Links must be HTTPS"},
+            )
+
+        serializer_data = {
+            "title": title,
+            "post_type": post_type,
+            "user": user,
+            "url": url,
+        }
 
         serializer = CreateOrUpdateCrosspostSerializer(data=serializer_data)
         if serializer.is_valid():

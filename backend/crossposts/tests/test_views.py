@@ -71,13 +71,21 @@ class CrosspostViewTC(cTestCase):
         expected_title = "crosspost_1"
         self.assertEqual(expected_title, request.data["title"])  # type: ignore
 
-    def test_does_post(self):
-        data = {"title": "title", "post_type": "BP"}
+    def test_does_post_with_https(self):
+        data = {"title": "title", "post_type": "BP", "url": "https://google.com"}
         request = self.authenticated_client.post(
             reverse_lazy("create_crosspost"), data=data
         )
         expected_result = "title"
         self.assertEqual(expected_result, request.data["title"])
+
+    def test_does_not_post_with_http(self):
+        data = {"title": "title", "post_type": "BP", "url": "http://google.com"}
+        request = self.authenticated_client.post(
+            reverse_lazy("create_crosspost"), data=data
+        )
+        expected_result = "Links must be HTTPS"
+        self.assertEqual(expected_result, request.data["error"])
 
     def test_does_edit_properly(self):
         # create a separate object to edit

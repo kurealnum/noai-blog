@@ -11,6 +11,7 @@ class Crosspost(models.Model):
     POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
 
     title = models.CharField(unique=True, max_length=101)
+    url = models.URLField(unique=False, max_length=500, default="https://byeai.dev")
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)

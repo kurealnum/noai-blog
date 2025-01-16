@@ -12,7 +12,7 @@ class CrosspostSerializer(serializers.ModelSerializer):
 
 class CreateOrUpdateCrosspostSerializer(serializers.ModelSerializer):
     class Meta:  # type: ignore
-        fields = ("title", "post_type", "user")
+        fields = ("title", "post_type", "user", "url")
         model = Crosspost
 
 
