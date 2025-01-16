@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from base.base_views import (
     BaseCommentView,
+    BaseFeedListView,
     BasePostListView,
     BasePostView,
     BaseReactionView,
@@ -49,55 +50,9 @@ class ListView(BasePostView):
     serializer_for_put = CreateOrUpdateListSerializer
 
 
-class ListFeed(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, index):
-        index = int(index)
-        posts_per_page = 50
-
-        # id like to change this to a multiplier at some point
-        follower_addition = 50
-        comment_score = 5
-        reaction_score = 3
-
-        # initial query
-        all_posts = (
-            List.objects.all()
-            .annotate(
-                reactions=Count("listreaction"),
-                comments=Count("listcomment"),
-                score=ExpressionWrapper(
-                    (F("reactions") * reaction_score) + (F("comments") * comment_score),
-                    output_field=FloatField(),
-                ),
-            )
-            .select_related("user")
-            .order_by("-score")
-        )
-
-        # paginating list
-        all_posts = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
-
-        # adding follower "boosts"
-        if request.user.id:
-            following = (
-                Follower.objects.filter(follower=request.user.id)
-                .select_related("user")
-                .values("user__username")
-            )
-
-            all_posts = all_posts.annotate(
-                score=Case(
-                    When(
-                        user__username__in=following,
-                        then=ExpressionWrapper(
-                            F("score") + follower_addition, output_field=FloatField()
-                        ),
-                    ),
-                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
-                ),
-            )
-
-        serializer = ListSerializer(all_posts, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+class ListFeed(BaseFeedListView):
+    main_model = List
+    reaction_model_string = "listreaction"
+    comments_model_string = "listcomment"
+    serializer_for_get = ListSerializer
+    debuff_listicles = False

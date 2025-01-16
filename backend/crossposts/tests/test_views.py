@@ -305,3 +305,36 @@ class CrosspostCommentViewTC(cTestCase):
         request = temp_client.post(reverse_lazy("create_crosspost_comment"), data)
         expected_status = 201
         self.assertEqual(expected_status, request.status_code)
+
+
+class CrosspostFeedListViewTC(cTestCase):
+    def setUp(self):
+        super().setUp()
+        self.crosspost_3 = Crosspost.objects.create(user=self.user, title="three")
+        CrosspostReaction.objects.create(user=self.user, post=self.crosspost_3)
+        self.crosspost_4 = Crosspost.objects.create(
+            user=self.user,
+            title="four",
+        )
+        self.user_two = CustomUser.objects.create(
+            email="janejoe@gmail.com",
+            first_name="Jane",
+            last_name="Joe",
+            about_me="I am Jane Joe, destroyer of worlds.",
+            username="jane",
+        )
+        self.user_two.set_password("TerriblePassword123")
+        self.user_two.save()
+        CrosspostReaction.objects.create(user=self.user, post=self.crosspost_4)
+        CrosspostReaction.objects.create(user=self.user_two, post=self.crosspost_4)
+
+    # the order should be list three, two, then one
+    def test_does_get_return_in_order(self):
+        request = self.client.get(reverse_lazy("get_crosspost_feed", args=[1]))
+        expected_first_title = "four"
+        expected_second_title = "three"
+        expected_third_title = "crosspost_1"
+        data = request.data  # type: ignore
+        self.assertEqual(expected_first_title, data[0]["title"])
+        self.assertEqual(expected_second_title, data[1]["title"])
+        self.assertEqual(expected_third_title, data[2]["title"])

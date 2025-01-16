@@ -1,11 +1,3 @@
-from django.db.models import (
-    F,
-    Case,
-    Count,
-    ExpressionWrapper,
-    FloatField,
-    When,
-)
 from rest_framework import generics, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -16,6 +8,7 @@ from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
 from base.base_views import (
     BaseCommentView,
+    BaseFeedListView,
     BasePostListView,
     BasePostView,
     BaseReactionView,
@@ -72,72 +65,8 @@ class PostReplyListView(generics.ListAPIView):
         return PostComment.objects.filter(user=user, reply_to=None)
 
 
-class FeedListView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, index):
-        index = int(index)
-        posts_per_page = 50
-
-        # id like to change this to a multiplier at some point
-        follower_addition = 50
-        listicle_debuff = 30
-        comment_score = 5
-        reaction_score = 3
-
-        # initial query
-        all_posts = (
-            BlogPost.objects.all()
-            .annotate(
-                reactions=Count("postreaction"),
-                comments=Count("postcomment"),
-                score=ExpressionWrapper(
-                    (F("reactions") * reaction_score) + (F("comments") * comment_score),
-                    output_field=FloatField(),
-                ),
-            )
-            .select_related("user")
-            .order_by("-score")
-        )
-
-        # paginating list
-        all_posts = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
-
-        # adding listicle "debuff"
-        all_posts = all_posts.annotate(
-            score=Case(
-                When(
-                    is_listicle=True,
-                    then=ExpressionWrapper(
-                        F("score") - listicle_debuff, output_field=FloatField()
-                    ),
-                ),
-                default=ExpressionWrapper(F("score"), output_field=FloatField()),
-            )
-        )
-
-        # adding follower "boosts"
-        if request.user.id:
-            following = (
-                Follower.objects.filter(follower=request.user.id)
-                .select_related("user")
-                .values("user__username")
-            )
-
-            all_posts = all_posts.annotate(
-                score=Case(
-                    When(
-                        user__username__in=following,
-                        then=ExpressionWrapper(
-                            F("score") + follower_addition, output_field=FloatField()
-                        ),
-                    ),
-                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
-                ),
-            )
-
-        serializer = BlogPostSerializer(all_posts, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+class FeedListView(BaseFeedListView):
+    pass
 
 
 class FollowerView(APIView):

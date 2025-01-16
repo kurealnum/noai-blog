@@ -1,6 +1,6 @@
 # This file contains a lot of the "base" views for certain functionality that other files can inherit from. For instance, BaseReactionView is the base view for ReactionViews for both Lists and BlogPosts
 
-from django.db.models import Count
+from django.db.models import F, Case, Count, ExpressionWrapper, FloatField, When
 from django.http.response import Http404
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from blogs.models import BlogPost, PostComment, PostReaction
+from blogs.models import BlogPost, Follower, PostComment, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
     CommentAndUserSerializer,
@@ -276,3 +276,83 @@ class BasePostView(APIView):
         )
         to_delete.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class BaseFeedListView(APIView):
+    permission_classes = (AllowAny,)
+
+    main_model = BlogPost
+    reaction_model_string = "postreaction"
+    comments_model_string = "postcomment"
+    debuff_listicles = True
+    serializer_for_get = BlogPostSerializer
+    posts_per_page = 50
+    follower_addition = 50
+    listicle_debuff = 30
+    comment_score = 5
+    reaction_score = 3
+
+    def get(self, request, index):
+        index = int(index)
+        posts_per_page = self.posts_per_page
+
+        # id like to change this to a multiplier at some point
+        follower_addition = self.follower_addition
+        listicle_debuff = self.listicle_debuff
+        comment_score = self.comment_score
+        reaction_score = self.reaction_score
+
+        # initial query
+        all_posts = (
+            self.main_model.objects.all()
+            .annotate(
+                reactions=Count(self.reaction_model_string),
+                comments=Count(self.comments_model_string),
+                score=ExpressionWrapper(
+                    (F("reactions") * reaction_score) + (F("comments") * comment_score),
+                    output_field=FloatField(),
+                ),
+            )
+            .select_related("user")
+            .order_by("-score")
+        )
+
+        # paginating list
+        all_posts = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
+
+        # adding listicle "debuff"
+        if self.debuff_listicles:
+            all_posts = all_posts.annotate(
+                score=Case(
+                    When(
+                        is_listicle=True,
+                        then=ExpressionWrapper(
+                            F("score") - listicle_debuff, output_field=FloatField()
+                        ),
+                    ),
+                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
+                )
+            )
+
+        # adding follower "boosts"
+        if request.user.id:
+            following = (
+                Follower.objects.filter(follower=request.user.id)
+                .select_related("user")
+                .values("user__username")
+            )
+
+            all_posts = all_posts.annotate(
+                score=Case(
+                    When(
+                        user__username__in=following,
+                        then=ExpressionWrapper(
+                            F("score") + follower_addition, output_field=FloatField()
+                        ),
+                    ),
+                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
+                ),
+            )
+
+        serializer = self.serializer_for_get(all_posts, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)

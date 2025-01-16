@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from base.base_views import (
     BaseCommentView,
+    BaseFeedListView,
     BasePostListView,
     BasePostView,
     BaseReactionView,
@@ -95,3 +96,11 @@ class CrosspostCommentView(BaseCommentView):
     serializer_for_get = CrosspostCommentAndUserSerializer
     serializer_for_post = CreateOrUpdateCrosspostCommentSerializer
     serializer_for_put = CreateOrUpdateCrosspostCommentSerializer
+
+
+class CrosspostFeedListView(BaseFeedListView):
+    main_model = Crosspost
+    reaction_model_string = "crosspostreaction"
+    comments_model_string = "crosspostcomment"
+    debuff_listicles = False
+    serializer_for_get = CrosspostSerializer

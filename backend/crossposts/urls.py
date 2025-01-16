@@ -2,6 +2,7 @@ from django.urls import path
 
 from crossposts.views import (
     CrosspostCommentView,
+    CrosspostFeedListView,
     CrosspostListView,
     CrosspostReactionView,
     CrosspostView,
@@ -53,4 +54,5 @@ urlpatterns = [
         CrosspostCommentView.as_view(),
         name="create_crosspost_comment",
     ),
+    path("feed/<index>/", CrosspostFeedListView.as_view(), name="get_crosspost_feed"),
 ]
