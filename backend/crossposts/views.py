@@ -1,10 +1,11 @@
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from base.base_views import BasePostListView, BasePostView
-from crossposts.models import Crosspost
+from base.base_views import BasePostListView, BasePostView, BaseReactionView
+from crossposts.models import Crosspost, CrosspostReaction
 from crossposts.serializers import (
     CreateOrUpdateCrosspostSerializer,
+    CrosspostReactionSerializer,
     CrosspostSerializer,
 )
 
@@ -71,3 +72,10 @@ class CrosspostView(BasePostView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CrosspostReactionView(BaseReactionView):
+    main_model = Crosspost
+    reaction_model = CrosspostReaction
+    reaction_serializer_for_get = CrosspostReactionSerializer
+    reaction_serializer_for_post = CrosspostReactionSerializer

@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from rest_framework.test import APIClient, APIRequestFactory
 
 from accounts.models import CustomUser
-from crossposts.models import Crosspost
+from crossposts.models import Crosspost, CrosspostReaction
 
 
 class cTestCase(TestCase):
@@ -24,8 +24,12 @@ class cTestCase(TestCase):
         self.authenticated_client.login(
             username="bobby", password="TerriblePassword123"
         )
-        Crosspost.objects.create(title="crosspost_1", user=self.user, post_type="BP")
-        Crosspost.objects.create(title="crosspost_2", user=self.user, post_type="L")
+        self.crosspost_1 = Crosspost.objects.create(
+            title="crosspost_1", user=self.user, post_type="BP"
+        )
+        self.crosspost_2 = Crosspost.objects.create(
+            title="crosspost_2", user=self.user, post_type="L"
+        )
 
 
 class CrossPostListViewTC(cTestCase):
@@ -161,3 +165,58 @@ class CrosspostViewTC(cTestCase):
         request = temp_client.delete(reverse_lazy("delete_crosspost"), data=data)
         expected_status = 204
         self.assertEqual(expected_status, request.status_code)
+
+
+class CrosspostReactionViewTC(cTestCase):
+    def setUp(self):
+        super().setUp()
+        self.reaction = CrosspostReaction.objects.create(
+            user=self.user, post=self.crosspost_1
+        )
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+
+    def test_does_get_succesfully(self):
+        self.authenticated_client.login(
+            password="TerriblePassword123", username="bobby"
+        )
+        request = self.authenticated_client.get(
+            reverse_lazy(
+                "manage_crosspost_reactions",
+                args=[self.crosspost_1.user.username, self.crosspost_1.slug_field],
+            )
+        )
+        expected_response = 200
+        self.assertEqual(expected_response, request.status_code)
+
+    def test_does_succesfully_create(self):
+        self.authenticated_client.login(
+            password="TerriblePassword123", username="jonny"
+        )
+        data = {
+            "slug": self.crosspost_1.slug_field,
+            "username": self.crosspost_1.user.username,
+        }
+        request = self.authenticated_client.post(
+            reverse_lazy("manage_crosspost_reactions"), data=data
+        )
+        expected_result = 201
+
+        self.assertEqual(expected_result, request.status_code)
+
+    def test_does_succesfully_delete(self):
+        temp_client = APIClient()
+        temp_client.login(password="TerriblePassword123", username="bobby")
+        data = {"slug": self.crosspost_1.slug_field}
+        request = temp_client.delete(
+            reverse_lazy("manage_crosspost_reactions"), data=data
+        )
+        expected_result = 204
+        self.assertEqual(expected_result, request.status_code)
