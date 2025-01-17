@@ -1,0 +1,1 @@
+import{r as o,u,j as g}from"./index-CxWqZXlI.js";import{a as i}from"./auth-DDRYAAYI.js";import{E as n}from"./ErrorMessage-yi_Y-Uw1.js";function E(){const s=i(),[t,r]=o.useState(!1),e=u();return o.useEffect(()=>{s.then(a=>{a?r(!0):e("/login")})},[s,e]),g.jsx(n,{isError:t,message:"There was an issue logging you out!",altMessage:"Logging you out..."})}export{E as default};

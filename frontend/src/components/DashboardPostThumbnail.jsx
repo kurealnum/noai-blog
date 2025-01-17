@@ -79,7 +79,7 @@ function DashboardPostThumbnail({ content, refetch, type }) {
       </div>
       <p className="hint" data-testid="post-content">
         {content["content"].length > 100
-          ? content.slice(0, 101) + "..."
+          ? content["content"].slice(0, 101) + "..."
           : content["content"]}
       </p>
     </li>
