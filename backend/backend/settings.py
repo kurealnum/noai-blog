@@ -90,6 +90,7 @@ INSTALLED_APPS = [
     "search",
     "lists",
     "storages",
+    "crossposts",
 ]
 
 

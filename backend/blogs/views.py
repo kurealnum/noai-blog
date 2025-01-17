@@ -1,14 +1,4 @@
-from django.db.models import (
-    F,
-    Case,
-    Count,
-    ExpressionWrapper,
-    FloatField,
-    When,
-)
-from django.http.response import Http404
 from rest_framework import generics, status
-from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -16,12 +6,17 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from base.base_views import BaseCommentView, BasePostListView, BaseReactionView
+from base.base_views import (
+    BaseCommentView,
+    BaseFeedListView,
+    BasePostListView,
+    BasePostView,
+    BaseReactionView,
+)
 from blogs.models import BlogPost, PostComment, Follower
 from blogs.serializers import (
     BlogPostSerializer,
     CommentSerializer,
-    CreateOrUpdateBlogPostSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
 )
@@ -37,110 +32,8 @@ class CommentListUserView(generics.ListAPIView):
 
 
 # this is the view for a *single* blog post
-class BlogPostView(APIView):
-    parser_classes = (MultiPartParser, FormParser, JSONParser)
-
-    def get_permissions(self):
-        permissions = super().get_permissions()
-        if self.request.method.lower() != "get":  # type: ignore
-            permissions.append(IsAuthenticated())  # type: ignore
-        return permissions
-
-    def get(self, request, username, slug):
-        try:
-            res = (
-                BlogPost.objects.select_related("user")
-                .annotate(likes=Count("postreaction"))
-                .get(user__username=username, slug_field=slug)
-            )
-            serializer = BlogPostSerializer(res)
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-        except BlogPost.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-    def post(self, request):
-        data = request.data
-
-        # blog post specific data
-        user = self.request.user.id  # type: ignore
-        title = data["title"]
-        content = data["content"]
-        thumbnail = data["thumbnail"]
-        if thumbnail == "undefined":
-            thumbnail = None
-        serializer_data = {
-            "user": user,
-            "title": title,
-            "content": content,
-            "thumbnail": thumbnail,
-        }
-
-        serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def put(self, request):
-        data = request.data
-
-        # blog post specific data
-        user = self.request.user.id  # type: ignore
-        title = data["title"]
-        title_slug = data["title_slug"]
-        content = data["content"]
-        thumbnail = data["thumbnail"]
-        original_slug = data["original_slug"]
-
-        try:
-            is_original_post = BlogPost.objects.get(
-                user=self.request.user, slug_field=title_slug
-            )
-        except BlogPost.DoesNotExist:
-            is_original_post = None
-
-        # weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
-        if title_slug != original_slug and is_original_post:
-            return Response(
-                data={"error": "A post with this title already exists!"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if thumbnail == "undefined" and is_original_post:
-            thumbnail = is_original_post.thumbnail
-            if not thumbnail:
-                thumbnail = None
-        elif thumbnail == "undefined":
-            thumbnail = None
-
-        serializer_data = {
-            "user": user,
-            "title": title,
-            "content": content,
-            "thumbnail": thumbnail,
-        }
-
-        instance = generics.get_object_or_404(
-            BlogPost, user=user, slug_field=original_slug
-        )
-        serializer = CreateOrUpdateBlogPostSerializer(
-            data=serializer_data, instance=instance
-        )
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_200_OK)
-
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request):
-        data = request.data
-        user = self.request.user
-        to_delete = generics.get_object_or_404(
-            BlogPost, user=user, slug_field=data["slug"]
-        )
-        to_delete.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+class BlogPostView(BasePostView):
+    pass
 
 
 # this is the view for *multiple* blog posts
@@ -172,72 +65,8 @@ class PostReplyListView(generics.ListAPIView):
         return PostComment.objects.filter(user=user, reply_to=None)
 
 
-class FeedListView(APIView):
-    permission_classes = (AllowAny,)
-
-    def get(self, request, index):
-        index = int(index)
-        posts_per_page = 50
-
-        # id like to change this to a multiplier at some point
-        follower_addition = 50
-        listicle_debuff = 30
-        comment_score = 5
-        reaction_score = 3
-
-        # initial query
-        all_posts = (
-            BlogPost.objects.all()
-            .annotate(
-                reactions=Count("postreaction"),
-                comments=Count("postcomment"),
-                score=ExpressionWrapper(
-                    (F("reactions") * reaction_score) + (F("comments") * comment_score),
-                    output_field=FloatField(),
-                ),
-            )
-            .select_related("user")
-            .order_by("-score")
-        )
-
-        # paginating list
-        all_posts = all_posts[posts_per_page * (index - 1) : posts_per_page * index]
-
-        # adding listicle "debuff"
-        all_posts = all_posts.annotate(
-            score=Case(
-                When(
-                    is_listicle=True,
-                    then=ExpressionWrapper(
-                        F("score") - listicle_debuff, output_field=FloatField()
-                    ),
-                ),
-                default=ExpressionWrapper(F("score"), output_field=FloatField()),
-            )
-        )
-
-        # adding follower "boosts"
-        if request.user.id:
-            following = (
-                Follower.objects.filter(follower=request.user.id)
-                .select_related("user")
-                .values("user__username")
-            )
-
-            all_posts = all_posts.annotate(
-                score=Case(
-                    When(
-                        user__username__in=following,
-                        then=ExpressionWrapper(
-                            F("score") + follower_addition, output_field=FloatField()
-                        ),
-                    ),
-                    default=ExpressionWrapper(F("score"), output_field=FloatField()),
-                ),
-            )
-
-        serializer = BlogPostSerializer(all_posts, many=True)
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+class FeedListView(BaseFeedListView):
+    pass
 
 
 class FollowerView(APIView):
