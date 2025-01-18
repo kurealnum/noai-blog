@@ -177,10 +177,11 @@ class BasePostView(APIView):
             permissions.append(IsAuthenticated())  # type: ignore
         return permissions
 
-    def get(self, request, username, slug):
+    def get(self, request, post_type, username, slug):
         try:
             res = (
-                self.main_model.objects.select_related("user")
+                self.main_model.objects.filter(post_type=post_type)
+                .select_related("user")
                 .annotate(likes=Count(self.reaction_model_string))
                 .get(user__username=username, slug_field=slug)
             )
@@ -189,7 +190,7 @@ class BasePostView(APIView):
         except BlogPost.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request):
+    def post(self, request, post_type):
         data = request.data
 
         # blog post specific data
@@ -210,6 +211,7 @@ class BasePostView(APIView):
             "title": title,
             "content": content,
             "thumbnail": thumbnail,
+            "post_type": post_type,
         }
 
         serializer = self.serializer_for_post(data=serializer_data)
@@ -219,7 +221,7 @@ class BasePostView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request):
+    def put(self, request, post_type):
         data = request.data
 
         # post specific data
@@ -256,6 +258,7 @@ class BasePostView(APIView):
             "title": title,
             "content": content,
             "thumbnail": thumbnail,
+            "post_type": post_type,
         }
 
         instance = get_object_or_404(
@@ -356,3 +359,27 @@ class BaseFeedListView(APIView):
 
         serializer = self.serializer_for_get(all_posts, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class BaseSearchView(APIView):
+    permission_classes = (AllowAny,)
+    main_model = BlogPost
+    posts_per_page = 50
+    serializer_for_get = BlogPostSerializer
+
+    def get(self, request, search=None, page=1):
+        page = int(page)
+        if not search:
+            queryset = self.main_model.objects.all()[:50]
+            short_queryset = queryset[
+                self.posts_per_page * (page - 1) : self.posts_per_page * page
+            ]
+            serializer = self.serializer_for_get(short_queryset, many=True)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        queryset = self.main_model.objects.filter(title__search=search)
+        short_queryset = queryset[
+            self.posts_per_page * (page - 1) : self.posts_per_page * page
+        ]
+        serializer = self.serializer_for_get(short_queryset, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)

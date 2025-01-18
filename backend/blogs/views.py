@@ -22,13 +22,16 @@ from blogs.serializers import (
 )
 
 
-class CommentListUserView(generics.ListAPIView):
+class CommentListUserView(APIView):
     permission_classes = (AllowAny,)
-    serializer_class = CommentSerializer
 
-    def get_queryset(self):  # type: ignore
+    def get(self, post_type):
         user = self.request.user.id  # type: ignore
-        return PostComment.objects.filter(user=user).select_related("post")
+        query = PostComment.objects.filter(user=user, comment_type=type).select_related(
+            "post"
+        )
+        serializer = CommentSerializer(query, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 # this is the view for a *single* blog post
