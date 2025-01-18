@@ -26,12 +26,12 @@ from blogs.views import (
 urlpatterns = [
     # Misc. URLs
     path(
-        "get-comment-replies/<post_type>/",
+        "get-comment-replies/",
         CommentReplyListView.as_view(),
         name="get_comment_replies",
     ),
     path(
-        "get-post-replies/<post_type>/",
+        "get-post-replies/",
         PostReplyListView.as_view(),
         name="get_post_replies",
     ),
@@ -43,37 +43,38 @@ urlpatterns = [
         name="get_comments",
     ),
     path(
-        "delete-comment/<post_type>/<id>/",
+        "delete-comment/<id>/",
         BlogPostCommentView.as_view(),
         name="delete_comment",
     ),
     path(
-        "edit-comment/<post_type>/<id>/",
+        "edit-comment/<id>/",
         BlogPostCommentView.as_view(),
         name="edit_comment",
     ),
     path(
-        "create-comment/<post_type>/",
+        "create-comment/",
         BlogPostCommentView.as_view(),
         name="create_comment",
     ),
-    # BlogPostLISTView
-    path("get-posts/<post_type>/", BlogPostListView.as_view(), name="get_posts"),
+    # BlogPostListView
+    path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
     path(
-        "get-posts/<post_type>/<username>/",
+        "get-posts/<username>/",
         BlogPostListView.as_view(),
         name="get_posts",
     ),
     # BlogPostView
     path(
-        "get-post/<post_type>/<username>/<slug>/",
+        "get-post/<username>/<slug>/",
         BlogPostView.as_view(),
         name="get_post",
     ),
-    path("delete-post/<post_type>/", BlogPostView.as_view(), name="get_post"),
-    path("create-post/<post_type>/", BlogPostView.as_view(), name="create_post"),
-    path("edit-post/<post_type>/", BlogPostView.as_view(), name="edit_post"),
+    path("delete-post/", BlogPostView.as_view(), name="get_post"),
+    path("create-post/", BlogPostView.as_view(), name="create_post"),
+    path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     # CommentListUserView
+    # ???
     path(
         "manage-comments/<post_type>/",
         CommentListUserView.as_view(),
@@ -85,28 +86,26 @@ urlpatterns = [
         name="manage_comments",
     ),
     # FollowerView
-    path(
-        "manage-followers/<post_type>/", FollowerView.as_view(), name="manage_followers"
-    ),
+    path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
     # FollowINGView
     path(
-        "manage-following/<post_type>/",
+        "manage-following/",
         FollowingView.as_view(),
         name="manage_following",
     ),
     path(
-        "manage-following/<post_type>/<username>/",
+        "manage-following/<username>/",
         FollowingView.as_view(),
         name="manage_following",
     ),
     # ReactionView
     path(
-        "manage-post-reactions/<post_type>/",
+        "manage-post-reactions/",
         PostReactionView.as_view(),
         name="manage_post_reactions",
     ),
     path(
-        "manage-post-reactions/<post_type>/<username>/<slug>/",
+        "manage-post-reactions/<username>/<slug>/",
         PostReactionView.as_view(),
         name="manage_post_reactions",
     ),
@@ -118,55 +117,55 @@ urlpatterns = [
     ),
     # ModeratorModifyCommentView
     path(
-        "toggle-flagged-comment/<post_type>/<id>/",
+        "toggle-flagged-comment/<id>/",
         ModeratorModifyCommentView.as_view(),
         name="toggle_flagged_comment",
     ),
     # ModeratorModifyUserView
     path(
-        "toggle-flagged-user/<post_type>/<username>/",
+        "toggle-flagged-user/<username>/",
         ModeratorModifyUserView.as_view(),
         name="toggle_flagged_user",
     ),
     # AdminGetAllFlaggedPostsView
     path(
-        "get-flagged-posts/<post_type>/",
+        "get-flagged-posts/",
         AdminGetAllFlaggedPostsView.as_view(),
         name="get_flagged_posts",
     ),
     # AdminGetAllFlaggedCommentsView
     path(
-        "get-flagged-comments/<post_type>/",
+        "get-flagged-comments/",
         AdminGetAllFlaggedCommentsView.as_view(),
         name="get_flagged_comments",
     ),
     # AdminGetAllFlaggedUsersView
     path(
-        "get-flagged-users/<post_type>/",
+        "get-flagged-users/",
         AdminGetAllFlaggedUsersView.as_view(),
         name="get_flagged_users",
     ),
     # AdminManageListicleView
     path(
-        "toggle-listicle/<post_type>/<username>/<slug>/",
+        "toggle-listicle/<username>/<slug>/",
         AdminManageListicleView.as_view(),
         name="toggle_listicle",
     ),
     # AdminManagePostView
     path(
-        "admin/manage-post/<post_type>/<username>/<slug>/",
+        "admin/manage-post/<username>/<slug>/",
         AdminManagePostView.as_view(),
         name="admin_manage_post",
     ),
     # AdminManageCommentView
     path(
-        "admin/manage-comment/<post_type>/<id>/",
+        "admin/manage-comment/<id>/",
         AdminManageCommentView.as_view(),
         name="admin_manage_comment",
     ),
     # AdminManageUserView
     path(
-        "admin/manage-user/<post_type>/<username>/",
+        "admin/manage-user/<username>/",
         AdminManagerUserView.as_view(),
         name="admin_manage_user",
     ),

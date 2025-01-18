@@ -89,7 +89,6 @@ INSTALLED_APPS = [
     "blogs",
     "search",
     "storages",
-    "crossposts",
 ]
 
 
