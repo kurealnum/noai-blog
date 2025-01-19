@@ -531,14 +531,18 @@ class FeedListTestCase(CustomTestCase):
 
     def test_feedlist_returns_correctly_on_first_page(self):
         # temp client for logging in
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         # the title of the 3rd blog post is 3
         expected_result = "3"
         self.assertEqual(expected_result, response.data[0].get("title"))  # type: ignore
 
     # should return an empty array
     def test_feedlist_returns_correctly_on_second_page(self):
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 2}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 2, "post_type": "blogPost"})
+        )
 
         # there should be nothing on this page
         expected_length = 0
@@ -547,7 +551,9 @@ class FeedListTestCase(CustomTestCase):
     def test_feedlist_returns_correctly_for_authenticated_user(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
-        response = temp_client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = temp_client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         expected_response = 50
 
         self.assertEqual(expected_response, response.data[0]["score"])
@@ -556,7 +562,9 @@ class FeedListTestCase(CustomTestCase):
         self.blog_post_1.is_listicle = True
         self.blog_post_1.save()
 
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         expected_score = -30
 
         self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore

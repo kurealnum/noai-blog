@@ -11,8 +11,8 @@ def get_sentinel_user():
 
 
 class BlogPost(models.Model):
-    BLOG_POST = "BP"
-    LIST = "L"
+    BLOG_POST = "blogPost"
+    LIST = "list"
     POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
 
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)

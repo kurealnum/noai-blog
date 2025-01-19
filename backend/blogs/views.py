@@ -255,25 +255,19 @@ class PostReplyListView(generics.ListAPIView):
 
 
 class FeedListView(APIView):
-    posts_per_page = 50
-    follower_addition = 50
-    listicle_debuff = 30
-    comment_score = 5
-    reaction_score = 3
-
-    def get(self, request, index):
+    def get(self, request, post_type, index):
         index = int(index)
-        posts_per_page = self.posts_per_page
+        posts_per_page = 50
 
         # id like to change this to a multiplier at some point
-        follower_addition = self.follower_addition
-        listicle_debuff = self.listicle_debuff
-        comment_score = self.comment_score
-        reaction_score = self.reaction_score
+        follower_addition = 50
+        listicle_debuff = 30
+        comment_score = 5
+        reaction_score = 3
 
         # initial query
         all_posts = (
-            BlogPost.objects.all()
+            BlogPost.objects.filter(post_type=post_type)
             .annotate(
                 reactions=Count("postreaction"),
                 comments=Count("postcomment"),
