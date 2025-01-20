@@ -38,7 +38,7 @@ urlpatterns = [
     path("feed/<post_type>/<index>/", (FeedListView.as_view()), name="feed"),
     # CommentListView URLs
     path(
-        "get-comments/<post_type>/<username>/<slug>/",
+        "get-comments/<username>/<slug>/",
         BlogPostCommentView.as_view(),
         name="get_comments",
     ),
@@ -58,15 +58,15 @@ urlpatterns = [
         name="create_comment",
     ),
     # BlogPostListView
-    path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
+    path("get-posts/<post_type>/", BlogPostListView.as_view(), name="get_posts"),
     path(
-        "get-posts/<username>/",
+        "get-posts/<post_type>/<username>/",
         BlogPostListView.as_view(),
         name="get_posts",
     ),
     # BlogPostView
     path(
-        "get-post/<username>/<slug>/",
+        "get-post/<slug>/",
         BlogPostView.as_view(),
         name="get_post",
     ),
@@ -74,14 +74,8 @@ urlpatterns = [
     path("create-post/", BlogPostView.as_view(), name="create_post"),
     path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     # CommentListUserView
-    # ???
     path(
-        "manage-comments/<post_type>/",
-        CommentListUserView.as_view(),
-        name="manage_comments",
-    ),
-    path(
-        "manage-comments/<post_type>/<slug>/",
+        "manage-comments/",
         CommentListUserView.as_view(),
         name="manage_comments",
     ),

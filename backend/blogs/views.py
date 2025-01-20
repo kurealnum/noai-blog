@@ -25,7 +25,7 @@ from blogs.serializers import (
 class CommentListUserView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, post_type):
+    def get(self):
         user = self.request.user.id  # type: ignore
         query = PostComment.objects.filter(user=user, comment_type=type).select_related(
             "post"
@@ -47,8 +47,7 @@ class BlogPostView(APIView):
     def get(self, request, post_type, username, slug):
         try:
             res = (
-                BlogPost.objects.filter(post_type=post_type)
-                .select_related("user")
+                BlogPost.objects.select_related("user")
                 .annotate(likes=Count("postreaction"))
                 .get(user__username=username, slug_field=slug)
             )
@@ -83,7 +82,7 @@ class BlogPostView(APIView):
 
         return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def put(self, request, post_type):
+    def put(self, request):
         data = request.data
 
         # post specific data
@@ -120,7 +119,6 @@ class BlogPostView(APIView):
             "title": title,
             "content": content,
             "thumbnail": thumbnail,
-            "post_type": post_type,
         }
 
         instance = generics.get_object_or_404(
@@ -149,10 +147,12 @@ class BlogPostView(APIView):
 class BlogPostListView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, username=None):
+    def get(self, request, post_type, username=None):
         if username:
             try:
-                res = BlogPost.objects.filter(user__username=username)
+                res = BlogPost.objects.filter(
+                    user__username=username, post_type=post_type
+                )
                 if len(res) == 0:
                     raise BlogPost.DoesNotExist
                 serializer = BlogPostSerializer(res, many=True)
@@ -161,7 +161,9 @@ class BlogPostListView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user.id  # type:ignore
-            res = BlogPost.objects.filter(user=user).select_related("user")
+            res = BlogPost.objects.filter(
+                user=user, post_type=post_type
+            ).select_related("user")
             serializer = BlogPostSerializer(res, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
