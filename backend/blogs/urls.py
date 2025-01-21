@@ -66,11 +66,16 @@ urlpatterns = [
     ),
     # BlogPostView
     path(
+        "get-post/<username>/<slug>/",
+        BlogPostView.as_view(),
+        name="get_post",
+    ),
+    path(
         "get-post/<slug>/",
         BlogPostView.as_view(),
         name="get_post",
     ),
-    path("delete-post/", BlogPostView.as_view(), name="get_post"),
+    path("delete-post/", BlogPostView.as_view(), name="delete_post"),
     path("create-post/", BlogPostView.as_view(), name="create_post"),
     path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     # CommentListUserView

@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from accounts.models import CustomUser
-from blogs.models import BlogPost
+from blogs.models import BlogPost, PostComment
 
 
 class CustomTestCase(TestCase):
@@ -34,3 +34,11 @@ class BlogPostTestCase(CustomTestCase):
         res = self.blog_post.get_absolute_url()
         expected_result = "/api/blog-posts/get-post/bobby/my-awesome-blog-post/"
         self.assertEqual(res, expected_result)
+
+    def test_does_comment_register(self):
+        PostComment.objects.create(
+            user=self.user, post=self.blog_post, content="A really good comment"
+        )
+        comment_count = PostComment.objects.filter(post=self.blog_post).count()
+        expected_result = 1
+        self.assertEqual(expected_result, comment_count)

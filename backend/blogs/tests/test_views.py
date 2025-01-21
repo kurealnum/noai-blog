@@ -39,30 +39,10 @@ class CustomTestCase(TestCase):
         )
         self.admin.set_password("TerriblePassword123")
         self.admin.save()
-
-
-class BlogTestCase(CustomTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-
-    def test_does_react_count(self):
-        PostReaction.objects.create(user=self.user, post=self.blog_post)
-        reaction_count = PostReaction.objects.filter(post=self.blog_post).count()
-        expected_result = 1
-        self.assertEqual(expected_result, reaction_count)
-
-    def test_does_comment_register(self):
-        PostComment.objects.create(
-            user=self.user, post=self.blog_post, content="A really good comment"
+        self.authenticated_client = APIClient()
+        self.authenticated_client.login(
+            username="bobby", password="TerriblePassword123"
         )
-        comment_count = PostComment.objects.filter(post=self.blog_post).count()
-        expected_result = 1
-        self.assertEqual(expected_result, comment_count)
-
-    def test_get_absolute_url(self):
-        expected_result = "/api/blog-posts/get-post/bobby/my-awesome-blog-post/"
-        result = self.blog_post.get_absolute_url()
-        self.assertEqual(expected_result, result)
 
 
 class CommentTestCase(CustomTestCase):
@@ -429,20 +409,83 @@ class BlogPostListTestCase(CustomTestCase):
         # temp client for logging in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        response = temp_client.get(reverse_lazy("get_posts"))
+        response = temp_client.get(
+            reverse_lazy("get_posts", kwargs={"post_type": "blog-post"})
+        )
 
         # expected_title, basically
         expected_result = "My awesome blog post"
         self.assertEqual(expected_result, response.data[0].get("title"))
 
     def test_with_username(self):
-        request = self.client.get(reverse_lazy("get_posts") + "bobby/")
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts", kwargs={"username": "bobby", "post_type": "blog-post"}
+            )
+        )
         expected_result = "My awesome blog post"
         result = json.loads(request.content)[0].get("title")
         self.assertEqual(result, expected_result)
 
     def test_with_incorrect_username(self):
-        request = self.client.get(reverse_lazy("get_posts") + "thewrongusername/")
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts",
+                kwargs={"username": "thewrongusername", "post_type": "blog-post"},
+            )
+        )
+        expected_result = "Not found."
+        self.assertEqual(json.loads(request.content)["detail"], expected_result)
+
+
+class BlogPostList_List_TestCase(CustomTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        # alternative user
+        self.alternative_user = CustomUser.objects.create(
+            email="marysue@gmail.com",
+            first_name="Mary",
+            last_name="Sue",
+            about_me="I do not destroy worlds!",
+            username="MarySue",
+        )
+        self.alternative_user.set_password("TerriblePassword123")
+        self.alternative_user.save()
+        self.alternative_list = BlogPost.objects.create(
+            user=self.alternative_user,
+            title="My very awesome list",
+            content="Here's something about my list",
+            post_type="list",
+        )
+
+    def test_get_returns_correctly_with_list(self):
+        temp_client = APIClient()
+        temp_client.login(username="MarySue", password="TerriblePassword123")
+        response = temp_client.get(
+            reverse_lazy("get_posts", kwargs={"post_type": "list"})
+        )
+
+        # expected_title, basically
+        expected_result = "My very awesome list"
+        self.assertEqual(expected_result, response.data[0].get("title"))
+
+    def test_with_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts", kwargs={"post_type": "list", "username": "MarySue"}
+            )
+        )
+        expected_result = "My very awesome list"
+        result = json.loads(request.content)[0].get("title")
+        self.assertEqual(result, expected_result)
+
+    def test_with_incorrect_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts",
+                kwargs={"post_type": "list", "username": "thewrongusername"},
+            )
+        )
         expected_result = "Not found."
         self.assertEqual(json.loads(request.content)["detail"], expected_result)
 

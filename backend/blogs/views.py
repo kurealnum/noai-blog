@@ -44,7 +44,7 @@ class BlogPostView(APIView):
             permissions.append(IsAuthenticated())  # type: ignore
         return permissions
 
-    def get(self, request, post_type, username, slug):
+    def get(self, request, username, slug):
         try:
             res = (
                 BlogPost.objects.select_related("user")
