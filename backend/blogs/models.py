@@ -10,6 +10,23 @@ def get_sentinel_user():
     return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
+class BlogPostManager(models.Manager):
+    def filter(self, *args, **kwargs):
+        cur_post_type = kwargs.get("post_type")
+        if (
+            cur_post_type == "blogs"
+            or cur_post_type == "blog-posts"
+            or cur_post_type == "blog"
+            or cur_post_type == "blog-post"
+        ):
+            kwargs["post_type"] = "blogPost"
+
+        if cur_post_type == "lists":
+            kwargs["post_type"] = "list"
+
+        return super().filter(*args, **kwargs)
+
+
 class BlogPost(models.Model):
     BLOG_POST = "blogPost"
     LIST = "list"
@@ -35,6 +52,8 @@ class BlogPost(models.Model):
         keep_meta=False,
         force_format="JPEG",
     )
+
+    objects = BlogPostManager()
 
     # the url for the frontend, basically
     def get_sitemap_url(self):
