@@ -65,9 +65,9 @@ async function getPosts(username, type) {
 
   let url;
   if (type === "list") {
-    url = reverseUrl("GET_LISTS", [username]);
+    url = reverseUrl("GET_LISTS", [type, username]);
   } else if (type === "blogPost") {
-    url = reverseUrl("GET_BLOG_POSTS", [username]);
+    url = reverseUrl("GET_BLOG_POSTS", [type, username]);
   }
 
   const response = await fetch(url, config);
@@ -252,17 +252,16 @@ async function getFeed(index) {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/feed/" + index + "/", config);
-  return await response.json();
-}
 
-async function getListFeed(index) {
-  const config = {
-    headers: { "Content-Type": "application/json" },
-    method: "GET",
-    credentials: "include",
-  };
-  const response = await fetch(reverseUrl("LIST_FEED", [index]), config);
+  const type = getPostType();
+
+  let url;
+  if (type === "list") {
+    url = reverseUrl("GET_LIST_FEED", [type, index]);
+  } else if (type === "blogPost") {
+    url = reverseUrl("GET_BLOG_POST_FEED", [type, index]);
+  }
+  const response = await fetch(url, config);
   return await response.json();
 }
 
@@ -271,6 +270,7 @@ async function createPost({ newBlogPost, thumbnail }) {
   data.append("thumbnail", thumbnail["thumbnail"]);
   data.append("content", newBlogPost["content"]);
   data.append("title", newBlogPost["title"]);
+  data.append("post_type", newBlogPost["post_type"]);
   data.append("user", "hubot");
 
   const config = {
@@ -926,7 +926,6 @@ export {
   getFeed,
   createPost,
   doesPathExist,
-  getListFeed,
   getPostType,
 };
 
