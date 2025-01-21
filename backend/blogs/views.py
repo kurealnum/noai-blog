@@ -25,11 +25,11 @@ from blogs.serializers import (
 class CommentListUserView(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self):
+    def get(self, request, post_type):
         user = self.request.user.id  # type: ignore
-        query = PostComment.objects.filter(user=user, comment_type=type).select_related(
-            "post"
-        )
+        query = PostComment.objects.filter(
+            user=user, post_type=post_type
+        ).select_related("post")
         serializer = CommentSerializer(query, many=True)
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -56,7 +56,7 @@ class BlogPostView(APIView):
         except BlogPost.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
-    def post(self, request, post_type):
+    def post(self, request):
         data = request.data
 
         # blog post specific data
@@ -64,6 +64,7 @@ class BlogPostView(APIView):
         title = data["title"]
         content = data["content"]
         thumbnail = data["thumbnail"]
+        post_type = data["post_type"]
 
         if thumbnail == "undefined":
             thumbnail = None

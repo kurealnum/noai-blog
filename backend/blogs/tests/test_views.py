@@ -69,11 +69,11 @@ class CommentListUserViewTestCase(CustomTestCase):
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
 
-    def test_view(self):
+    def test_get(self):
         # temp client to log in
-        temp_client = APIClient()
-        temp_client.login(username="bobby", password="TerriblePassword123")
-        request = temp_client.get(reverse_lazy("manage_comments"))
+        request = self.authenticated_client.get(
+            reverse_lazy("manage_comments", kwargs={"post_type": "blog-post"}),
+        )
         # expected result for both
         expected_result = "This is NOT a reply!"
         result = json.loads(request.content)
@@ -184,7 +184,7 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_status = 404
         self.assertEqual(expected_status, request.status_code)
 
-    def test_does_create_properly(self):
+    def test_does_post_with_post_type(self):
         img = BytesIO(
             b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
             b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
@@ -198,6 +198,7 @@ class BlogPostViewTestCase(CustomTestCase):
             "content": "Here's my awesome blog post ##",
             "likes": 0,
             "thumbnail": img,
+            "post_type": "blog-post",
         }
         request = temp_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
@@ -205,16 +206,15 @@ class BlogPostViewTestCase(CustomTestCase):
 
     def test_does_post_with_no_thumbnail(self):
         # temp client to log in
-        temp_client = APIClient()
-        temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
             "title": "My blog post",
             "content": "Here's my awesome blog post ##",
             "likes": 0,
             # this is how JS handles this, so we have to manually put "undefined"
             "thumbnail": "undefined",
+            "post_type": "list",
         }
-        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
 

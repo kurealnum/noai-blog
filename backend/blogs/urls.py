@@ -80,7 +80,7 @@ urlpatterns = [
     path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     # CommentListUserView
     path(
-        "manage-comments/",
+        "manage-comments/<post_type>/",
         CommentListUserView.as_view(),
         name="manage_comments",
     ),
@@ -110,7 +110,7 @@ urlpatterns = [
     ),
     # ModeratorModifyPostView
     path(
-        "toggle-flagged-post/<post_type>/<username>/<slug>/",
+        "toggle-flagged-post/<username>/<slug>/",
         ModeratorModifyPostView.as_view(),
         name="toggle_flagged_post",
     ),

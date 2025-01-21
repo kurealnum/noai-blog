@@ -10,7 +10,7 @@ def get_sentinel_user():
     return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
-class BlogPostManager(models.Manager):
+class PostTypeReducerMixin(models.Manager):
     def filter(self, *args, **kwargs):
         cur_post_type = kwargs.get("post_type")
         if (
@@ -53,7 +53,7 @@ class BlogPost(models.Model):
         force_format="JPEG",
     )
 
-    objects = BlogPostManager()
+    objects = PostTypeReducerMixin()
 
     # the url for the frontend, basically
     def get_sitemap_url(self):
@@ -89,23 +89,25 @@ class Follower(models.Model):
 
 
 class PostReaction(models.Model):
-    BLOG_POST = "BP"
-    LIST = "L"
+    BLOG_POST = "blogPost"
+    LIST = "list"
     POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
 
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
-    reaction_type = models.CharField(
+    post_type = models.CharField(
         choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
     )
+
+    objects = PostTypeReducerMixin()
 
     class Meta:  # type: ignore
         unique_together = "user", "post"
 
 
 class PostComment(models.Model):
-    BLOG_POST = "BP"
-    LIST = "L"
+    BLOG_POST = "blogPost"
+    LIST = "list"
     POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
 
     user = models.ForeignKey(to=CustomUser, on_delete=models.SET(get_sentinel_user))
@@ -120,9 +122,11 @@ class PostComment(models.Model):
         "self", on_delete=models.DO_NOTHING, null=True, blank=True, related_name="reply"
     )
     flagged = models.BooleanField(default=False)
-    comment_type = models.CharField(
+    post_type = models.CharField(
         choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
     )
+
+    objects = PostTypeReducerMixin()
 
     def delete(self, *args, **kwargs):  # type: ignore
         self.content = "This comment was deleted"
@@ -137,12 +141,14 @@ class PostComment(models.Model):
 
 
 class CommentReaction(models.Model):
-    BLOG_POST = "BP"
-    LIST = "L"
+    BLOG_POST = "blogPost"
+    LIST = "list"
     POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
 
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     comment = models.ForeignKey(to=PostComment, on_delete=models.SET_NULL, null=True)
-    reaction_type = models.CharField(
+    post_type = models.CharField(
         choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
     )
+
+    objects = PostTypeReducerMixin()
