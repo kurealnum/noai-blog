@@ -58,7 +58,7 @@ function CreatePost() {
 
   function handleSave(e) {
     e.preventDefault(e);
-    createPostMutation.mutate({ newBlogPost, thumbnail });
+    createPostMutation.mutate({ newBlogPost, thumbnail, postType });
   }
 
   function setContentHelper(content) {
