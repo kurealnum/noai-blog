@@ -1,5 +1,5 @@
 import FeedComponent from "../components/FeedComponent";
-import { getListFeed } from "../features/helpers";
+import { getFeed } from "../features/helpers";
 import { TYPE_LIST } from "../features/types";
 
 function ListFeed() {
@@ -9,7 +9,7 @@ function ListFeed() {
       advertiseRatio={advertiseRatio}
       showPaginator={true}
       defaultSearchValue={""}
-      queryFunction={getListFeed}
+      queryFunction={getFeed}
       includePage={true}
       typeSet={TYPE_LIST}
     />

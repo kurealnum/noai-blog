@@ -10,7 +10,28 @@ def get_sentinel_user():
     return get_user_model().objects.get_or_create(username="deleted")[0]
 
 
+class PostTypeReducerMixin(models.Manager):
+    def filter(self, *args, **kwargs):
+        cur_post_type = kwargs.get("post_type")
+        if (
+            cur_post_type == "blogs"
+            or cur_post_type == "blog-posts"
+            or cur_post_type == "blog"
+            or cur_post_type == "blog-post"
+        ):
+            kwargs["post_type"] = "blogPost"
+
+        if cur_post_type == "lists":
+            kwargs["post_type"] = "list"
+
+        return super().filter(*args, **kwargs)
+
+
 class BlogPost(models.Model):
+    BLOG_POST = "blogPost"
+    LIST = "list"
+    POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
+
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     title = models.CharField(max_length=101, unique=True)
     content = models.TextField(max_length=20000)
@@ -19,6 +40,9 @@ class BlogPost(models.Model):
     slug_field = models.SlugField(null=True, unique=True, max_length=200)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
+    post_type = models.CharField(
+        choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
+    )
     thumbnail = ResizedImageField(
         size=[520, 292],
         upload_to="blog_thumbnails/",
@@ -28,6 +52,8 @@ class BlogPost(models.Model):
         keep_meta=False,
         force_format="JPEG",
     )
+
+    objects = PostTypeReducerMixin()
 
     # the url for the frontend, basically
     def get_sitemap_url(self):
@@ -63,14 +89,27 @@ class Follower(models.Model):
 
 
 class PostReaction(models.Model):
+    BLOG_POST = "blogPost"
+    LIST = "list"
+    POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
+
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
+    post_type = models.CharField(
+        choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
+    )
+
+    objects = PostTypeReducerMixin()
 
     class Meta:  # type: ignore
         unique_together = "user", "post"
 
 
 class PostComment(models.Model):
+    BLOG_POST = "blogPost"
+    LIST = "list"
+    POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
+
     user = models.ForeignKey(to=CustomUser, on_delete=models.SET(get_sentinel_user))
     post = models.ForeignKey(
         to=BlogPost, on_delete=models.CASCADE, null=True, blank=True
@@ -83,6 +122,11 @@ class PostComment(models.Model):
         "self", on_delete=models.DO_NOTHING, null=True, blank=True, related_name="reply"
     )
     flagged = models.BooleanField(default=False)
+    post_type = models.CharField(
+        choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
+    )
+
+    objects = PostTypeReducerMixin()
 
     def delete(self, *args, **kwargs):  # type: ignore
         self.content = "This comment was deleted"
@@ -97,5 +141,14 @@ class PostComment(models.Model):
 
 
 class CommentReaction(models.Model):
+    BLOG_POST = "blogPost"
+    LIST = "list"
+    POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
+
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     comment = models.ForeignKey(to=PostComment, on_delete=models.SET_NULL, null=True)
+    post_type = models.CharField(
+        choices=POST_TYPE_CHOICES, default=BLOG_POST  # type: ignore
+    )
+
+    objects = PostTypeReducerMixin()

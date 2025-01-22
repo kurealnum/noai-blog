@@ -30,36 +30,67 @@ urlpatterns = [
         CommentReplyListView.as_view(),
         name="get_comment_replies",
     ),
-    path("get-post-replies/", PostReplyListView.as_view(), name="get_post_replies"),
-    path("feed/<index>/", (FeedListView.as_view()), name="feed"),
+    path(
+        "get-post-replies/",
+        PostReplyListView.as_view(),
+        name="get_post_replies",
+    ),
+    path("feed/<post_type>/<index>/", (FeedListView.as_view()), name="feed"),
     # CommentListView URLs
     path(
         "get-comments/<username>/<slug>/",
         BlogPostCommentView.as_view(),
         name="get_comments",
     ),
-    path("delete-comment/<id>/", BlogPostCommentView.as_view(), name="delete_comment"),
-    path("edit-comment/<id>/", BlogPostCommentView.as_view(), name="edit_comment"),
-    path("create-comment/", BlogPostCommentView.as_view(), name="create_comment"),
-    # BlogPostLISTView
-    path("get-posts/", BlogPostListView.as_view(), name="get_posts"),
-    path("get-posts/<username>/", BlogPostListView.as_view(), name="get_posts"),
+    path(
+        "delete-comment/<id>/",
+        BlogPostCommentView.as_view(),
+        name="delete_comment",
+    ),
+    path(
+        "edit-comment/<id>/",
+        BlogPostCommentView.as_view(),
+        name="edit_comment",
+    ),
+    path(
+        "create-comment/",
+        BlogPostCommentView.as_view(),
+        name="create_comment",
+    ),
+    # BlogPostListView
+    path("get-posts/<post_type>/", BlogPostListView.as_view(), name="get_posts"),
+    path(
+        "get-posts/<post_type>/<username>/",
+        BlogPostListView.as_view(),
+        name="get_posts",
+    ),
     # BlogPostView
-    path("get-post/<username>/<slug>/", BlogPostView.as_view(), name="get_post"),
-    path("delete-post/", BlogPostView.as_view(), name="get_post"),
+    path(
+        "get-post/<username>/<slug>/",
+        BlogPostView.as_view(),
+        name="get_post",
+    ),
+    path("delete-post/", BlogPostView.as_view(), name="delete_post"),
     path("create-post/", BlogPostView.as_view(), name="create_post"),
     path("edit-post/", BlogPostView.as_view(), name="edit_post"),
     # CommentListUserView
-    path("manage-comments/", CommentListUserView.as_view(), name="manage_comments"),
     path(
-        "manage-comments/<slug>/", CommentListUserView.as_view(), name="manage_comments"
+        "manage-comments/<post_type>/",
+        CommentListUserView.as_view(),
+        name="manage_comments",
     ),
     # FollowerView
     path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
     # FollowINGView
-    path("manage-following/", FollowingView.as_view(), name="manage_following"),
     path(
-        "manage-following/<username>/", FollowingView.as_view(), name="manage_following"
+        "manage-following/",
+        FollowingView.as_view(),
+        name="manage_following",
+    ),
+    path(
+        "manage-following/<username>/",
+        FollowingView.as_view(),
+        name="manage_following",
     ),
     # ReactionView
     path(
@@ -107,12 +138,6 @@ urlpatterns = [
         "get-flagged-users/",
         AdminGetAllFlaggedUsersView.as_view(),
         name="get_flagged_users",
-    ),
-    # AdminManageListicleView
-    path(
-        "toggle-listicle/<username>/<slug>/",
-        AdminManageListicleView.as_view(),
-        name="toggle_listicle",
     ),
     # AdminManagePostView
     path(

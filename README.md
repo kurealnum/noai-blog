@@ -40,9 +40,31 @@ When running the project in production, the admin panel is **not** located at /a
 
 `#language-field` (CSS) is a honeypot field for the register page.
 
-For the love of all that is holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
+For the love of all that is you consider holy, please, please, PLEASE, use `DOMPurify.sanitize()` on any blog post/markdown content that you render.
 
-When referencing the different kinds of articles on byeAI (listicles, tutorials, general articles, etc.), blog posts refer to, well, standard articles, "lists" refer to listicles, "tutorials" refers to tutorials, and "posts" refers to ALL posts.
+When referencing the different kinds of articles on byeAI (listicles, tutorials, general articles, etc.), blog posts refer to, well, standard articles, "lists" refer to listicles, "tutorials" refers to tutorials, "crossposts" refer to crossposts, and "posts" refers to ALL posts.
+
+### post_type
+
+Dealing with different post types (lists, crossposts, etc.) can be a little tricky is a little bit weird. For instance, you _don't_ need to indicate the post type when querying for a single post:
+
+```py
+reverse("get_post", kwargs={"username": "bobby", "slug": "my-title"})
+```
+
+However, you do need to indicate the post type when querying for a list of posts:
+
+```py
+reverse("get_posts", kwargs={"username": "bobby", "post_type": "blog-post"})
+```
+
+Here's a list of URLs (by "name" entry in `urls.py`) that require you to indicate the post type (this may be out of date):
+
+```txt
+feed
+get_posts
+manage_comments
+```
 
 ### Testing Markdown
 

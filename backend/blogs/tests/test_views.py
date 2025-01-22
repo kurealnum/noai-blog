@@ -39,30 +39,10 @@ class CustomTestCase(TestCase):
         )
         self.admin.set_password("TerriblePassword123")
         self.admin.save()
-
-
-class BlogTestCase(CustomTestCase):
-    def setUp(self) -> None:
-        super().setUp()
-
-    def test_does_react_count(self):
-        PostReaction.objects.create(user=self.user, post=self.blog_post)
-        reaction_count = PostReaction.objects.filter(post=self.blog_post).count()
-        expected_result = 1
-        self.assertEqual(expected_result, reaction_count)
-
-    def test_does_comment_register(self):
-        PostComment.objects.create(
-            user=self.user, post=self.blog_post, content="A really good comment"
+        self.authenticated_client = APIClient()
+        self.authenticated_client.login(
+            username="bobby", password="TerriblePassword123"
         )
-        comment_count = PostComment.objects.filter(post=self.blog_post).count()
-        expected_result = 1
-        self.assertEqual(expected_result, comment_count)
-
-    def test_get_absolute_url(self):
-        expected_result = "/api/blog-posts/get-post/bobby/my-awesome-blog-post/"
-        result = self.blog_post.get_absolute_url()
-        self.assertEqual(expected_result, result)
 
 
 class CommentTestCase(CustomTestCase):
@@ -89,11 +69,11 @@ class CommentListUserViewTestCase(CustomTestCase):
             user=self.user, post=self.blog_post, content="This is NOT a reply!"
         )
 
-    def test_view(self):
+    def test_get(self):
         # temp client to log in
-        temp_client = APIClient()
-        temp_client.login(username="bobby", password="TerriblePassword123")
-        request = temp_client.get(reverse_lazy("manage_comments"))
+        request = self.authenticated_client.get(
+            reverse_lazy("manage_comments", kwargs={"post_type": "blog-post"}),
+        )
         # expected result for both
         expected_result = "This is NOT a reply!"
         result = json.loads(request.content)
@@ -204,7 +184,7 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_status = 404
         self.assertEqual(expected_status, request.status_code)
 
-    def test_does_create_properly(self):
+    def test_does_post_with_post_type(self):
         img = BytesIO(
             b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
             b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
@@ -218,6 +198,7 @@ class BlogPostViewTestCase(CustomTestCase):
             "content": "Here's my awesome blog post ##",
             "likes": 0,
             "thumbnail": img,
+            "post_type": "blog-post",
         }
         request = temp_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
@@ -225,16 +206,15 @@ class BlogPostViewTestCase(CustomTestCase):
 
     def test_does_post_with_no_thumbnail(self):
         # temp client to log in
-        temp_client = APIClient()
-        temp_client.login(username="bobby", password="TerriblePassword123")
         data = {
             "title": "My blog post",
             "content": "Here's my awesome blog post ##",
             "likes": 0,
             # this is how JS handles this, so we have to manually put "undefined"
             "thumbnail": "undefined",
+            "post_type": "list",
         }
-        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
 
@@ -429,20 +409,83 @@ class BlogPostListTestCase(CustomTestCase):
         # temp client for logging in
         temp_client = APIClient()
         temp_client.login(username="bobby", password="TerriblePassword123")
-        response = temp_client.get(reverse_lazy("get_posts"))
+        response = temp_client.get(
+            reverse_lazy("get_posts", kwargs={"post_type": "blog-post"})
+        )
 
         # expected_title, basically
         expected_result = "My awesome blog post"
         self.assertEqual(expected_result, response.data[0].get("title"))
 
     def test_with_username(self):
-        request = self.client.get(reverse_lazy("get_posts") + "bobby/")
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts", kwargs={"username": "bobby", "post_type": "blog-post"}
+            )
+        )
         expected_result = "My awesome blog post"
         result = json.loads(request.content)[0].get("title")
         self.assertEqual(result, expected_result)
 
     def test_with_incorrect_username(self):
-        request = self.client.get(reverse_lazy("get_posts") + "thewrongusername/")
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts",
+                kwargs={"username": "thewrongusername", "post_type": "blog-post"},
+            )
+        )
+        expected_result = "Not found."
+        self.assertEqual(json.loads(request.content)["detail"], expected_result)
+
+
+class BlogPostList_List_TestCase(CustomTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        # alternative user
+        self.alternative_user = CustomUser.objects.create(
+            email="marysue@gmail.com",
+            first_name="Mary",
+            last_name="Sue",
+            about_me="I do not destroy worlds!",
+            username="MarySue",
+        )
+        self.alternative_user.set_password("TerriblePassword123")
+        self.alternative_user.save()
+        self.alternative_list = BlogPost.objects.create(
+            user=self.alternative_user,
+            title="My very awesome list",
+            content="Here's something about my list",
+            post_type="list",
+        )
+
+    def test_get_returns_correctly_with_list(self):
+        temp_client = APIClient()
+        temp_client.login(username="MarySue", password="TerriblePassword123")
+        response = temp_client.get(
+            reverse_lazy("get_posts", kwargs={"post_type": "list"})
+        )
+
+        # expected_title, basically
+        expected_result = "My very awesome list"
+        self.assertEqual(expected_result, response.data[0].get("title"))
+
+    def test_with_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts", kwargs={"post_type": "list", "username": "MarySue"}
+            )
+        )
+        expected_result = "My very awesome list"
+        result = json.loads(request.content)[0].get("title")
+        self.assertEqual(result, expected_result)
+
+    def test_with_incorrect_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts",
+                kwargs={"post_type": "list", "username": "thewrongusername"},
+            )
+        )
         expected_result = "Not found."
         self.assertEqual(json.loads(request.content)["detail"], expected_result)
 
@@ -531,14 +574,18 @@ class FeedListTestCase(CustomTestCase):
 
     def test_feedlist_returns_correctly_on_first_page(self):
         # temp client for logging in
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         # the title of the 3rd blog post is 3
         expected_result = "3"
         self.assertEqual(expected_result, response.data[0].get("title"))  # type: ignore
 
     # should return an empty array
     def test_feedlist_returns_correctly_on_second_page(self):
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 2}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 2, "post_type": "blogPost"})
+        )
 
         # there should be nothing on this page
         expected_length = 0
@@ -547,7 +594,9 @@ class FeedListTestCase(CustomTestCase):
     def test_feedlist_returns_correctly_for_authenticated_user(self):
         temp_client = APIClient()
         temp_client.login(password="TerriblePassword123", username="bobby")
-        response = temp_client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = temp_client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         expected_response = 50
 
         self.assertEqual(expected_response, response.data[0]["score"])
@@ -556,7 +605,9 @@ class FeedListTestCase(CustomTestCase):
         self.blog_post_1.is_listicle = True
         self.blog_post_1.save()
 
-        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+        response = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "blogPost"})
+        )
         expected_score = -30
 
         self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore

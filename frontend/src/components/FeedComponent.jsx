@@ -3,10 +3,10 @@ import SearchBar from "../components/SearchBar";
 import BlogPostThumbnail from "../components/BlogPostThumbnail";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { CircularProgress } from "@mui/material";
 import { getPostType } from "../features/helpers";
 import { useDispatch } from "react-redux";
 import { checkPostType } from "../features/authStore/authSlice";
+import LoadingIcon from "../components/LoadingIcon.jsx";
 
 // this is the feed *component*. not the feed logic itself
 function FeedComponent({
@@ -41,17 +41,7 @@ function FeedComponent({
   if (isLoading) {
     return (
       <div id="feed">
-        <CircularProgress
-          sx={{
-            position: "absolute",
-            left: "0",
-            right: "0",
-            top: "0",
-            bottom: "0",
-            margin: "auto",
-          }}
-        />
-        ;
+        <LoadingIcon />
       </div>
     );
   }
