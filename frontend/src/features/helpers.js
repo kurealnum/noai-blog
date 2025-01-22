@@ -713,9 +713,9 @@ async function toggleFlagComment(id) {
 
   let url;
   if (type === "list") {
-    url = reverseUrl("FLAG_LIST", [id]);
+    url = reverseUrl("FLAG_LIST_COMMENT", [id]);
   } else if (type === "blogPost") {
-    url = reverseUrl("FLAG_BLOG_POST", [id]);
+    url = reverseUrl("FLAG_BLOG_POST_COMMENT", [id]);
   }
 
   const response = await fetch(url, config);
@@ -869,9 +869,9 @@ async function search(type, query, page) {
   // if there's no query given, we don't want to include it in the url
   let url = "";
   if (query != null) {
-    url = "/api/search/" + type + "/" + query + "/" + page + "/";
+    url = reverseUrl("GET_SEARCH", [type, query, page]);
   } else {
-    url = "/api/search/" + type + "/" + page + "/";
+    url = reverseUrl("GET_SEARCH", [type, page]);
   }
   const response = await fetch(url, config);
   return await response.json();

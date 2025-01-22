@@ -139,12 +139,6 @@ urlpatterns = [
         AdminGetAllFlaggedUsersView.as_view(),
         name="get_flagged_users",
     ),
-    # AdminManageListicleView
-    path(
-        "toggle-listicle/<username>/<slug>/",
-        AdminManageListicleView.as_view(),
-        name="toggle_listicle",
-    ),
     # AdminManagePostView
     path(
         "admin/manage-post/<username>/<slug>/",

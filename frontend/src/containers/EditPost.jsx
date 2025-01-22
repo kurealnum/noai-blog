@@ -14,6 +14,7 @@ import reverseUrl from "../features/reverseUrl";
 import { useDispatch } from "react-redux";
 import { checkPostType } from "../features/authStore/authSlice";
 import { TYPE_BLOG_POST, TYPE_LIST } from "../features/types";
+import "../styles/CreatePost.css";
 
 const marked = new Marked(
   markedHighlight({

@@ -3,6 +3,8 @@ function reverseUrl(name, args) {
   const baseUrl = "/api/";
 
   switch (name) {
+    case "GET_SEARCH":
+      return add_args(baseUrl + "search/", args);
     case "USER_INFO":
       return add_args(baseUrl + "accounts/user-info/", args);
     case "GET_LIST_FEED":
