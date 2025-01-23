@@ -5,7 +5,6 @@ from blogs.views import (
     AdminGetAllFlaggedPostsView,
     AdminGetAllFlaggedUsersView,
     AdminManageCommentView,
-    AdminManageListicleView,
     AdminManagePostView,
     AdminManagerUserView,
     BlogPostListView,
