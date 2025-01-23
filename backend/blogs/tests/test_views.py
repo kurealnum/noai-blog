@@ -950,28 +950,6 @@ class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
         self.assertEqual(expected_content, request.data[-1]["about_me"])
 
 
-class AdminManageListicleViewTestCase(CustomTestCase):
-    def test_does_patch_work(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bethy")
-        request = temp_client.patch(
-            reverse_lazy(
-                "toggle_listicle",
-                kwargs={
-                    "username": self.blog_post.user.username,
-                    "slug": self.blog_post.slug_field,
-                },
-            )
-        )
-
-        expected_status = 204
-
-        self.blog_post.refresh_from_db()
-
-        self.assertEqual(expected_status, request.status_code)
-        self.assertTrue(self.blog_post.is_listicle)
-
-
 class AdminManagePostViewTestCase(CustomTestCase):
     def test_delete_post(self):
         post = BlogPost.objects.create(

@@ -27,13 +27,22 @@ def post_type_reducer(post_type):
     elif post_type == "lists":
         reduced_post_type = "list"
 
+    elif (
+        post_type == "crossposts"
+        or post_type == "cross-post"
+        or post_type == "cross-posts"
+    ):
+        reduced_post_type = "crosspost"
+
     return reduced_post_type if reduced_post_type != "" else post_type
 
 
 class PostTypeReducerMixin(models.Manager):
     def filter(self, *args, **kwargs):
+
         post_type = kwargs.get("post_type")
-        kwargs["post_type"] = post_type_reducer(post_type)
+        if post_type:
+            kwargs["post_type"] = post_type_reducer(post_type)
 
         return super().filter(*args, **kwargs)
 
@@ -42,9 +51,10 @@ class BlogPostManager(models.Manager):
     def filter(self, *args, **kwargs):
 
         post_type = kwargs.get("post_type")
-        kwargs["post_type"] = post_type_reducer(post_type)
+        if post_type:
+            kwargs["post_type"] = post_type_reducer(post_type)
 
-        if kwargs["post_type"] == "crosspost":
+        if post_type == "crosspost":
             return super().filter(*args, **kwargs).select_related("crosspost")
 
         return super().filter(*args, **kwargs)
@@ -53,7 +63,12 @@ class BlogPostManager(models.Manager):
 class PostTypesMixin:
     BLOG_POST = "blogPost"
     LIST = "list"
-    POST_TYPE_CHOICES = {BLOG_POST: "Blog Post", LIST: "Listicle"}
+    CROSSPOST = "crosspost"
+    POST_TYPE_CHOICES = {
+        BLOG_POST: "Blog Post",
+        LIST: "Listicle",
+        CROSSPOST: "Crosspost",
+    }
 
 
 class BlogPost(models.Model, PostTypesMixin):
@@ -78,7 +93,7 @@ class BlogPost(models.Model, PostTypesMixin):
         force_format="JPEG",
     )
 
-    objects = PostTypeReducerMixin()
+    objects = BlogPostManager()
 
     # the url for the frontend, basically
     def get_sitemap_url(self):

@@ -509,7 +509,7 @@ class NotificationViewTestCase(CustomTestCase):
             user=self.user, post=self.post, content="Hello world", is_read=True
         )
 
-        # these should be included in the get request
+        # these should be included in the get response
         PostComment.objects.create(
             user=self.altuser,
             post=self.post,
