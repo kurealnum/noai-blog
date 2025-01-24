@@ -1,5 +1,6 @@
 from django.db.models import F, Case, Count, ExpressionWrapper, FloatField, When
 from django.http.response import Http404
+from django.template.defaultfilters import slugify
 from rest_framework import generics, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -16,6 +17,7 @@ from blogs.serializers import (
     CommentSerializer,
     CreateOrUpdateBlogPostSerializer,
     CreateOrUpdateCommentSerializer,
+    CrosspostSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
     ReactionSerializer,
@@ -76,12 +78,35 @@ class BlogPostView(APIView):
             "post_type": post_type,
         }
 
-        serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        blog_post_serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
+        if blog_post_serializer.is_valid():
+            blog_post_serializer.save()
+            res = blog_post_serializer.data
 
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            url = data.get("url")
+            if url:
+                blog_post = BlogPost.objects.get(slug_field=slugify(title), user=user)
+                crosspost_serializer_data = {
+                    "blog_post": blog_post.pk,  # type: ignore
+                    "url": url,
+                }
+                crosspost_serializer = CrosspostSerializer(
+                    data=crosspost_serializer_data
+                )
+
+                if crosspost_serializer.is_valid():
+                    return Response(data=res, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(
+                        data=crosspost_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+            return Response(data=res, status=status.HTTP_201_CREATED)
+
+        return Response(
+            data=blog_post_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     def put(self, request):
         data = request.data

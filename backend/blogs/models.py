@@ -118,7 +118,7 @@ class BlogPost(models.Model, PostTypesMixin):
 
 
 class Crosspost(models.Model):
-    blog_post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    blog_post = models.OneToOneField(BlogPost, on_delete=models.CASCADE)
     url = models.URLField(max_length=100)
 
 

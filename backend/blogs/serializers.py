@@ -78,6 +78,7 @@ class BlogPostSerializer(serializers.Serializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     post = BlogPostSerializer(required=False)
+    crosspost = CrosspostSerializer(required=False)
 
     class Meta:  # type:ignore
         model = PostComment

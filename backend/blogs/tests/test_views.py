@@ -7,7 +7,14 @@ from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ..models import BlogPost, CommentReaction, Follower, PostReaction, PostComment
+from ..models import (
+    BlogPost,
+    CommentReaction,
+    Crosspost,
+    Follower,
+    PostReaction,
+    PostComment,
+)
 
 
 class CustomTestCase(TestCase):
@@ -77,6 +84,40 @@ class CommentListUserViewTestCase(CustomTestCase):
         # expected result for both
         expected_result = "This is NOT a reply!"
         result = json.loads(request.content)
+        self.assertEqual(expected_result, result[0].get("content"))
+        self.assertEqual(expected_result, result[1].get("content"))
+
+
+class CommentListUserView_CrosspostTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user,
+            title="My very awesome list",
+            content="Here's something about my list",
+            post_type="crosspost",
+        )
+        PostComment.objects.create(
+            user=self.user,
+            post=self.crosspost_1,
+            content="This is NOT a reply!",
+            post_type="crosspost",
+        )
+        PostComment.objects.create(
+            user=self.user,
+            post=self.crosspost_1,
+            content="This is NOT a reply!",
+            post_type="crosspost",
+        )
+
+    def test_get(self):
+        # temp client to log in
+        request = self.authenticated_client.get(
+            reverse_lazy("manage_comments", kwargs={"post_type": "crosspost"}),
+        )
+        # expected result for both
+        expected_result = "This is NOT a reply!"
+        result = request.data
         self.assertEqual(expected_result, result[0].get("content"))
         self.assertEqual(expected_result, result[1].get("content"))
 
@@ -388,7 +429,45 @@ class BlogPostViewTestCase(CustomTestCase):
         self.assertEqual(expected_result, request.data["title"])
 
 
-class BlogPostListTestCase(CustomTestCase):
+class BlogPostView_CrosspostTestCase(CustomTestCase):
+    def test_does_post_with_post_type(self):
+        img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        img.name = "myimage.gif"
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            "thumbnail": img,
+            "post_type": "crosspost",
+            "url": "https://google.com",
+        }
+        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_post_with_no_thumbnail(self):
+        # temp client to log in
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
+            "post_type": "crosspost",
+            "url": "https://google.com",
+        }
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
+
+
+class BlogPostListViewTC(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
         # alternative user
@@ -490,6 +569,65 @@ class BlogPostList_List_TestCase(CustomTestCase):
         self.assertEqual(json.loads(request.content)["detail"], expected_result)
 
 
+class BlogPostList_CrosspostViewTC(CustomTestCase):
+    def setUp(self) -> None:
+        super().setUp()
+        # alternative user
+        self.alternative_user = CustomUser.objects.create(
+            email="marysue@gmail.com",
+            first_name="Mary",
+            last_name="Sue",
+            about_me="I do not destroy worlds!",
+            username="MarySue",
+        )
+        self.alternative_user.set_password("TerriblePassword123")
+        self.alternative_user.save()
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.alternative_user,
+            title="My very awesome list",
+            content="Here's something about my list",
+            post_type="crosspost",
+        )
+        self.crosspost_1_data = Crosspost.objects.create(
+            blog_post=self.crosspost_1, url="https://google.com"
+        )
+
+    def test_get_returns_correctly_with_list(self):
+        temp_client = APIClient()
+        temp_client.login(username="MarySue", password="TerriblePassword123")
+        request = temp_client.get(
+            reverse_lazy("get_posts", kwargs={"post_type": "crossposts"})
+        )
+
+        # expected_title, basically
+        expected_result = "My very awesome list"
+        expected_url = "https://google.com"
+        self.assertEqual(expected_url, request.data[0]["crosspost"].get("url"))
+        self.assertEqual(expected_result, request.data[0].get("title"))
+
+    def test_with_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts", kwargs={"post_type": "cross-post", "username": "MarySue"}
+            )
+        )
+        expected_result = "My very awesome list"
+        expected_url = "https://google.com"
+        data = request.data  # type: ignore
+        self.assertEqual(expected_url, data[0]["crosspost"].get("url"))
+        self.assertEqual(expected_result, data[0].get("title"))
+
+    def test_with_incorrect_username(self):
+        request = self.client.get(
+            reverse_lazy(
+                "get_posts",
+                kwargs={"post_type": "crosspost", "username": "thewrongusername"},
+            )
+        )
+        expected_result = "Not found."
+        self.assertEqual(json.loads(request.content)["detail"], expected_result)
+
+
 class CommentReplyListTestCase(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
@@ -539,6 +677,8 @@ class PostReplyListTestCase(CustomTestCase):
 class FeedListTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
+
+        # alt user
         self.altuser = CustomUser.objects.create(
             email="jon@gmail.com",
             first_name="Jon",
@@ -548,6 +688,8 @@ class FeedListTestCase(CustomTestCase):
         )
         self.altuser.set_password("TerriblePassword123")
         self.altuser.save()
+
+        # creating blog posts to "query" for
         self.blog_post_1 = BlogPost.objects.create(
             user=self.user,
             title="1",
@@ -611,6 +753,74 @@ class FeedListTestCase(CustomTestCase):
         expected_score = -30
 
         self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore
+
+
+class FeedList_CrosspostTC(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        # alt user
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
+
+        # creating blog posts to "query" for
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user,
+            title="1",
+            content="Here's something about my blog post",
+            post_type="crosspost",
+        )
+
+        self.crosspost_1_data = Crosspost.objects.create(
+            blog_post=self.crosspost_1, url="https://google.com"
+        )
+
+        # this post should be worth 50 "score" because of the follower object
+        self.crosspost_2 = BlogPost.objects.create(
+            user=self.altuser,
+            title="2",
+            content="Here's something else about another blog post",
+            post_type="crosspost",
+        )
+
+        self.crosspost_2_data = Crosspost.objects.create(
+            blog_post=self.crosspost_2, url="https://example.com"
+        )
+
+        self.crosspost_3 = BlogPost.objects.create(
+            user=self.user,
+            title="3",
+            content="Yet another blog post to crosspost",
+            post_type="crosspost",
+        )
+
+        self.crosspost_3_data = Crosspost.objects.create(
+            blog_post=self.crosspost_3, url="https://stackoverflow.com"
+        )
+
+        # adding a comment to test that the 3rd blog post is listed first
+        PostComment.objects.create(
+            user=self.user, content="a comment", post=self.crosspost_3
+        )
+
+        Follower.objects.create(user=self.altuser, follower=self.user)
+
+    def test_get_returns_correctly_with_crosspost(self):
+        request = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "crosspost"})
+        )
+
+        # the title of the 3rd blog post is 3
+        expected_result = "3"
+        expected_link = "https://stackoverflow.com"
+        self.assertEqual(expected_result, request.data[0].get("title"))  # type: ignore
+        self.assertEqual(expected_link, request.data[0]["crosspost"].get("url"))  # type: ignore
 
 
 class FollowerViewTestCase(CustomTestCase):
