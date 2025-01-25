@@ -283,7 +283,7 @@ class PostReplyListView(generics.ListAPIView):
 
 
 class FeedListView(APIView):
-    def get(self, request, post_type, index):
+    def get(self, request, index, post_type=None):
         index = int(index)
         posts_per_page = 50
 
@@ -294,9 +294,14 @@ class FeedListView(APIView):
         reaction_score = 3
 
         # initial query
+        if not post_type:
+            filter_query = BlogPost.objects.all()
+        else:
+            filter_query = BlogPost.objects.filter(post_type=post_type)
+
+        # score and rank posts
         all_posts = (
-            BlogPost.objects.filter(post_type=post_type)
-            .annotate(
+            filter_query.annotate(
                 reactions=Count("postreaction"),
                 comments=Count("postcomment"),
                 score=ExpressionWrapper(

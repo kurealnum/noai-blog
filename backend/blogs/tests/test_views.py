@@ -706,6 +706,13 @@ class FeedListTestCase(CustomTestCase):
             title="3",
             content="Here's something about my blog post",
         )
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user, title="c1", content="c1"
+        )
+        self.crosspost_1_data = Crosspost.objects.create(
+            blog_post=self.crosspost_1, url="https://google.com"
+        )
+        self.list_1 = BlogPost.objects.create(user=self.user, title="l1", content="l1")
 
         # adding a comment to test that the 3rd blog post is listed first
         PostComment.objects.create(
@@ -753,6 +760,12 @@ class FeedListTestCase(CustomTestCase):
         expected_score = -30
 
         self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore
+
+    def test_get_returns_all_posts_with_no_type(self):
+        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+
+        length = 6
+        self.assertEqual(len(response.data), length)  # type: ignore
 
 
 class FeedList_CrosspostTC(CustomTestCase):
