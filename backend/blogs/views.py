@@ -1,4 +1,4 @@
-from django.db.models import F, Case, Count, ExpressionWrapper, FloatField, When
+from django.db.models import F, Q, Case, Count, ExpressionWrapper, FloatField, When
 from django.http.response import Http404
 from django.template.defaultfilters import slugify
 from rest_framework import generics, status
@@ -297,7 +297,12 @@ class FeedListView(APIView):
         if not post_type:
             filter_query = BlogPost.objects.all()
         else:
-            filter_query = BlogPost.objects.filter(post_type=post_type)
+            # we also want to get crossposts of type post_type
+            filter_query = BlogPost.objects.filter(
+                Q(post_type=post_type) | Q(post_type="crosspost"),
+                Q(crosspost__crosspost_type=None)
+                | Q(crosspost__crosspost_type=post_type),
+            ).select_related("crosspost")
 
         # score and rank posts
         all_posts = (

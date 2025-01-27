@@ -117,9 +117,10 @@ class BlogPost(models.Model, PostTypesMixin):
         self.save()
 
 
-class Crosspost(models.Model):
+class Crosspost(models.Model, PostTypesMixin):
     blog_post = models.OneToOneField(BlogPost, on_delete=models.CASCADE)
     url = models.URLField(max_length=100)
+    crosspost_type = models.CharField(choices=PostTypesMixin.POST_TYPE_CHOICES, default=PostTypesMixin.BLOG_POST)  # type: ignore
 
 
 class Follower(models.Model):

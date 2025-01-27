@@ -707,10 +707,24 @@ class FeedListTestCase(CustomTestCase):
             content="Here's something about my blog post",
         )
         self.crosspost_1 = BlogPost.objects.create(
-            user=self.user, title="c1", content="c1"
+            user=self.user, title="c1", content="c1", post_type="crosspost"
         )
         self.crosspost_1_data = Crosspost.objects.create(
             blog_post=self.crosspost_1, url="https://google.com"
+        )
+        self.crosspost_2 = BlogPost.objects.create(
+            user=self.user, title="c2", content="c2", post_type="crosspost"
+        )
+        self.crosspost_2_data = Crosspost.objects.create(
+            blog_post=self.crosspost_2, url="https://google.com", crosspost_type="list"
+        )
+        self.crosspost_3 = BlogPost.objects.create(
+            user=self.user, title="c3", content="c3", post_type="crosspost"
+        )
+        self.crosspost_3_data = Crosspost.objects.create(
+            blog_post=self.crosspost_3,
+            url="https://stackoverflow.com",
+            crosspost_type="crosspost",
         )
         self.list_1 = BlogPost.objects.create(user=self.user, title="l1", content="l1")
 
@@ -764,8 +778,19 @@ class FeedListTestCase(CustomTestCase):
     def test_get_returns_all_posts_with_no_type(self):
         response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
 
-        length = 6
+        length = 8
         self.assertEqual(len(response.data), length)  # type: ignore
+
+    def test_get_returns_correctly_with_crosspost(self):
+        request = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "crosspost"})
+        )
+
+        # the title of the 3rd blog post is 3
+        expected_result = "c3"
+        expected_link = "https://stackoverflow.com"
+        self.assertEqual(expected_result, request.data[0].get("title"))  # type: ignore
+        self.assertEqual(expected_link, request.data[0]["crosspost"].get("url"))  # type: ignore
 
 
 class FeedList_CrosspostTC(CustomTestCase):
@@ -781,59 +806,6 @@ class FeedList_CrosspostTC(CustomTestCase):
         )
         self.altuser.set_password("TerriblePassword123")
         self.altuser.save()
-
-        # creating blog posts to "query" for
-        self.crosspost_1 = BlogPost.objects.create(
-            user=self.user,
-            title="1",
-            content="Here's something about my blog post",
-            post_type="crosspost",
-        )
-
-        self.crosspost_1_data = Crosspost.objects.create(
-            blog_post=self.crosspost_1, url="https://google.com"
-        )
-
-        # this post should be worth 50 "score" because of the follower object
-        self.crosspost_2 = BlogPost.objects.create(
-            user=self.altuser,
-            title="2",
-            content="Here's something else about another blog post",
-            post_type="crosspost",
-        )
-
-        self.crosspost_2_data = Crosspost.objects.create(
-            blog_post=self.crosspost_2, url="https://example.com"
-        )
-
-        self.crosspost_3 = BlogPost.objects.create(
-            user=self.user,
-            title="3",
-            content="Yet another blog post to crosspost",
-            post_type="crosspost",
-        )
-
-        self.crosspost_3_data = Crosspost.objects.create(
-            blog_post=self.crosspost_3, url="https://stackoverflow.com"
-        )
-
-        # adding a comment to test that the 3rd blog post is listed first
-        PostComment.objects.create(
-            user=self.user, content="a comment", post=self.crosspost_3
-        )
-
-        Follower.objects.create(user=self.altuser, follower=self.user)
-
-    def test_get_returns_correctly_with_crosspost(self):
-        request = self.client.get(
-            reverse_lazy("feed", kwargs={"index": 1, "post_type": "crosspost"})
-        )
-
-        # the title of the 3rd blog post is 3
-        expected_result = "3"
-        expected_link = "https://stackoverflow.com"
-        self.assertEqual(expected_result, request.data[0].get("title"))  # type: ignore
-        self.assertEqual(expected_link, request.data[0]["crosspost"].get("url"))  # type: ignore
 
 
 class FollowerViewTestCase(CustomTestCase):
