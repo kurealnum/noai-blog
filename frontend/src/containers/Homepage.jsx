@@ -151,7 +151,9 @@ function Homepage() {
               ) : (
                 links.map((content, index) => (
                   <li key={index}>
-                    <a href={content["link"]}>{content["name"]}</a>
+                    <a href={DOMPurify.sanitize(content["link"])}>
+                      {DOMPurify.sanitize(content["name"])}
+                    </a>
                   </li>
                 ))
               )}
