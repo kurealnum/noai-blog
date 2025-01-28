@@ -36,7 +36,7 @@ function CreatePost() {
   const [thumbnail, setThumbnail] = useState({});
   const userData = useRouteLoaderData("root");
   const createPostMutation = useMutation({ mutationFn: createPost });
-  const [postType, setPostType] = useState("post");
+  const [postType, setPostType] = useState("");
   const dispatch = useDispatch();
 
   // autosave feature
@@ -82,7 +82,7 @@ function CreatePost() {
       dispatch(checkPostType(TYPE_BLOG_POST));
     }
 
-    setPostType(e.target.value);
+    setPostType(newPostType);
   }
 
   if (createPostMutation.isPending) {
@@ -127,11 +127,26 @@ function CreatePost() {
             id="post-type"
             value={postType}
             onChange={handleChange_PostTypeDropdown}
+            defaultValue=""
             defaultOpen
           >
-            <MenuItem value="blogPost">Blog Post</MenuItem>
-            <MenuItem value="list">List</MenuItem>
+            <MenuItem value="blogPost" defaultValue={""}>
+              Blog Post
+            </MenuItem>
+            <MenuItem value="list" defaultValue={""}>
+              List
+            </MenuItem>
           </Select>
+          <label htmlFor="url" hidden>
+            URL for crosspost
+          </label>
+          <input
+            id="url"
+            name="url"
+            className="generic-input"
+            onChange={(e) => setFormHelper(e)}
+            defaultValue={"Crosspost with a URL instead!"}
+          ></input>
           <label htmlFor="title" hidden>
             Title
           </label>

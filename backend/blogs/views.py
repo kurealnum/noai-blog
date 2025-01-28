@@ -84,17 +84,21 @@ class BlogPostView(APIView):
             res = blog_post_serializer.data
 
             url = data.get("url")
-            if url:
+
+            # this is not the security measure to end all security measures, but it's just a nice little safety feature
+            if url is not None and url[:8] == "https://":
                 blog_post = BlogPost.objects.get(slug_field=slugify(title), user=user)
                 crosspost_serializer_data = {
                     "blog_post": blog_post.pk,  # type: ignore
                     "url": url,
+                    "post_type": post_type,
                 }
                 crosspost_serializer = CrosspostSerializer(
                     data=crosspost_serializer_data
                 )
 
                 if crosspost_serializer.is_valid():
+                    crosspost_serializer.save()
                     return Response(data=res, status=status.HTTP_201_CREATED)
                 else:
                     return Response(

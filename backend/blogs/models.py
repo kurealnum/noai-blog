@@ -21,6 +21,7 @@ def post_type_reducer(post_type):
         or post_type == "blog-posts"
         or post_type == "blog"
         or post_type == "blog-post"
+        or post_type == "posts"
     ):
         reduced_post_type = "blogPost"
 
