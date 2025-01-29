@@ -10,6 +10,7 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
+from base.base_helpers import filter_blog_post_by_post_type
 from blogs.models import BlogPost, PostComment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
@@ -302,11 +303,7 @@ class FeedListView(APIView):
             filter_query = BlogPost.objects.all()
         else:
             # we also want to get crossposts of type post_type
-            filter_query = BlogPost.objects.filter(
-                Q(post_type=post_type) | Q(post_type="crosspost"),
-                Q(crosspost__crosspost_type=None)
-                | Q(crosspost__crosspost_type=post_type),
-            ).select_related("crosspost")
+            filter_query = filter_blog_post_by_post_type(post_type)
 
         # score and rank posts
         all_posts = (

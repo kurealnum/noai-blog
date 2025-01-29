@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from rest_framework.test import APIClient
 
 from accounts.models import CustomUser
-from blogs.models import BlogPost
+from blogs.models import BlogPost, Crosspost
 
 
 class cTestCase(TestCase):
@@ -28,13 +28,22 @@ class BlogPostSearchTC(cTestCase):
             title="My awesome blog post",
             content="Here's something about my blog post",
         )
-        self.blog_post.save()
         self.blog_post_two = BlogPost.objects.create(
             user=self.user,
             title="No keyword here",
             content="Here's something about my blog post",
         )
-        self.blog_post_two.save()
+        self.list_1 = BlogPost.objects.create(
+            user=self.user, title="l1", content="l1", post_type="list"
+        )
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user, title="c1", content="c1", post_type="crosspost"
+        )
+        self.crosspost_1_data = Crosspost.objects.create(
+            blog_post=self.crosspost_1,
+            url="https://google.com",
+            crosspost_type="blogPost",
+        )
 
     def test_does_get_with_correct_query(self):
         request = self.client.get(
