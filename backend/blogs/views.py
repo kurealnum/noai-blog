@@ -202,8 +202,8 @@ class BlogPostListView(APIView):
     def get(self, request, post_type, username=None):
         if username:
             try:
-                res = BlogPost.objects.filter(
-                    user__username=username, post_type=post_type
+                res = filter_blog_post_by_post_type(
+                    post_type=post_type, user__username=username
                 )
                 if len(res) == 0:
                     raise BlogPost.DoesNotExist
@@ -213,8 +213,8 @@ class BlogPostListView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user.id  # type:ignore
-            res = BlogPost.objects.filter(
-                user=user, post_type=post_type
+            res = filter_blog_post_by_post_type(
+                post_type=post_type, user=user
             ).select_related("user")
             serializer = BlogPostSerializer(res, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)

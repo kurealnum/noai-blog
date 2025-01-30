@@ -74,6 +74,10 @@ h2 {
   max-width: 800px;
 }
 
+.links p {
+  margin: 0 auto;
+}
+
 .links li {
   border-left: 2px var(--accent) solid;
   padding-left: 5px;
