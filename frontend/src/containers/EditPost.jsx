@@ -106,7 +106,7 @@ function EditPost() {
     if (crosspostURL != null) {
       return crosspostURL;
     } else {
-      return "Crosspost with a URL instead!";
+      return "";
     }
   }
 
@@ -175,16 +175,20 @@ function EditPost() {
             accept="image/png, image/jpeg"
             onChange={(e) => setThumbnailHelper(e, true)}
           />
-          <label htmlFor="url" hidden>
-            URL for crosspost
-          </label>
-          <input
-            id="url"
-            name="url"
-            className="generic-input"
-            onChange={(e) => setFormHelper(e)}
-            defaultValue={getCrosspostURL()}
-          ></input>
+          {getCrosspostURL() != "" ? (
+            <>
+              <label htmlFor="url" hidden>
+                URL for crosspost
+              </label>
+              <input
+                id="url"
+                name="url"
+                className="generic-input"
+                onChange={(e) => setFormHelper(e)}
+                defaultValue={getCrosspostURL()}
+              ></input>
+            </>
+          ) : null}
           <label htmlFor="title" hidden>
             Title
           </label>

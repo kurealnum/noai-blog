@@ -11,7 +11,7 @@ from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
 from base.base_helpers import filter_blog_post_by_post_type
-from blogs.models import BlogPost, PostComment, Follower, PostReaction
+from blogs.models import BlogPost, Crosspost, PostComment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
     CommentAndUserSerializer,
@@ -116,14 +116,16 @@ class BlogPostView(APIView):
     def put(self, request):
         data = request.data
 
-        # post specific data
+        # Data
         user = self.request.user.id  # type: ignore
         title = data["title"]
         title_slug = data["title_slug"]
         content = data["content"]
         thumbnail = data["thumbnail"]
         original_slug = data["original_slug"]
+        url = data.get("url")  # url is not gauranteed to exist
 
+        # Title logic
         try:
             is_original_post = BlogPost.objects.get(
                 user=self.request.user, slug_field=title_slug
@@ -131,13 +133,14 @@ class BlogPostView(APIView):
         except BlogPost.DoesNotExist:
             is_original_post = None
 
-        # weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
+        # Weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
         if title_slug != original_slug and is_original_post:
             return Response(
                 data={"error": "A post with this title already exists!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Thumbnail logic
         if thumbnail == "undefined" and is_original_post:
             thumbnail = is_original_post.thumbnail
             if not thumbnail:
@@ -145,6 +148,7 @@ class BlogPostView(APIView):
         elif thumbnail == "undefined":
             thumbnail = None
 
+        # Serializers/Saving/Responses
         serializer_data = {
             "user": user,
             "title": title,
@@ -158,6 +162,23 @@ class BlogPostView(APIView):
         serializer = CreateOrUpdateBlogPostSerializer(
             data=serializer_data, instance=instance
         )
+
+        # If URL does exist, save it to its corresponding Crosspost
+        if url is not None:
+            crosspost_instance = Crosspost.objects.get(blog_post=instance)
+            crosspost_data = {"url": url}
+            crosspost_serializer = CrosspostSerializer(
+                instance=crosspost_instance, partial=True, data=crosspost_data
+            )
+
+            # If crosspost serializer is valid, save it, but don't return a response. We still need to save the main BlogPost serializer.
+            if crosspost_serializer.is_valid():
+                crosspost_serializer.save()
+            else:
+                return Response(
+                    data=crosspost_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                )
+
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)

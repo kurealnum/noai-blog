@@ -204,7 +204,7 @@ class BlogPostCommentViewTC(CustomTestCase):
         self.assertEqual(expected_status, request.status_code)
 
 
-class BlogPostViewTestCase(CustomTestCase):
+class BlogPostViewTC(CustomTestCase):
     def test_does_work_with_correct_title(self):
         request = self.client.get(
             reverse_lazy(
@@ -428,9 +428,7 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_result = "An edited title"
         self.assertEqual(expected_result, request.data["title"])
 
-
-class BlogPostView_CrosspostTestCase(CustomTestCase):
-    def test_does_post_with_post_type(self):
+    def test_does_post_with_post_type_with_url(self):
         img = BytesIO(
             b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
             b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
@@ -451,8 +449,7 @@ class BlogPostView_CrosspostTestCase(CustomTestCase):
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
 
-    def test_does_post_with_no_thumbnail(self):
-        # temp client to log in
+    def test_does_post_with_no_thumbnail_with_url(self):
         data = {
             "title": "My blog post",
             "content": "Here's my awesome blog post ##",
@@ -465,6 +462,36 @@ class BlogPostView_CrosspostTestCase(CustomTestCase):
         request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
         expected_result = "Here's my awesome blog post ##"
         self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_put_with_url(self):
+        crosspost = BlogPost.objects.create(
+            title="c1", content="c1", user=self.user, post_type="crosspost"
+        )
+        # Save to updated slug_field
+        crosspost.save()
+        crosspost_data = Crosspost.objects.create(
+            blog_post=crosspost, url="https://google.com"
+        )
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
+            "post_type": "crosspost",
+            "url": "https://stackoverflow.com",
+            "title_slug": crosspost.slug_field,
+            "original_slug": crosspost.slug_field,
+        }
+
+        request = self.authenticated_client.put(reverse_lazy("edit_post"), data=data)
+        expected_status = 200
+        self.assertEqual(request.status_code, expected_status)
+
+        # Check to see if the Crosspost itself has been updated
+        updated_crosspost = Crosspost.objects.get(blog_post=crosspost)
+        expected_url = "https://stackoverflow.com"
+        self.assertEqual(updated_crosspost.url, expected_url)
 
 
 class BlogPostListViewTC(CustomTestCase):
