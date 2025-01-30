@@ -46,6 +46,17 @@
   width: 100%;
 }
 
+.generic-input {
+  border-radius: 10px;
+  border: solid var(--light-accent) 1px;
+  padding: 6px;
+  color: var(--light-text);
+  outline: none;
+  font-style: italic;
+  margin-right: auto;
+  width: 24ch;
+}
+
 @media (min-width: 800px) {
   .post-form #thumbnail {
     width: 30%;

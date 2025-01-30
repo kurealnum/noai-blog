@@ -17,15 +17,10 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 
 import { useEffect, useState } from "react";
-import {
-  Favorite,
-  FormatAlignCenter,
-  FormatAlignLeft,
-} from "@mui/icons-material";
+import { Favorite } from "@mui/icons-material";
 import Comments from "../containers/Comments.jsx";
 import Profile from "../components/Profile";
 import FlagButton from "../components/FlagButton";
-import Thumbnail from "../components/Thumbnail";
 import "../styles/BlogPost.css";
 import hljs from "highlight.js";
 import { Marked } from "marked";
@@ -126,7 +121,7 @@ function PostComponent() {
   }
 
   if (isSuccess) {
-    document.title = document.title + " - " + data["title"];
+    document.title = "byeAI | Post - " + data["title"];
 
     const structuredData = {
       "@context": "https://schema.org",
@@ -198,6 +193,19 @@ function PostComponent() {
               </Link>
             ) : null}
           </div>
+          {data["crosspost"] != null ? (
+            <div className="crosspost">
+              <button>
+                <Link to={DOMPurify.sanitize(data["crosspost"]["url"])}>
+                  Read the article
+                </Link>
+              </button>
+              <p>
+                Hey! You! This is a crosspost! This button will take you to{" "}
+                {DOMPurify.sanitize(data["crosspost"]["url"])}.
+              </p>
+            </div>
+          ) : null}
           <div
             className={"blog-post-content-align-left"}
             dangerouslySetInnerHTML={{

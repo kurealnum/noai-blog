@@ -5,7 +5,6 @@ from blogs.views import (
     AdminGetAllFlaggedPostsView,
     AdminGetAllFlaggedUsersView,
     AdminManageCommentView,
-    AdminManageListicleView,
     AdminManagePostView,
     AdminManagerUserView,
     BlogPostListView,
@@ -35,7 +34,9 @@ urlpatterns = [
         PostReplyListView.as_view(),
         name="get_post_replies",
     ),
+    # FeedListView
     path("feed/<post_type>/<index>/", (FeedListView.as_view()), name="feed"),
+    path("feed/<index>/", (FeedListView.as_view()), name="feed"),
     # CommentListView URLs
     path(
         "get-comments/<username>/<slug>/",

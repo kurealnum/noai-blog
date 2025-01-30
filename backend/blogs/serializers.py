@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from .models import BlogPost, PostComment, Follower, PostReaction
+from .models import BlogPost, Crosspost, PostComment, Follower, PostReaction
 
 
 class NotificationBlogPostSerializer(serializers.Serializer):
@@ -44,17 +44,25 @@ class PostUserSerializer(serializers.ModelSerializer):
         fields = ("username", "profile_picture", "approved_ai_usage")
 
 
+class CrosspostSerializer(serializers.ModelSerializer):
+    class Meta:  # type: ignore
+        model = Crosspost
+        fields = "__all__"
+
+
 class CreateOrUpdateBlogPostSerializer(serializers.ModelSerializer):
     thumbnail = serializers.ImageField(allow_null=True, required=False)
     post_type = serializers.CharField(allow_null=True, required=False)
+    crosspost = CrosspostSerializer(required=False, allow_null=True)
 
     class Meta:  # type:ignore
         model = BlogPost
-        fields = ("user", "title", "content", "thumbnail", "post_type")
+        fields = ("user", "title", "content", "thumbnail", "post_type", "crosspost")
 
 
 class BlogPostSerializer(serializers.Serializer):
     user = PostUserSerializer()
+    crosspost = CrosspostSerializer(required=False, allow_null=True)
     title = serializers.CharField(max_length=100)
     content = serializers.CharField(
         max_length=101
@@ -70,6 +78,7 @@ class BlogPostSerializer(serializers.Serializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     post = BlogPostSerializer(required=False)
+    crosspost = CrosspostSerializer(required=False)
 
     class Meta:  # type:ignore
         model = PostComment

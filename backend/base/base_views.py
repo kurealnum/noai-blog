@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from base.base_helpers import filter_blog_post_by_post_type
 from blogs.models import BlogPost
 from blogs.serializers import (
     BlogPostSerializer,
@@ -27,9 +28,7 @@ class BaseSearchView(APIView):
             serializer = self.serializer_for_get(short_queryset, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
 
-        queryset = self.main_model.objects.filter(
-            title__search=search, post_type=post_type
-        )
+        queryset = filter_blog_post_by_post_type(post_type, title__icontains=search)
         short_queryset = queryset[
             self.posts_per_page * (page - 1) : self.posts_per_page * page
         ]

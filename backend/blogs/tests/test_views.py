@@ -7,7 +7,14 @@ from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from ..models import BlogPost, CommentReaction, Follower, PostReaction, PostComment
+from ..models import (
+    BlogPost,
+    CommentReaction,
+    Crosspost,
+    Follower,
+    PostReaction,
+    PostComment,
+)
 
 
 class CustomTestCase(TestCase):
@@ -77,6 +84,40 @@ class CommentListUserViewTestCase(CustomTestCase):
         # expected result for both
         expected_result = "This is NOT a reply!"
         result = json.loads(request.content)
+        self.assertEqual(expected_result, result[0].get("content"))
+        self.assertEqual(expected_result, result[1].get("content"))
+
+
+class CommentListUserView_CrosspostTestCase(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user,
+            title="My very awesome list",
+            content="Here's something about my list",
+            post_type="crosspost",
+        )
+        PostComment.objects.create(
+            user=self.user,
+            post=self.crosspost_1,
+            content="This is NOT a reply!",
+            post_type="crosspost",
+        )
+        PostComment.objects.create(
+            user=self.user,
+            post=self.crosspost_1,
+            content="This is NOT a reply!",
+            post_type="crosspost",
+        )
+
+    def test_get(self):
+        # temp client to log in
+        request = self.authenticated_client.get(
+            reverse_lazy("manage_comments", kwargs={"post_type": "crosspost"}),
+        )
+        # expected result for both
+        expected_result = "This is NOT a reply!"
+        result = request.data
         self.assertEqual(expected_result, result[0].get("content"))
         self.assertEqual(expected_result, result[1].get("content"))
 
@@ -163,7 +204,7 @@ class BlogPostCommentViewTC(CustomTestCase):
         self.assertEqual(expected_status, request.status_code)
 
 
-class BlogPostViewTestCase(CustomTestCase):
+class BlogPostViewTC(CustomTestCase):
     def test_does_work_with_correct_title(self):
         request = self.client.get(
             reverse_lazy(
@@ -387,8 +428,73 @@ class BlogPostViewTestCase(CustomTestCase):
         expected_result = "An edited title"
         self.assertEqual(expected_result, request.data["title"])
 
+    def test_does_post_with_post_type_with_url(self):
+        img = BytesIO(
+            b"GIF89a\x01\x00\x01\x00\x00\x00\x00!\xf9\x04\x01\x00\x00\x00"
+            b"\x00,\x00\x00\x00\x00\x01\x00\x01\x00\x00\x02\x01\x00\x00"
+        )
+        img.name = "myimage.gif"
+        # temp client to log in
+        temp_client = APIClient()
+        temp_client.login(username="bobby", password="TerriblePassword123")
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            "thumbnail": img,
+            "post_type": "crosspost",
+            "url": "https://google.com",
+        }
+        request = temp_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
 
-class BlogPostListTestCase(CustomTestCase):
+    def test_does_post_with_no_thumbnail_with_url(self):
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
+            "post_type": "crosspost",
+            "url": "https://google.com",
+        }
+        request = self.authenticated_client.post(reverse_lazy("create_post"), data=data)
+        expected_result = "Here's my awesome blog post ##"
+        self.assertEqual(expected_result, request.data["content"])
+
+    def test_does_put_with_url(self):
+        crosspost = BlogPost.objects.create(
+            title="c1", content="c1", user=self.user, post_type="crosspost"
+        )
+        # Save to updated slug_field
+        crosspost.save()
+        crosspost_data = Crosspost.objects.create(
+            blog_post=crosspost, url="https://google.com"
+        )
+        data = {
+            "title": "My blog post",
+            "content": "Here's my awesome blog post ##",
+            "likes": 0,
+            # this is how JS handles this, so we have to manually put "undefined"
+            "thumbnail": "undefined",
+            "post_type": "crosspost",
+            "url": "https://stackoverflow.com",
+            "title_slug": crosspost.slug_field,
+            "original_slug": crosspost.slug_field,
+        }
+
+        request = self.authenticated_client.put(reverse_lazy("edit_post"), data=data)
+        expected_status = 200
+        self.assertEqual(request.status_code, expected_status)
+
+        # Check to see if the Crosspost itself has been updated
+        updated_crosspost = Crosspost.objects.get(blog_post=crosspost)
+        expected_url = "https://stackoverflow.com"
+        self.assertEqual(updated_crosspost.url, expected_url)
+
+
+class BlogPostListViewTC(CustomTestCase):
     def setUp(self) -> None:
         super().setUp()
         # alternative user
@@ -539,6 +645,8 @@ class PostReplyListTestCase(CustomTestCase):
 class FeedListTestCase(CustomTestCase):
     def setUp(self):
         super().setUp()
+
+        # alt user
         self.altuser = CustomUser.objects.create(
             email="jon@gmail.com",
             first_name="Jon",
@@ -548,6 +656,8 @@ class FeedListTestCase(CustomTestCase):
         )
         self.altuser.set_password("TerriblePassword123")
         self.altuser.save()
+
+        # creating blog posts to "query" for
         self.blog_post_1 = BlogPost.objects.create(
             user=self.user,
             title="1",
@@ -564,6 +674,27 @@ class FeedListTestCase(CustomTestCase):
             title="3",
             content="Here's something about my blog post",
         )
+        self.crosspost_1 = BlogPost.objects.create(
+            user=self.user, title="c1", content="c1", post_type="crosspost"
+        )
+        self.crosspost_1_data = Crosspost.objects.create(
+            blog_post=self.crosspost_1, url="https://google.com"
+        )
+        self.crosspost_2 = BlogPost.objects.create(
+            user=self.user, title="c2", content="c2", post_type="crosspost"
+        )
+        self.crosspost_2_data = Crosspost.objects.create(
+            blog_post=self.crosspost_2, url="https://google.com", crosspost_type="list"
+        )
+        self.crosspost_3 = BlogPost.objects.create(
+            user=self.user, title="c3", content="c3", post_type="crosspost"
+        )
+        self.crosspost_3_data = Crosspost.objects.create(
+            blog_post=self.crosspost_3,
+            url="https://stackoverflow.com",
+            crosspost_type="crosspost",
+        )
+        self.list_1 = BlogPost.objects.create(user=self.user, title="l1", content="l1")
 
         # adding a comment to test that the 3rd blog post is listed first
         PostComment.objects.create(
@@ -611,6 +742,38 @@ class FeedListTestCase(CustomTestCase):
         expected_score = -30
 
         self.assertEqual(expected_score, response.data[-1]["score"])  # type: ignore
+
+    def test_get_returns_all_posts_with_no_type(self):
+        response = self.client.get(reverse_lazy("feed", kwargs={"index": 1}))
+
+        length = 8
+        self.assertEqual(len(response.data), length)  # type: ignore
+
+    def test_get_returns_correctly_with_crosspost(self):
+        request = self.client.get(
+            reverse_lazy("feed", kwargs={"index": 1, "post_type": "crosspost"})
+        )
+
+        # the title of the 3rd blog post is 3
+        expected_result = "c3"
+        expected_link = "https://stackoverflow.com"
+        self.assertEqual(expected_result, request.data[0].get("title"))  # type: ignore
+        self.assertEqual(expected_link, request.data[0]["crosspost"].get("url"))  # type: ignore
+
+
+class FeedList_CrosspostTC(CustomTestCase):
+    def setUp(self):
+        super().setUp()
+        # alt user
+        self.altuser = CustomUser.objects.create(
+            email="jon@gmail.com",
+            first_name="Jon",
+            last_name="Lasty",
+            about_me="I am Jon, destroyer of worlds.",
+            username="jonny",
+        )
+        self.altuser.set_password("TerriblePassword123")
+        self.altuser.save()
 
 
 class FollowerViewTestCase(CustomTestCase):
@@ -948,28 +1111,6 @@ class AdminGetAllFlaggedUsersViewTestCase(CustomTestCase):
 
         self.assertEqual(expected_length, len(request.data))
         self.assertEqual(expected_content, request.data[-1]["about_me"])
-
-
-class AdminManageListicleViewTestCase(CustomTestCase):
-    def test_does_patch_work(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bethy")
-        request = temp_client.patch(
-            reverse_lazy(
-                "toggle_listicle",
-                kwargs={
-                    "username": self.blog_post.user.username,
-                    "slug": self.blog_post.slug_field,
-                },
-            )
-        )
-
-        expected_status = 204
-
-        self.blog_post.refresh_from_db()
-
-        self.assertEqual(expected_status, request.status_code)
-        self.assertTrue(self.blog_post.is_listicle)
 
 
 class AdminManagePostViewTestCase(CustomTestCase):

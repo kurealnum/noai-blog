@@ -28,3 +28,46 @@ h1 {
     margin: 0;
   }
 }
+
+.crosspost {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.crosspost button {
+  background-image: linear-gradient(
+    45deg,
+    hsl(210deg 3% 13%) 0%,
+    hsl(212deg 3% 12%) 8%,
+    hsl(213deg 3% 12%) 17%,
+    hsl(215deg 3% 11%) 25%,
+    hsl(217deg 3% 11%) 33%,
+    hsl(219deg 3% 10%) 42%,
+    hsl(221deg 3% 9%) 50%,
+    hsl(224deg 3% 9%) 58%,
+    hsl(226deg 3% 8%) 67%,
+    hsl(229deg 3% 8%) 75%,
+    hsl(232deg 3% 7%) 83%,
+    hsl(236deg 3% 6%) 92%,
+    hsl(240deg 4% 5%) 100%
+  );
+  padding: 5px 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  font-size: 20px;
+  border: solid var(--light-accent) 1px;
+}
+
+.crosspost a {
+  color: var(--light-text);
+}
+
+.crosspost p {
+  font-style: italic;
+  font-size: 13px;
+  margin-bottom: 40px;
+  text-align: center;
+  width: 300px;
+}

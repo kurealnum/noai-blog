@@ -14,20 +14,38 @@ import { Alert, CircularProgress, Snackbar } from "@mui/material";
 import Profile from "../components/Profile";
 import FlagButton from "../components/FlagButton";
 import DOMPurify from "dompurify";
+import LoadingIcon from "../components/LoadingIcon.jsx";
+import { useQuery } from "@tanstack/react-query";
+import LoadingError from "../components/LoadingError.jsx";
 
 function Homepage() {
   const { username } = useParams();
   const currentUserInfo = useRouteLoaderData("root");
-  const [userInfo, setUserInfo] = useState({});
-  const [blogPosts, setBlogPosts] = useState([]);
-  const [links, setLinks] = useState([]);
-  const [doesUserExist, setDoesUserExist] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
   // for rendering snackbar
   const [followError, setFollowError] = useState(false);
   const [followSuccess, setFollowSuccess] = useState(false);
 
+  // querys & mutations
+  const blogPostsQuery = useQuery({
+    queryKey: ["blogPosts", username],
+    queryFn: () => getPosts(username, "blogPost"),
+  });
+  const listsQuery = useQuery({
+    queryKey: ["lists", username],
+    queryFn: () => getPosts(username, "list"),
+  });
+  const userInfoQuery = useQuery({
+    queryKey: ["userInfo", username],
+    queryFn: () => getUserInfoByUsername(username),
+  });
+  const linksQuery = useQuery({
+    queryKey: ["links", username],
+    queryFn: () => getLinks(username),
+  });
+
+  // helper functions
   const handleCloseError = (event, reason) => {
     if (reason === "clickaway") {
       return;
@@ -44,35 +62,11 @@ function Homepage() {
     setFollowSuccess(false);
   };
 
-  useEffect(() => {
-    getUserInfoByUsername(username).then((res) => {
-      setUserInfo(res);
-      if (res != null) {
-        setDoesUserExist(true);
-      }
-    });
-    getPosts(username, "blogPost").then((res) => {
-      setBlogPosts(res);
-    });
-    getLinks(username).then((res) => {
-      setLinks(res);
-      document.title = "NoAI Blog" + " - " + username;
-    });
-    // see comments in helpers.js for this function
-    isFollowingUser(username).then((res) => {
-      if (!res) {
-        setIsFollowing(false);
-      } else {
-        setIsFollowing(true);
-      }
-    });
-  }, [username]);
-
+  // prevents user from following themselves
   function followHelper() {
-    // prevents user from following themselves
     if (
       currentUserInfo["username"] != null &&
-      currentUserInfo["username"] !== userInfo["username"]
+      currentUserInfo["username"] !== userInfoQuery.data["username"]
     ) {
       followUser(username).then((res) => {
         if (res) {
@@ -98,20 +92,38 @@ function Homepage() {
     });
   }
 
-  if (doesUserExist) {
+  useEffect(() => {
+    // see comments in helpers.js for this function
+    isFollowingUser(username).then((res) => {
+      if (!res) {
+        setIsFollowing(false);
+      } else {
+        setIsFollowing(true);
+      }
+    });
+  }, [username]);
+
+  // Only using userInfoQuery to tell if the page is loaded because it's the only thing that the user is gauranteed to "have"
+  if (userInfoQuery.isPending) {
+    return <LoadingIcon />;
+  } else if (userInfoQuery.isSuccess) {
+    document.title = "NoAI Blog" + " - " + username;
+
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
-      dateCreated: userInfo["created_date"],
-      dateModified: userInfo["updated_date"],
+      dateCreated: userInfoQuery.data["created_date"],
+      dateModified: userInfoQuery.data["updated_date"],
       mainEntity: {
         "@type": "Person",
         name: DOMPurify.sanitize(
-          userInfo["first_name"] + " " + userInfo["last_name"],
+          userInfoQuery.data["first_name"] +
+            " " +
+            userInfoQuery.data["last_name"],
         ),
-        alternateName: DOMPurify.sanitize(userInfo["username"]),
-        description: DOMPurify.sanitize(userInfo["about_me"]),
-        image: DOMPurify.sanitize(userInfo["profile_picture"]),
+        alternateName: DOMPurify.sanitize(userInfoQuery.data["username"]),
+        description: DOMPurify.sanitize(userInfoQuery.data["about_me"]),
+        image: DOMPurify.sanitize(userInfoQuery.data["profile_picture"]),
       },
     };
 
@@ -124,11 +136,11 @@ function Homepage() {
         <div id="homepage">
           <FlagButton
             type={"user"}
-            isFlaggedParam={userInfo["flagged"]}
-            content={userInfo}
+            isFlaggedParam={userInfoQuery.data["flagged"]}
+            content={userInfoQuery.data}
           />
           <div className="user-box">
-            <Profile content={{ user: userInfo }} />
+            <Profile content={{ user: userInfoQuery.data }} />
             <button
               type="button"
               onClick={
@@ -140,30 +152,42 @@ function Homepage() {
             </button>
           </div>
           <div className="general-info">
-            <p>{userInfo["about_me"]}</p>
-            <p>{userInfo["technical_info"]}</p>
+            <p>{userInfoQuery.data["about_me"]}</p>
+            <p>{userInfoQuery.data["technical_info"]}</p>
           </div>
           <div className="extra-info">
             <h2>Links</h2>
             <ul className="links">
-              {links === null || links.length === 0 ? (
+              {linksQuery.data === null || linksQuery.data.length === 0 ? (
                 <p>This user doesn't have any links!</p>
               ) : (
-                links.map((content, index) => (
+                linksQuery.data.map((content, index) => (
                   <li key={index}>
-                    <a href={content["link"]}>{content["name"]}</a>
+                    <a href={DOMPurify.sanitize(content["link"])}>
+                      {DOMPurify.sanitize(content["name"])}
+                    </a>
                   </li>
                 ))
               )}
             </ul>
             <h2>Blog Posts</h2>
             <ul className="feed">
-              {blogPosts === null || blogPosts.length === 0 ? (
-                <p>There's nothing here!</p>
-              ) : (
-                blogPosts.map((content, index) => (
+              {blogPostsQuery.isSuccess ? (
+                blogPostsQuery.data.map((content, index) => (
                   <BlogPostThumbnail key={index} content={content} />
                 ))
+              ) : (
+                <p>There's nothing here!</p>
+              )}
+            </ul>
+            <h2>Lists</h2>
+            <ul className="feed">
+              {listsQuery.isSuccess ? (
+                listsQuery.data.map((content, index) => (
+                  <BlogPostThumbnail key={index} content={content} />
+                ))
+              ) : (
+                <p>There's nothing here!</p>
               )}
             </ul>
           </div>
@@ -199,18 +223,7 @@ function Homepage() {
       </>
     );
   } else {
-    return (
-      <CircularProgress
-        sx={{
-          position: "absolute",
-          left: "0",
-          right: "0",
-          top: "0",
-          bottom: "0",
-          margin: "auto",
-        }}
-      />
-    );
+    return <LoadingError />;
   }
 }
 

@@ -265,12 +265,19 @@ async function getFeed(index) {
   return await response.json();
 }
 
-async function createPost({ newBlogPost, thumbnail }) {
+async function createPost({ newBlogPost, thumbnail, postType }) {
   let data = new FormData();
   data.append("thumbnail", thumbnail["thumbnail"]);
   data.append("content", newBlogPost["content"]);
   data.append("title", newBlogPost["title"]);
-  data.append("post_type", newBlogPost["post_type"]);
+
+  // if the url exists, then the post is a crosspost
+  if (newBlogPost["url"] != undefined) {
+    data.append("post_type", "crosspost");
+  } else {
+    data.append("post_type", postType);
+  }
+  data.append("url", newBlogPost["url"]);
   data.append("user", "hubot");
 
   const config = {
@@ -467,11 +474,19 @@ async function deletePost(slug, type) {
   return response.ok;
 }
 
-async function editPost({ newBlogPost, thumbnail, originalSlug }) {
+async function editPost({
+  newBlogPost,
+  thumbnail,
+  originalSlug,
+  crosspostURL,
+}) {
   let data = new FormData();
   data.append("thumbnail", thumbnail["thumbnail"]);
   data.append("content", newBlogPost["content"]);
   data.append("title", newBlogPost["title"]);
+  if (crosspostURL != "") {
+    data.append("url", newBlogPost["url"]);
+  }
   data.append("title_slug", slugify(newBlogPost["title"]));
   data.append("original_slug", originalSlug);
   data.append("user", "hubot");

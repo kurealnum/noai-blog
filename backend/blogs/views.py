@@ -1,5 +1,6 @@
-from django.db.models import F, Case, Count, ExpressionWrapper, FloatField, When
+from django.db.models import F, Q, Case, Count, ExpressionWrapper, FloatField, When
 from django.http.response import Http404
+from django.template.defaultfilters import slugify
 from rest_framework import generics, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -9,13 +10,15 @@ from rest_framework.views import APIView
 from accounts.helpers import IsAdmin, IsModerator
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from blogs.models import BlogPost, PostComment, Follower, PostReaction
+from base.base_helpers import filter_blog_post_by_post_type
+from blogs.models import BlogPost, Crosspost, PostComment, Follower, PostReaction
 from blogs.serializers import (
     BlogPostSerializer,
     CommentAndUserSerializer,
     CommentSerializer,
     CreateOrUpdateBlogPostSerializer,
     CreateOrUpdateCommentSerializer,
+    CrosspostSerializer,
     FollowerSerializer,
     GetFollowerSerializer,
     ReactionSerializer,
@@ -76,24 +79,53 @@ class BlogPostView(APIView):
             "post_type": post_type,
         }
 
-        serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        blog_post_serializer = CreateOrUpdateBlogPostSerializer(data=serializer_data)
+        if blog_post_serializer.is_valid():
+            blog_post_serializer.save()
+            res = blog_post_serializer.data
 
-        return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            url = data.get("url")
+
+            # this is not the security measure to end all security measures, but it's just a nice little safety feature
+            if url is not None and url[:8] == "https://":
+                blog_post = BlogPost.objects.get(slug_field=slugify(title), user=user)
+                crosspost_serializer_data = {
+                    "blog_post": blog_post.pk,  # type: ignore
+                    "url": url,
+                    "post_type": post_type,
+                }
+                crosspost_serializer = CrosspostSerializer(
+                    data=crosspost_serializer_data
+                )
+
+                if crosspost_serializer.is_valid():
+                    crosspost_serializer.save()
+                    return Response(data=res, status=status.HTTP_201_CREATED)
+                else:
+                    return Response(
+                        data=crosspost_serializer.errors,
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
+
+            return Response(data=res, status=status.HTTP_201_CREATED)
+
+        return Response(
+            data=blog_post_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+        )
 
     def put(self, request):
         data = request.data
 
-        # post specific data
+        # Data
         user = self.request.user.id  # type: ignore
         title = data["title"]
         title_slug = data["title_slug"]
         content = data["content"]
         thumbnail = data["thumbnail"]
         original_slug = data["original_slug"]
+        url = data.get("url")  # url is not gauranteed to exist
 
+        # Title logic
         try:
             is_original_post = BlogPost.objects.get(
                 user=self.request.user, slug_field=title_slug
@@ -101,13 +133,14 @@ class BlogPostView(APIView):
         except BlogPost.DoesNotExist:
             is_original_post = None
 
-        # weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
+        # Weird conditional, just means that if the title has changed and theres a post with the title "title_slug", then return a 400
         if title_slug != original_slug and is_original_post:
             return Response(
                 data={"error": "A post with this title already exists!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
+        # Thumbnail logic
         if thumbnail == "undefined" and is_original_post:
             thumbnail = is_original_post.thumbnail
             if not thumbnail:
@@ -115,6 +148,7 @@ class BlogPostView(APIView):
         elif thumbnail == "undefined":
             thumbnail = None
 
+        # Serializers/Saving/Responses
         serializer_data = {
             "user": user,
             "title": title,
@@ -128,6 +162,23 @@ class BlogPostView(APIView):
         serializer = CreateOrUpdateBlogPostSerializer(
             data=serializer_data, instance=instance
         )
+
+        # If URL does exist, save it to its corresponding Crosspost
+        if url is not None:
+            crosspost_instance = Crosspost.objects.get(blog_post=instance)
+            crosspost_data = {"url": url}
+            crosspost_serializer = CrosspostSerializer(
+                instance=crosspost_instance, partial=True, data=crosspost_data
+            )
+
+            # If crosspost serializer is valid, save it, but don't return a response. We still need to save the main BlogPost serializer.
+            if crosspost_serializer.is_valid():
+                crosspost_serializer.save()
+            else:
+                return Response(
+                    data=crosspost_serializer.errors, status=status.HTTP_400_BAD_REQUEST
+                )
+
         if serializer.is_valid():
             serializer.save()
             return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -151,8 +202,8 @@ class BlogPostListView(APIView):
     def get(self, request, post_type, username=None):
         if username:
             try:
-                res = BlogPost.objects.filter(
-                    user__username=username, post_type=post_type
+                res = filter_blog_post_by_post_type(
+                    post_type=post_type, user__username=username
                 )
                 if len(res) == 0:
                     raise BlogPost.DoesNotExist
@@ -162,8 +213,8 @@ class BlogPostListView(APIView):
             return Response(data=serializer.data, status=status.HTTP_200_OK)
         else:
             user = self.request.user.id  # type:ignore
-            res = BlogPost.objects.filter(
-                user=user, post_type=post_type
+            res = filter_blog_post_by_post_type(
+                post_type=post_type, user=user
             ).select_related("user")
             serializer = BlogPostSerializer(res, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
@@ -258,7 +309,7 @@ class PostReplyListView(generics.ListAPIView):
 
 
 class FeedListView(APIView):
-    def get(self, request, post_type, index):
+    def get(self, request, index, post_type=None):
         index = int(index)
         posts_per_page = 50
 
@@ -269,9 +320,15 @@ class FeedListView(APIView):
         reaction_score = 3
 
         # initial query
+        if not post_type:
+            filter_query = BlogPost.objects.all()
+        else:
+            # we also want to get crossposts of type post_type
+            filter_query = filter_blog_post_by_post_type(post_type)
+
+        # score and rank posts
         all_posts = (
-            BlogPost.objects.filter(post_type=post_type)
-            .annotate(
+            filter_query.annotate(
                 reactions=Count("postreaction"),
                 comments=Count("postcomment"),
                 score=ExpressionWrapper(

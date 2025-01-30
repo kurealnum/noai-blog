@@ -6,6 +6,7 @@ input {
   --primary: #202122;
   --secondary: #2775e0;
   --accent: #e94f37;
+  --light-accent: rgba(233, 79, 55, 0.6);
   --tertiary: #879e14;
   --light-text: #ffffff;
   --page-background: #0d0d0e;
