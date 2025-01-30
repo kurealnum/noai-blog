@@ -121,7 +121,7 @@ function PostComponent() {
   }
 
   if (isSuccess) {
-    document.title = document.title + " - " + data["title"];
+    document.title = "byeAI | Post - " + data["title"];
 
     const structuredData = {
       "@context": "https://schema.org",
