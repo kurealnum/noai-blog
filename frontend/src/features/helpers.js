@@ -474,11 +474,19 @@ async function deletePost(slug, type) {
   return response.ok;
 }
 
-async function editPost({ newBlogPost, thumbnail, originalSlug }) {
+async function editPost({
+  newBlogPost,
+  thumbnail,
+  originalSlug,
+  crosspostURL,
+}) {
   let data = new FormData();
   data.append("thumbnail", thumbnail["thumbnail"]);
   data.append("content", newBlogPost["content"]);
   data.append("title", newBlogPost["title"]);
+  if (crosspostURL != "") {
+    data.append("url", newBlogPost["url"]);
+  }
   data.append("title_slug", slugify(newBlogPost["title"]));
   data.append("original_slug", originalSlug);
   data.append("user", "hubot");

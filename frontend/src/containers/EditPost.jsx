@@ -31,6 +31,7 @@ function EditPost() {
   const userData = useRouteLoaderData("root");
   const { type, slug } = useParams();
   const [newBlogPost, setNewBlogPost] = useState({});
+  const [crosspostURL, setCrosspostURL] = useState("");
   const [thumbnail, setThumbnail] = useState({});
   const dispatch = useDispatch();
 
@@ -54,10 +55,15 @@ function EditPost() {
   useEffect(() => {
     if (toEditBlogPostQuery.isSuccess) {
       setNewBlogPost({ ...toEditBlogPostQuery.data, slug: slug });
+      if (toEditBlogPostQuery.data["crosspost"] != undefined) {
+        setCrosspostURL(
+          DOMPurify.sanitize(toEditBlogPostQuery.data["crosspost"]["url"]),
+        );
+      }
     }
   }, [slug, toEditBlogPostQuery.data, toEditBlogPostQuery.isSuccess]);
 
-  // autosave feature
+  // Autosave Logic
   const delay = 1000;
   const customRendererOptions = useMemo(() => {
     return {
@@ -72,16 +78,22 @@ function EditPost() {
     };
   }, []);
 
+  // Helper Functions
   function handleSave(e) {
     e.preventDefault();
-    editPostMutation.mutate({ newBlogPost, thumbnail, originalSlug: slug });
+    editPostMutation.mutate({
+      newBlogPost,
+      thumbnail,
+      originalSlug: slug,
+      crosspostURL: crosspostURL,
+    });
   }
 
   function setContentHelper(content) {
     setNewBlogPost({ ...newBlogPost, content: content });
   }
 
-  function setTitleHelper(e) {
+  function setFormHelper(e) {
     setNewBlogPost({ ...newBlogPost, [e.target.name]: e.target.value });
   }
 
@@ -89,6 +101,16 @@ function EditPost() {
     setThumbnail({ [e.target.name]: e.target.files[0] });
   }
 
+  // why we have to do this... is beyond me.
+  function getCrosspostURL() {
+    if (crosspostURL != null) {
+      return crosspostURL;
+    } else {
+      return "Crosspost with a URL instead!";
+    }
+  }
+
+  // Rendering Logic
   if (toEditBlogPostQuery.isError) {
     return <Navigate to={"/dashboard/"} />;
   } else if (toEditBlogPostQuery.isPending) {
@@ -153,13 +175,26 @@ function EditPost() {
             accept="image/png, image/jpeg"
             onChange={(e) => setThumbnailHelper(e, true)}
           />
+          <label htmlFor="url" hidden>
+            URL for crosspost
+          </label>
+          <input
+            id="url"
+            name="url"
+            className="generic-input"
+            onChange={(e) => setFormHelper(e)}
+            defaultValue={getCrosspostURL()}
+          ></input>
+          <label htmlFor="title" hidden>
+            Title
+          </label>
           <label htmlFor="title" hidden>
             Title
           </label>
           <input
             id="title"
             name="title"
-            onChange={(e) => setTitleHelper(e)}
+            onChange={(e) => setFormHelper(e)}
             defaultValue={newBlogPost["title"]}
           />
         </div>
