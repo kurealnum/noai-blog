@@ -1,0 +1,1 @@
+import{j as e,F as t,p as a,T as o}from"./index-BX5Plg-3.js";function n(){return e.jsx(t,{advertiseRatio:18,showPaginator:!0,defaultSearchValue:"",queryFunction:a,includePage:!0,typeSet:o})}export{n as default};
