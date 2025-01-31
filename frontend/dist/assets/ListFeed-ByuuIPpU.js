@@ -1,1 +1,0 @@
-import{j as e,F as t,p as a,at as o}from"./index-DKk1ud7V.js";function i(){return e.jsx(t,{advertiseRatio:18,showPaginator:!0,defaultSearchValue:"",queryFunction:a,includePage:!0,typeSet:o})}export{i as default};
