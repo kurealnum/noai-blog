@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { login } from "../features/auth";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ErrorMessage from "../components/ErrorMessage";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { CircularProgress } from "@mui/material";
 
 function Login() {
+  const { state: locationState } = useLocation();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const navigate = useNavigate();
   const [isError, setIsError] = useState(false);
@@ -19,7 +20,11 @@ function Login() {
     setIsLoading(true);
     login(formData).then((isAuth) => {
       if (isAuth) {
-        navigate("/login-redirect");
+        if (locationState != null) {
+          navigate(locationState.redirectTo.pathname);
+        } else {
+          navigate("/login-redirect");
+        }
       } else {
         setIsError(true);
       }

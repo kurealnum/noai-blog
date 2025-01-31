@@ -1,6 +1,26 @@
+import { Link, useLocation } from "react-router-dom";
 import Comment from "../components/Comment";
+import { isAuthenticated } from "../features/helpers";
 
 function Comments({ raw, refetch }) {
+  const location = useLocation();
+
+  if (raw.length == 0) {
+    if (isAuthenticated()) {
+      return null;
+    }
+    return (
+      <ul className="list">
+        <p>
+          <Link to="/login" state={{ redirectTo: location }}>
+            Sign up
+          </Link>{" "}
+          and be the first to comment!
+        </p>
+      </ul>
+    );
+  }
+
   const memo = new Set([]);
 
   function renderedCommentsHelper(nodes, level) {

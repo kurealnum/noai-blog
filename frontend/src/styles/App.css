@@ -177,20 +177,6 @@ fieldset {
   border-radius: 5px;
 }
 
-.comments {
-  width: 100%;
-}
-
-#blog-post .comments h2 {
-  margin: 20px 70px;
-  margin-top: 30px;
-}
-
-#blog-post .pfp {
-  margin: 0;
-  border-radius: 50%;
-}
-
 .edit-comment-form,
 .reply-comment-form {
   padding: 0;
