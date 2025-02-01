@@ -35,6 +35,8 @@ h1 {
   flex-direction: column;
 }
 
+/*button logic from https://uiverse.io/adamgiebl/popular-termite-0*/
+
 .crosspost button {
   padding: 5px 20px;
   border-radius: 10px;
