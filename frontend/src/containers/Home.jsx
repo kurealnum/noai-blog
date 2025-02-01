@@ -31,7 +31,7 @@ function Home() {
           If you aren’t a fan of traditional articles, consider sticking around.
           We’ll be releasing more AI-free content in the future.
         </p>
-        <Link to="/register" id="link-button">
+        <Link to="/register" class="link-button">
           Sign Up <ArrowForwardIosIcon />
         </Link>
       </div>

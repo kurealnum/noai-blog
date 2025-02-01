@@ -36,6 +36,26 @@ h1 {
 }
 
 .crosspost button {
+  padding: 5px 20px;
+  border-radius: 10px;
+  max-width: 500px;
+  margin: 0 auto;
+  font-size: 20px;
+  border: solid var(--light-accent) 1px;
+  transition: 0.2s ease all;
+  z-index: 1;
+  position: relative;
+}
+
+.crosspost button:before {
+  transition: 0.5s all ease;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  right: 50%;
+  bottom: 0;
+  opacity: 0;
+  content: "";
   background-image: linear-gradient(
     45deg,
     hsl(210deg 3% 13%) 0%,
@@ -52,12 +72,25 @@ h1 {
     hsl(236deg 3% 6%) 92%,
     hsl(240deg 4% 5%) 100%
   );
-  padding: 5px 20px;
   border-radius: 10px;
-  max-width: 500px;
-  margin: 0 auto;
-  font-size: 20px;
-  border: solid var(--light-accent) 1px;
+  z-index: -1;
+}
+
+.crosspost button:hover,
+.crosspost button:focus {
+  color: white;
+}
+
+.crosspost button:hover:before,
+.crosspost button:focus:before {
+  transition: 0.5s all ease;
+  left: 0;
+  right: 0;
+  opacity: 1;
+}
+
+.crosspost button:active {
+  transform: scale(0.9);
 }
 
 .crosspost a {
