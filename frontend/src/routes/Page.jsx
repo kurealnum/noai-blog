@@ -11,7 +11,7 @@ import {
   IS_SUPERUSER_TRUE,
 } from "../features/types";
 import { CircularProgress } from "@mui/material";
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import {
   isAdmin,
   isAuthenticated,
@@ -24,8 +24,17 @@ const blogName = "byeAI | ";
 function Page({ children, title, type }) {
   const dispatch = useDispatch();
   const [isBusy, setIsBusy] = useState(true);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
+    // Redirect to slash if route doesn't end with slash
+    const path = location.pathname;
+    const pathLen = location.pathname.length;
+    if (location.pathname[pathLen - 1] !== "/") {
+      navigate(path + "/", { replace: true });
+    }
+
     document.title = blogName + title || "";
     async function updateAuth() {
       const isAuthenticatedOnServer = checkIfAuthenticatedOnServer();
@@ -48,7 +57,7 @@ function Page({ children, title, type }) {
       });
     }
     updateAuth();
-  });
+  }, [dispatch, location.pathname, navigate, title]);
 
   if (isBusy) {
     return (
