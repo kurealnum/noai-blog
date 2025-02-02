@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import useScrollToLocation from "../features/hooks/useScrollToLocation";
 
 function Guidelines() {
+  useScrollToLocation();
   return (
     <div className="text-based-page">
       <h1>Guidelines</h1>
