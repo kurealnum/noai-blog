@@ -107,6 +107,9 @@ function NavBar() {
                         <Link to="/guidelines">Guidelines</Link>
                       </li>
                       <li>
+                        <Link to="/user-documentation">Docs</Link>
+                      </li>
+                      <li>
                         <Link to="/about-us">About Us</Link>
                       </li>
                       <li>

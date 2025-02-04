@@ -27,6 +27,7 @@ import {
   Faq,
   ListFeed,
   List,
+  UserDocumentation,
 } from "./LazyImports";
 import Search from "../containers/Search.jsx";
 
@@ -51,6 +52,14 @@ const router = createBrowserRouter([
         element: (
           <Page type={"public"} title={"List"}>
             <List />
+          </Page>
+        ),
+      },
+      {
+        path: "/user-documentation",
+        element: (
+          <Page type={"public"} title={"User Documentation"}>
+            <UserDocumentation />
           </Page>
         ),
       },
