@@ -81,6 +81,9 @@ class BlogPost(models.Model, PostTypesMixin):
     slug_field = models.SlugField(null=True, unique=True, max_length=200)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
+
+    # This field serves to temporarily remove a post from the feed
+    enabled = models.BooleanField(default=True)
     post_type = models.CharField(
         choices=PostTypesMixin.POST_TYPE_CHOICES, default=PostTypesMixin.BLOG_POST  # type: ignore
     )

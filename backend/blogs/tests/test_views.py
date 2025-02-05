@@ -642,7 +642,7 @@ class PostReplyListTestCase(CustomTestCase):
         self.assertEqual(expected_result, response.data[0].get("content"))
 
 
-class FeedListTestCase(CustomTestCase):
+class FeedListViewTC(CustomTestCase):
     def setUp(self):
         super().setUp()
 
@@ -673,6 +673,9 @@ class FeedListTestCase(CustomTestCase):
             user=self.user,
             title="3",
             content="Here's something about my blog post",
+        )
+        self.disabled_blog_post = BlogPost.objects.create(
+            user=self.user, title="d1", content="d1", enabled=False
         )
         self.crosspost_1 = BlogPost.objects.create(
             user=self.user, title="c1", content="c1", post_type="crosspost"

@@ -321,10 +321,10 @@ class FeedListView(APIView):
 
         # initial query
         if not post_type:
-            filter_query = BlogPost.objects.all()
+            filter_query = BlogPost.objects.filter(enabled=True)
         else:
             # we also want to get crossposts of type post_type
-            filter_query = filter_blog_post_by_post_type(post_type)
+            filter_query = filter_blog_post_by_post_type(post_type, enabled=True)
 
         # score and rank posts
         all_posts = (
