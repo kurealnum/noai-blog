@@ -11,8 +11,6 @@ from blogs.views import (
     BlogPostView,
     CommentReplyListView,
     FeedListView,
-    FollowerView,
-    FollowingView,
     ModeratorModifyCommentView,
     ModeratorModifyPostView,
     ModeratorModifyUserView,
@@ -79,19 +77,6 @@ urlpatterns = [
         "manage-comments/<post_type>/",
         CommentListUserView.as_view(),
         name="manage_comments",
-    ),
-    # FollowerView
-    path("manage-followers/", FollowerView.as_view(), name="manage_followers"),
-    # FollowINGView
-    path(
-        "manage-following/",
-        FollowingView.as_view(),
-        name="manage_following",
-    ),
-    path(
-        "manage-following/<username>/",
-        FollowingView.as_view(),
-        name="manage_following",
     ),
     # ReactionView
     path(

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from accounts.models import CustomUser
 from accounts.serializers import CustomUserSerializer
-from .models import BlogPost, Crosspost, PostComment, Follower, PostReaction
+from .models import BlogPost, Crosspost, PostComment, PostReaction
 
 
 class NotificationBlogPostSerializer(serializers.Serializer):
@@ -24,12 +24,6 @@ class FeedCustomUserSerializer(serializers.ModelSerializer):
     class Meta:  # type:ignore
         model = CustomUser
         fields = ("username",)
-
-
-class FollowerSerializer(serializers.ModelSerializer):
-    class Meta:  # type: ignore
-        model = Follower
-        fields = "__all__"
 
 
 class ReactionSerializer(serializers.ModelSerializer):
@@ -99,12 +93,3 @@ class CommentAndUserSerializer(serializers.Serializer):
     updated_date = serializers.DateTimeField()
     id = serializers.IntegerField()
     flagged = serializers.BooleanField()
-
-
-class GetFollowerSerializer(serializers.ModelSerializer):
-    user = PostUserSerializer()
-    follower = PostUserSerializer()
-
-    class Meta:  # type: ignore
-        model = Follower
-        fields = "__all__"

@@ -127,17 +127,6 @@ class Crosspost(models.Model, PostTypesMixin):
     crosspost_type = models.CharField(choices=PostTypesMixin.POST_TYPE_CHOICES, default=PostTypesMixin.BLOG_POST)  # type: ignore
 
 
-class Follower(models.Model):
-    follower = models.ForeignKey(
-        to=CustomUser, on_delete=models.CASCADE, related_name="follower_id"
-    )
-    user = models.ForeignKey(
-        to=CustomUser,
-        on_delete=models.CASCADE,
-        related_name="follower_user_id",
-    )
-
-
 class PostReaction(models.Model, PostTypesMixin):
     user = models.ForeignKey(to=CustomUser, on_delete=models.CASCADE)
     post = models.ForeignKey(to=BlogPost, on_delete=models.SET_NULL, null=True)
