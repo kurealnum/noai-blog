@@ -81,6 +81,9 @@ class BlogPost(models.Model, PostTypesMixin):
     slug_field = models.SlugField(null=True, unique=True, max_length=200)
     is_listicle = models.BooleanField(default=False)
     flagged = models.BooleanField(default=False)
+
+    # This field serves to temporarily remove a post from the feed
+    enabled = models.BooleanField(default=True)
     post_type = models.CharField(
         choices=PostTypesMixin.POST_TYPE_CHOICES, default=PostTypesMixin.BLOG_POST  # type: ignore
     )
@@ -122,17 +125,6 @@ class Crosspost(models.Model, PostTypesMixin):
     blog_post = models.OneToOneField(BlogPost, on_delete=models.CASCADE)
     url = models.URLField(max_length=100)
     crosspost_type = models.CharField(choices=PostTypesMixin.POST_TYPE_CHOICES, default=PostTypesMixin.BLOG_POST)  # type: ignore
-
-
-class Follower(models.Model):
-    follower = models.ForeignKey(
-        to=CustomUser, on_delete=models.CASCADE, related_name="follower_id"
-    )
-    user = models.ForeignKey(
-        to=CustomUser,
-        on_delete=models.CASCADE,
-        related_name="follower_user_id",
-    )
 
 
 class PostReaction(models.Model, PostTypesMixin):

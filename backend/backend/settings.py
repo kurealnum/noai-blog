@@ -89,6 +89,7 @@ INSTALLED_APPS = [
     "blogs",
     "search",
     "storages",
+    "followers",
 ]
 
 

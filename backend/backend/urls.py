@@ -35,6 +35,7 @@ urlpatterns = [
     path(API_URL + "accounts/", include("accounts.urls")),
     path(API_URL + "blog-posts/", include("blogs.urls")),
     path(API_URL + "search/", include("search.urls")),
+    path(API_URL + "followers/", include("followers.urls")),
     path(
         "sitemap.xml",
         sitemap,

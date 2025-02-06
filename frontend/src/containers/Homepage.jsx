@@ -172,7 +172,7 @@ function Homepage() {
             </ul>
             <h2>Blog Posts</h2>
             <ul className="feed">
-              {blogPostsQuery.isSuccess ? (
+              {blogPostsQuery.isSuccess && blogPostsQuery != null ? (
                 blogPostsQuery.data.map((content, index) => (
                   <BlogPostThumbnail key={index} content={content} />
                 ))
@@ -182,7 +182,7 @@ function Homepage() {
             </ul>
             <h2>Lists</h2>
             <ul className="feed">
-              {listsQuery.isSuccess ? (
+              {listsQuery.isSuccess && listsQuery.data != null ? (
                 listsQuery.data.map((content, index) => (
                   <BlogPostThumbnail key={index} content={content} />
                 ))

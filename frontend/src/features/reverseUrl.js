@@ -3,6 +3,10 @@ function reverseUrl(name, args) {
   const baseUrl = "/api/";
 
   switch (name) {
+    case "MANAGE_FOLLOWERS":
+      return add_args(baseUrl + "followers/manage-followers/", args);
+    case "MANAGE_FOLLOWING":
+      return add_args(baseUrl + "followers/manage-following/", args);
     case "GET_SEARCH":
       return add_args(baseUrl + "search/", args);
     case "USER_INFO":

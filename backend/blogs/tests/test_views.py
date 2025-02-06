@@ -7,11 +7,12 @@ from accounts.models import CustomUser
 from rest_framework.test import APIClient, APIRequestFactory
 from django.core.files.uploadedfile import SimpleUploadedFile
 
+from followers.models import Follower
+
 from ..models import (
     BlogPost,
     CommentReaction,
     Crosspost,
-    Follower,
     PostReaction,
     PostComment,
 )
@@ -642,7 +643,7 @@ class PostReplyListTestCase(CustomTestCase):
         self.assertEqual(expected_result, response.data[0].get("content"))
 
 
-class FeedListTestCase(CustomTestCase):
+class FeedListViewTC(CustomTestCase):
     def setUp(self):
         super().setUp()
 
@@ -673,6 +674,9 @@ class FeedListTestCase(CustomTestCase):
             user=self.user,
             title="3",
             content="Here's something about my blog post",
+        )
+        self.disabled_blog_post = BlogPost.objects.create(
+            user=self.user, title="d1", content="d1", enabled=False
         )
         self.crosspost_1 = BlogPost.objects.create(
             user=self.user, title="c1", content="c1", post_type="crosspost"
@@ -774,89 +778,6 @@ class FeedList_CrosspostTC(CustomTestCase):
         )
         self.altuser.set_password("TerriblePassword123")
         self.altuser.save()
-
-
-class FollowerViewTestCase(CustomTestCase):
-    def setUp(self):
-        super().setUp()
-        self.altuser = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Jon",
-            last_name="Lasty",
-            about_me="I am Jon, destroyer of worlds.",
-            username="jonny",
-        )
-        self.altuser.set_password("TerriblePassword123")
-        self.altuser.save()
-        self.follower = Follower.objects.create(follower=self.altuser, user=self.user)
-
-    def test_does_get_request_function_properly(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.get(reverse_lazy("manage_followers"))
-        expected_result = "bobby"
-
-        self.assertEqual(expected_result, request.data[0]["user"]["username"])
-
-    def test_does_post_request_function_properly(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.post(
-            reverse_lazy("manage_followers"),
-            data={"followee": self.altuser.username},
-        )
-        expected_result = 201
-        self.assertEqual(expected_result, request.status_code)
-
-    # testing the deletion of self.follower (django tests run sequentially, so this should be fine!!!)
-    def test_does_delete_request_function_properly(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="bobby")
-        request = temp_client.delete(
-            reverse_lazy("manage_followers"),
-            data={"followee": self.altuser.username},
-        )
-        expected_result = 204
-        self.assertEqual(expected_result, request.status_code)
-
-
-class FollowingViewTestCase(CustomTestCase):
-    def setUp(self):
-        super().setUp()
-        self.altuser = CustomUser.objects.create(
-            email="jon@gmail.com",
-            first_name="Jon",
-            last_name="Lasty",
-            about_me="I am Jon, destroyer of worlds.",
-            username="jonny",
-        )
-        self.altuser.set_password("TerriblePassword123")
-        self.altuser.save()
-        self.follower = Follower.objects.create(follower=self.altuser, user=self.user)
-
-    def test_does_get_request_function_properly(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="jonny")
-        request = temp_client.get(reverse_lazy("manage_following"))
-        expected_result = "bobby"
-
-        self.assertEqual(expected_result, request.data[0]["user"]["username"])
-
-    def test_does_get_request_with_parameter_function_properly(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="jonny")
-        request = temp_client.get(reverse_lazy("manage_following", args=["bobby"]))
-        expected_result = "bobby"
-
-        self.assertEqual(expected_result, request.data["user"]["username"])
-
-    def test_does_get_with_incorrect_username_return_404(self):
-        temp_client = APIClient()
-        temp_client.login(password="TerriblePassword123", username="jonny")
-        request = temp_client.get(reverse_lazy("manage_following", args=["idontexist"]))
-        expected_result = "This user does not exist"
-
-        self.assertEqual(expected_result, request.data["error"])
 
 
 class ReactionViewTestCase(CustomTestCase):

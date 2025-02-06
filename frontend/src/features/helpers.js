@@ -339,7 +339,7 @@ async function followUser(username) {
     body: JSON.stringify({ followee: username }),
   };
 
-  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  const response = await fetch(reverseUrl("MANAGE_FOLLOWERS"), config);
   return response.ok;
 }
 
@@ -354,7 +354,7 @@ async function unfollowUser(username) {
     body: JSON.stringify({ followee: username }),
   };
 
-  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  const response = await fetch(reverseUrl("MANAGE_FOLLOWERS"), config);
   return response.ok;
 }
 
@@ -367,7 +367,7 @@ async function isFollowingUser(username) {
   };
 
   const response = await fetch(
-    "/api/blog-posts/manage-following/" + username + "/",
+    reverseUrl("MANAGE_FOLLOWING", [username]),
     config,
   );
   return response.ok;
@@ -631,7 +631,7 @@ async function getFollowers() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/manage-followers/", config);
+  const response = await fetch(reverseUrl("MANAGE_FOLLOWERS"), config);
   return await response.json();
 }
 
@@ -641,7 +641,7 @@ async function getFollowing() {
     method: "GET",
     credentials: "include",
   };
-  const response = await fetch("/api/blog-posts/manage-following/", config);
+  const response = await fetch(reverseUrl("MANAGE_FOLLOWING"), config);
   return await response.json();
 }
 
