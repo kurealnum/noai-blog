@@ -127,10 +127,15 @@ function Settings() {
   }
 
   function deleteAccountHelper() {
-    const res = deleteAccount(true);
-    if (res) {
-      navigate("/login");
-    }
+    deleteAccount(true).then((res) => {
+      if (res) {
+        navigate("/login");
+      }
+    });
+  }
+
+  function toggleIsDeleteProfileModalOpen() {
+    setIsDeleteProfileModalOpen(!isDeleteProfileModalOpen);
   }
 
   if (newUserData != null && newLinks != null) {
@@ -191,12 +196,12 @@ function Settings() {
               </button>
               {isDeleteProfileModalOpen ? (
                 <ConfirmationModal
-                  toCallFunction={deleteAccountHelper}
+                  helperFunction={deleteAccountHelper}
                   message={
                     "Are you sure you want to delete your profile? This will delete it forever (a really long time)!"
                   }
                   isOpen={isDeleteProfileModalOpen}
-                  toCallArgs={[]}
+                  toggleOpen={toggleIsDeleteProfileModalOpen}
                 />
               ) : null}
             </div>

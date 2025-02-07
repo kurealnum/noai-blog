@@ -4,9 +4,10 @@ import { Dialog } from "@mui/material";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import reverseUrl from "../features/reverseUrl";
+import ConfirmationModal from "../components/ConfirmationModal.jsx";
 
 function DashboardPostThumbnail({ content, refetch, type }) {
-  const [open, setOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -25,12 +26,12 @@ function DashboardPostThumbnail({ content, refetch, type }) {
       if (res) {
         refetch();
       }
-      setOpen(false);
+      setIsDeleteModalOpen(false);
     });
   }
 
-  function handleClose() {
-    setOpen(false);
+  function toggleDeleteModal() {
+    setIsDeleteModalOpen(!isDeleteModalOpen);
   }
 
   return (
@@ -40,22 +41,15 @@ function DashboardPostThumbnail({ content, refetch, type }) {
         <button onClick={() => editHelper(slugify(content["title"]))}>
           <Edit />
         </button>
-        <button onClick={() => setOpen(true)}>
+        <button onClick={() => toggleDeleteModal(true)}>
           <Delete />
         </button>
-        <Dialog
-          open={open}
-          className="delete-post-confirm"
-          onClose={handleClose}
-        >
-          <h1>This will delete your post forever! Are you sure?</h1>
-          <button onClick={() => dialogHelper()} className="accent-border">
-            Yes, I am sure
-          </button>
-          <button onClick={handleClose} className="tertiary-border">
-            No, I'm not
-          </button>
-        </Dialog>
+        <ConfirmationModal
+          helperFunction={dialogHelper}
+          message={"This will delete your post forever! Are you sure?"}
+          toggleOpen={toggleDeleteModal}
+          isOpen={isDeleteModalOpen}
+        />
       </div>
 
       <Link

@@ -241,11 +241,15 @@ body {
   justify-content: flex-end;
 }
 
-.delete-post-confirm button {
-  width: 50%;
+.confirmation-modal button {
+  width: 20%;
   margin: 10px auto;
   padding: 10px;
   border-radius: 10px;
+}
+
+.confirmation-modal h1 {
+  font-size: 24px;
 }
 
 .accent-border {
