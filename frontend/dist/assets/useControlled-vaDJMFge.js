@@ -1,1 +1,0 @@
-import{r as s}from"./index-BwakQfzY.js";function f(e,u=166){let t;function a(...o){const n=()=>{e.apply(this,o)};clearTimeout(t),t=setTimeout(n,u)}return a.clear=()=>{clearTimeout(t)},a}function m({controlled:e,default:u,name:t,state:a="value"}){const{current:o}=s.useRef(e!==void 0),[n,l]=s.useState(u),r=o?e:n,c=s.useCallback(i=>{o||l(i)},[]);return[r,c]}export{f as d,m as u};
