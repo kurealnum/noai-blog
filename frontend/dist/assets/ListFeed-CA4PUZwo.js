@@ -1,1 +1,0 @@
-import{j as e,F as t,p as a,au as o}from"./index-DvV6ITee.js";function u(){return e.jsx(t,{advertiseRatio:18,showPaginator:!0,defaultSearchValue:"",queryFunction:a,includePage:!0,typeSet:o})}export{u as default};
