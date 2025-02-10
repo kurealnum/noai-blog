@@ -17,6 +17,7 @@ import {
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { Fade, Popper, Tooltip } from "@mui/material";
 import TikTokIcon from "../components/svgs/TikTokIcon.jsx";
+import PopUp from "../components/PopUp.jsx";
 
 function NavBar() {
   const userData = useLoaderData();
@@ -210,6 +211,9 @@ function NavBar() {
           <img id="logo" src={Logo} alt="Logo"></img>
         </Link>
       </nav>
+      <PopUp popUpId="baseAdvertisement" timesToShowPopUp={3}>
+        <p>Did you know that byeAI now supports crossposting?</p>
+      </PopUp>
       <Outlet />
     </>
   );

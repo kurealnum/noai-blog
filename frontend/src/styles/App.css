@@ -27,6 +27,28 @@ input {
   color: var(--light-text);
 }
 
+.pop-up {
+  position: absolute;
+  left: 0;
+  right: -76%;
+  top: 80%;
+  bottom: 0;
+  margin: auto;
+  background: var(--primary);
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 200px;
+  border: 1px var(--tertiary) solid;
+}
+
+.pop-up h1 {
+  margin: 0px;
+}
+
+.pop-up p {
+  text-align: left;
+}
+
 hr {
   width: 100px;
   margin: 0;
@@ -241,11 +263,15 @@ body {
   justify-content: flex-end;
 }
 
-.delete-post-confirm button {
-  width: 50%;
+.confirmation-modal button {
+  width: 20%;
   margin: 10px auto;
   padding: 10px;
   border-radius: 10px;
+}
+
+.confirmation-modal h1 {
+  font-size: 24px;
 }
 
 .accent-border {
