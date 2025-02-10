@@ -158,9 +158,7 @@ function Homepage() {
           <div className="extra-info">
             <h2>Links</h2>
             <ul className="links">
-              {linksQuery.data === null || linksQuery.data.length === 0 ? (
-                <p>This user doesn't have any links!</p>
-              ) : (
+              {linksQuery.isSuccess && linksQuery.data != null ? (
                 linksQuery.data.map((content, index) => (
                   <li key={index}>
                     <a href={DOMPurify.sanitize(content["link"])}>
@@ -168,11 +166,13 @@ function Homepage() {
                     </a>
                   </li>
                 ))
+              ) : (
+                <p>This user doesn't have any links!</p>
               )}
             </ul>
             <h2>Blog Posts</h2>
             <ul className="feed">
-              {blogPostsQuery.isSuccess && blogPostsQuery != null ? (
+              {blogPostsQuery.isSuccess && blogPostsQuery.data != null ? (
                 blogPostsQuery.data.map((content, index) => (
                   <BlogPostThumbnail key={index} content={content} />
                 ))
